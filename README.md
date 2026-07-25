@@ -60,7 +60,7 @@ The automated releases do not currently include a macOS build. It can still be b
 
 ### Build from source
 
-You will need Git, Node.js 18 or newer (Node.js 20 is recommended), Corepack, and the usual native build tools for your operating system.
+You will need Git, Node.js 20.19 or newer, Corepack, and the usual native build tools for your operating system.
 
 On Debian and Ubuntu, install the build dependencies first:
 
