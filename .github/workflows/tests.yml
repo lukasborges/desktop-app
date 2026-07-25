@@ -1,4 +1,5 @@
 name: Tests
+
 on:
   push:
     branches:
@@ -6,74 +7,65 @@ on:
   pull_request:
     branches:
       - "**"
-    ## This is used to not re-run the build if only thoses files have changed
     paths-ignore:
       - "README.md"
       - "CHANGELOG.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  Linux:
-    runs-on: ubuntu-latest
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+          - name: macOS
+            os: macos-latest
+          - name: Windows
+            os: windows-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: "18"
-          cache: "yarn"
-      # - name: Configure Node
-      #   run: |
-      #     yarn set version stable
+          node-version: "20"
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Install Linux test dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install --yes xvfb xauth
+
+      # Electron 43 downloads its platform binary lazily. Doing this before
+      # Jest makes installation errors fail immediately instead of leaving
+      # Electron test workers alive until the job timeout.
+      - name: Install Electron binary
+        run: yarn workspace platform-desktop-app exec electron --version
+
       - name: Build
         run: yarn build
-        
-  MacOs:
-    runs-on: macos-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: "18"
-          cache: "yarn"
-      - name: Configure Node
-        run: |
-          # npm v9 doesn't allow custom config parameters (i.e. node_gyp) anymode, so we have to downgrade it to v8
-          npm install -g npm@8  
-          npm install -g node-gyp@latest
-          npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
-          # yarn set version stable
-      - name: Install dependencies
-        run: yarn install --immutable
-      - name: Build
-        run: yarn build
+
       - name: Tests
+        if: runner.os != 'Linux'
         run: yarn test
 
-  Windows:
-    runs-on: windows-2019
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: "18"
-          cache: "yarn"
-      - name: Configure Node
-        shell: powershell
-        run: |
-          # npm v9 doesn't allow custom config parameters (i.e. node_gyp) anymode, so we have to downgrade it to v8
-          npm install -g npm@8  
-          npm install -g node-gyp@latest
-          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
-          # yarn set version stable
-      - name: Install dependencies
-        run: yarn install --immutable
-      - name: Build
-        run: yarn run build
       - name: Tests
-        run: yarn run test
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum yarn test
