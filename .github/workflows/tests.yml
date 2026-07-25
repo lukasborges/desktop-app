@@ -32,13 +32,15 @@ jobs:
           - name: macOS
             os: macos-latest
           - name: Windows
-            os: windows-latest
+            # node-gyp 10 cannot detect the Visual Studio 18 installation
+            # currently shipped by windows-latest.
+            os: windows-2022
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
           cache: yarn
@@ -52,6 +54,10 @@ jobs:
       - name: Install Linux test dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install --yes xvfb xauth
+
+      - name: Configure Electron sandbox on Linux
+        if: runner.os == 'Linux'
+        run: echo "ELECTRON_DISABLE_SANDBOX=1" >> "$GITHUB_ENV"
 
       # Electron 43 downloads its platform binary lazily. Doing this before
       # Jest makes installation errors fail immediately instead of leaving
