@@ -1,8 +1,10 @@
 import { map } from 'rxjs/operators';
-import { subscribeStore } from '../utils/observable';
+
 import { Resolvers } from '../graphql/resolvers-types.generated';
-import { isDownloadingUpdate, isCheckingUpdate, isUpdateAvailable, getReleaseName } from './selectors';
-import { checkForUpdates, quitAndInstall } from './duck';
+import { subscribeStore } from '../utils/observable';
+
+import { checkForUpdates, openReleaseNotes, quitAndInstall } from './duck';
+import { getReleaseName, isCheckingUpdate, isDownloadingUpdate, isUpdateAvailable } from './selectors';
 
 export type AutoUpdateStatusParent = {};
 
@@ -32,6 +34,10 @@ const resolvers: Resolvers = {
   Mutation: {
     checkForUpdates: (_obj, _args, context) => {
       context.store.dispatch(checkForUpdates());
+      return true;
+    },
+    openReleaseNotes: (_obj, _args, context) => {
+      context.store.dispatch(openReleaseNotes());
       return true;
     },
     quitAndInstall: (_obj, _args, context) => {

@@ -3,10 +3,11 @@ import ms = require('ms');
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
-import {
-  withGetAutoUpdateStatus, withCheckForUpdatesMutation, withQuitAndInstallMutation,
-} from './queries@local.gql.generated';
 import { compose } from 'redux';
+
+import {
+  withGetAutoUpdateStatus, withCheckForUpdatesMutation, withOpenReleaseNotesMutation,
+} from './queries@local.gql.generated';
 
 export interface Classes {
   checking: string,
@@ -21,7 +22,7 @@ export interface Props {
   isUpdateAvailable: boolean,
   releaseName: string,
   checkForUpdates: () => any,
-  quitAndInstall: () => any,
+  openReleaseNotes: () => any,
 }
 
 export interface State {
@@ -95,8 +96,8 @@ class SettingsUpdatesButton extends React.PureComponent<Props, State> {
     if (this.props.isUpdateAvailable) {
       return (
         <div>
-          <Button className={classes!.updateButton} btnSize={Size.SMALL} onClick={this.props.quitAndInstall} download={true}>
-            Quit to install the latest version
+          <Button className={classes!.updateButton} btnSize={Size.SMALL} onClick={this.props.openReleaseNotes}>
+            View available downloads
           </Button>
 
           <p className={classes!.info}>New version available ({this.props.releaseName})</p>
@@ -143,9 +144,9 @@ const connect = compose(
       checkForUpdates: () => mutate && mutate({ variables: { } }),
     }),
   }),
-  withQuitAndInstallMutation({
+  withOpenReleaseNotesMutation({
     props: ({ mutate }) => ({
-      quitAndInstall: () => mutate && mutate({ variables: { } }),
+      openReleaseNotes: () => mutate && mutate({ variables: { } }),
     }),
   }),
 );

@@ -50,7 +50,8 @@ export default function reducer(state = new Map(), action) {
 
     case SET_UPDATE_IS_AVAILABLE:
       return state
-        .set('startDownloading', false)
+        .set('checking', false)
+        .set('downloadingUpdate', false)
         .set('updateAvailable', true)
         .set('releaseName', action.releaseName);
 

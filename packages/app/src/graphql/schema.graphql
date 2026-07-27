@@ -52,6 +52,8 @@ type Mutation {
 
   """Trigger an action to check for updates"""
   checkForUpdates: Boolean,
+  """Open the GitHub page for the available release"""
+  openReleaseNotes: Boolean,
   """Trigger an action to quit browserX and restart with the new version"""
   quitAndInstall: Boolean,
 
