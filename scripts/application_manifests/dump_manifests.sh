@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 
-DUMP_FILE="scripts/application_manifests/applications-ids.json"
-MANIFEST_FOLDER="manifests/definitions"
-SERVER="http://localhost:4001"
+set -euo pipefail
 
-# CREATE MANIFESTS FOLDER IF IT DOES NOT EXISTS
-mkdir -p $MANIFEST_FOLDER
-# GRAB ALL APPLICATIONS IDS
-ids=`jq .[].id $DUMP_FILE`
+SCRIPT_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPOSITORY_ROOT="$(cd "$SCRIPT_FOLDER/../.." && pwd)"
+MANIFEST_FOLDER="$REPOSITORY_ROOT/packages/app/manifests/definitions"
+SERVER="${APPLICATION_CATALOG_SERVER:-http://localhost:4001}"
 
-# LOOP N CURL ALL MANIFESTS
-for identifier in $ids
-do
-  curl -s "$SERVER/application-recipe/$identifier/bxAppManifest.json" > $MANIFEST_FOLDER/"$identifier"_tmp.json
-  jq -s '.[0] * .[1]' $MANIFEST_FOLDER/"$identifier"_tmp.json $MANIFEST_FOLDER/"$identifier".json > $MANIFEST_FOLDER/"$identifier"_new.json
-  rm $MANIFEST_FOLDER/"$identifier"_tmp.json $MANIFEST_FOLDER/"$identifier".json
-  mv $MANIFEST_FOLDER/"$identifier"_new.json $MANIFEST_FOLDER/"$identifier".json
+# The checked-in manifests are the catalog's single source of truth. Refresh only
+# those applications instead of maintaining a second, easily stale list of IDs.
+for manifest in "$MANIFEST_FOLDER"/*.json; do
+  identifier="$(basename "$manifest" .json)"
+  downloaded_manifest="$(mktemp)"
+  merged_manifest="$(mktemp)"
+  trap 'rm -f "$downloaded_manifest" "$merged_manifest"' EXIT
+
+  curl --fail --silent --show-error \
+    "$SERVER/application-recipe/$identifier/bxAppManifest.json" \
+    --output "$downloaded_manifest"
+  jq -s '.[0] * .[1]' "$downloaded_manifest" "$manifest" > "$merged_manifest"
+  mv "$merged_manifest" "$manifest"
+  rm -f "$downloaded_manifest"
+  trap - EXIT
 done

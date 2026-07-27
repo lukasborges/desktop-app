@@ -1,4 +1,4 @@
-import { getUserAgentForApp } from '../../../src/session';
+import { getUserAgentForApp, isGoogleMeetOrigin } from '../../../src/session';
 import {
   isGmailLandingPage,
   isGoogleAccountsUrl,
@@ -55,5 +55,15 @@ describe('Google authentication navigation', () => {
   it('removes only the Chrome version token', () => {
     expect(withoutChromeVersion('Mozilla/5.0 Chrome/150.0.7871.114 Safari/537.36'))
       .toBe('Mozilla/5.0 Chrome Safari/537.36');
+  });
+});
+
+describe('Google Meet display capture', () => {
+  it('allows only the secure Google Meet origin', () => {
+    expect(isGoogleMeetOrigin('https://meet.google.com')).toBe(true);
+    expect(isGoogleMeetOrigin('https://meet.google.com/abc-defg-hij')).toBe(true);
+    expect(isGoogleMeetOrigin('http://meet.google.com')).toBe(false);
+    expect(isGoogleMeetOrigin('https://meet.google.com.evil.example')).toBe(false);
+    expect(isGoogleMeetOrigin('not a URL')).toBe(false);
   });
 });
