@@ -5,6 +5,15 @@ export const GMAIL_ACCOUNT_CHOOSER_URL =
 export const isGoogleAccountsUrl = (url: string): boolean =>
   url.startsWith(GOOGLE_ACCOUNTS_ORIGIN);
 
+export const isGoogleMeetUrl = (url: string): boolean => {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'https:' && parsedUrl.hostname === 'meet.google.com';
+  } catch (_error) {
+    return false;
+  }
+};
+
 export const isGmailLandingPage = (url: string): boolean => {
   try {
     const parsedUrl = new URL(url);

@@ -32,8 +32,8 @@ import {
   UrlDispatcherProviderService,
   WebContentsOverrideProviderService,
 } from './interface';
-import { DEFAULT_BROWSER, DEFAULT_BROWSER_BACKGROUND, NEW_WINDOW } from '../../../urlrouter/constants';
-import { isGoogleAccountsUrl } from '../../../utils/userAgent';
+import { NEW_TAB } from '../../../urlrouter/constants';
+import { isGoogleAccountsUrl, isGoogleMeetUrl } from '../../../utils/userAgent';
 
 export class TabWebContentsServiceImpl extends TabWebContentsService implements RPC.Interface<TabWebContentsService> {
   protected webviews: Subject<Electron.WebContents>;
@@ -265,13 +265,13 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
     return false;
   }
 
-  async setUrlDispatcherProvider(_provider: RPC.Node<UrlDispatcherProviderService>) {
+  async setUrlDispatcherProvider(provider: RPC.Node<UrlDispatcherProviderService>) {
     return new ServiceSubscription(this.onNewWebviews().subscribe(wc => {
 
       wc.setWindowOpenHandler((details: HandlerDetails) => {
         // Fork-specific: every link click that would spawn a new window/tab
         // is sent to the OS default browser instead of opening inside Platform.
-        // Two narrow exceptions stay inside Electron:
+        // Three narrow exceptions stay inside Electron:
         //   1. OAuth flows / popup-window patterns initiated by a webview
         //      (about:blank, accounts.google.com, popup features,
         //      named frame targets - see isNewWindowForUserRequest). These
@@ -279,12 +279,22 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
         //      reaches the originating webview; sending them to the OS
         //      browser breaks third-party "Sign in with Google" and similar
         //      federated logins inside webviews.
-        //   2. The download hack - Gmail/Google attachments rely on a hidden
+        //   2. Google Meet links are delegated to Platform's URL router.
+        //   3. The download hack - Gmail/Google attachments rely on a hidden
         //      window to receive the download.
 
         if (isGoogleAccountsUrl(details.url)) {
           wc.loadURL(details.url).catch(error => {
             log.error('Unable to open Google authentication in service webview', error);
+          });
+          return { action: 'deny' };
+        }
+
+        // Calendar opens meeting links in a new browser tab. Keep those links
+        // inside Platform so the URL router can activate or install Google Meet.
+        if (isGoogleMeetUrl(details.url)) {
+          provider.dispatchUrl(details.url, wc.id, NEW_TAB).catch(error => {
+            log.error('Unable to open Google Meet inside Platform', error);
           });
           return { action: 'deny' };
         }
