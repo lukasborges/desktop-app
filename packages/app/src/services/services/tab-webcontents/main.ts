@@ -1,5 +1,5 @@
 import * as BluebirdPromise from 'bluebird';
-import { app, ipcMain, session, shell, HandlerDetails } from 'electron';
+import { app, ipcMain, session, HandlerDetails } from 'electron';
 import log from 'electron-log';
 import { omit } from 'ramda';
 import { fromEvent, Observable, Subject } from 'rxjs';
@@ -33,7 +33,11 @@ import {
   WebContentsOverrideProviderService,
 } from './interface';
 import { NEW_TAB } from '../../../urlrouter/constants';
-import { isGoogleAccountsUrl, isGoogleMeetUrl } from '../../../utils/userAgent';
+import {
+  isMicrosoftTeamsMeetingUrl,
+  unwrapGoogleRedirectUrl,
+} from '../../../utils/applicationLinks';
+import { isGoogleAccountsUrl } from '../../../utils/userAgent';
 
 export class TabWebContentsServiceImpl extends TabWebContentsService implements RPC.Interface<TabWebContentsService> {
   protected webviews: Subject<Electron.WebContents>;
@@ -269,9 +273,12 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
     return new ServiceSubscription(this.onNewWebviews().subscribe(wc => {
 
       wc.setWindowOpenHandler((details: HandlerDetails) => {
-        // Fork-specific: every link click that would spawn a new window/tab
-        // is sent to the OS default browser instead of opening inside Platform.
-        // Three narrow exceptions stay inside Electron:
+        const googleRedirectDestination = unwrapGoogleRedirectUrl(details.url);
+
+        // Delegate regular links to Platform's URL router. URLs covered by an
+        // application scope open in that application; everything else falls
+        // back to the OS default browser.
+        // Two narrow exceptions bypass the router:
         //   1. OAuth flows / popup-window patterns initiated by a webview
         //      (about:blank, accounts.google.com, popup features,
         //      named frame targets - see isNewWindowForUserRequest). These
@@ -279,8 +286,7 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
         //      reaches the originating webview; sending them to the OS
         //      browser breaks third-party "Sign in with Google" and similar
         //      federated logins inside webviews.
-        //   2. Google Meet links are delegated to Platform's URL router.
-        //   3. The download hack - Gmail/Google attachments rely on a hidden
+        //   2. The download hack - Gmail/Google attachments rely on a hidden
         //      window to receive the download.
 
         if (isGoogleAccountsUrl(details.url)) {
@@ -290,11 +296,22 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
           return { action: 'deny' };
         }
 
-        // Calendar opens meeting links in a new browser tab. Keep those links
-        // inside Platform so the URL router can activate or install Google Meet.
-        if (isGoogleMeetUrl(details.url)) {
+        // Google Calendar and other Google services wrap external links in
+        // https://www.google.com/url?q=... . Route the validated destination
+        // instead of treating Google's redirect page as the target app.
+        if (googleRedirectDestination !== details.url) {
           provider.dispatchUrl(details.url, wc.id, NEW_TAB).catch(error => {
-            log.error('Unable to open Google Meet inside Platform', error);
+            log.error('Unable to route destination from Google redirect', error);
+          });
+          return { action: 'deny' };
+        }
+
+        // Teams meeting links often request popup semantics even though they
+        // are regular deep links. Route them before the generic OAuth/popup
+        // exception so an installed Teams instance can receive the meeting.
+        if (isMicrosoftTeamsMeetingUrl(details.url)) {
+          provider.dispatchUrl(details.url, wc.id, NEW_TAB).catch(error => {
+            log.error('Unable to route Microsoft Teams meeting inside Platform', error);
           });
           return { action: 'deny' };
         }
@@ -316,7 +333,9 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
         if (details.disposition === 'new-window'
           || details.disposition === 'background-tab'
           || details.disposition === 'foreground-tab') {
-          shell.openExternal(details.url);
+          provider.dispatchUrl(details.url, wc.id, NEW_TAB).catch(error => {
+            log.error('Unable to route URL inside Platform', error);
+          });
           return { action: 'deny' };
         }
 

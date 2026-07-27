@@ -22,6 +22,11 @@ export interface RoutingOrigin {
   applicationId?: string,
 }
 
+export interface ApplicationRoutingChoice {
+  applicationId: string,
+  label: string,
+}
+
 export interface ParsedURL {
   protocol: string,
   subdomain?: string | null,
@@ -37,6 +42,7 @@ export enum URLRouterAction {
   NEW_WINDOW = 'NEW_WINDOW',
   NAV_IN_TAB = 'NAV_IN_TAB',
   INSTALL_AND_OPEN = 'INSTALL_AND_OPEN',
+  CHOOSE_APPLICATION = 'CHOOSE_APPLICATION',
   DEFAULT_BROWSER = 'DEFAULT_BROWSER',
   PUSH_AND_NAV_TO_TAB = 'PUSH_AND_NAV_TO_TAB',
 }
@@ -48,5 +54,6 @@ export type URLRouterActionAndDestination =
   [URLRouterAction.NEW_WINDOW, RoutingOrigin] |
   [URLRouterAction.NAV_IN_TAB, RoutingOrigin] |
   [URLRouterAction.INSTALL_AND_OPEN, { manifestURL: string }] |
+  [URLRouterAction.CHOOSE_APPLICATION, { applications: ApplicationRoutingChoice[] }] |
   [URLRouterAction.DEFAULT_BROWSER, null] |
   [URLRouterAction.PUSH_AND_NAV_TO_TAB, { tabId: string }];

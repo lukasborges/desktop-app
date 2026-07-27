@@ -24,6 +24,7 @@ import { BrowserWindowService } from '../services/services/browser-window/interf
 import services from '../services/servicesManager';
 import { RPC } from '../services/lib/types';
 import { service } from '../services/lib/decorator';
+import { unwrapGoogleRedirectUrl } from '../utils/applicationLinks';
 
 export type DispatchUrlOptions = {
   afterFollowingRedirects?: boolean,
@@ -61,7 +62,11 @@ export function* dispatchUrlSaga(
 ): SagaIterator {
   const bxApp: BrowserXAppWorker = yield getContext('bxApp');
   const { router } = bxApp;
-  const { url, origin, options } = dispatch;
+  const normalizedUrl = unwrapGoogleRedirectUrl(dispatch.url);
+  const routingDispatch = normalizedUrl === dispatch.url
+    ? dispatch
+    : { ...dispatch, url: normalizedUrl };
+  const { url, origin, options } = routingDispatch;
   const { afterFollowingRedirects, originalUrl } = dispatchUrlOptions;
 
   if (queue.has(url)) return;
@@ -75,20 +80,22 @@ export function* dispatchUrlSaga(
   }
 
   if (action === URLRouterAction.DEFAULT_BROWSER && !afterFollowingRedirects) {
-    const urlFromRedirects = yield call(urlFromRedirections, dispatch);
+    const urlFromRedirects = yield call(urlFromRedirections, routingDispatch);
 
     queue.delete(url);
 
     return yield call(
       dispatchUrlSaga,
-      { ...dispatch, url: urlFromRedirects },
+      { ...routingDispatch, url: urlFromRedirects },
       { originalUrl: url, afterFollowingRedirects: true },
     );
   }
 
   queue.delete(url);
 
-  const finalDispatch = action === URLRouterAction.DEFAULT_BROWSER ? { ...dispatch, url: originalUrl } : dispatch;
+  const finalDispatch = action === URLRouterAction.DEFAULT_BROWSER
+    ? { ...routingDispatch, url: originalUrl }
+    : routingDispatch;
   yield call(triggerCorrespondingAction, action, destination, finalDispatch);
 
   return { url: finalDispatch.url, origin, options, action, destination };
@@ -151,6 +158,28 @@ function* triggerCorrespondingAction(
     case URLRouterAction.NEW_WINDOW:
       yield put(createNewTab(destination.applicationId, url, { detach: true, navigateToApplication: true }));
       break;
+    case URLRouterAction.CHOOSE_APPLICATION: {
+      const cancelId = destination.applications.length;
+      const { response } = yield call(() => remote.dialog.showMessageBox({
+        type: 'question',
+        title: 'Open link',
+        message: 'Choose where to open this link',
+        detail: url,
+        buttons: [
+          ...destination.applications.map(application => application.label),
+          'Cancel',
+        ],
+        cancelId,
+        defaultId: 0,
+        noLink: true,
+      }));
+
+      if (response !== cancelId) {
+        const application = destination.applications[response];
+        yield put(createNewTab(application.applicationId, url, { navigateToApplication: true }));
+      }
+      break;
+    }
     case URLRouterAction.INSTALL_AND_OPEN: {
       yield put(installApplication(destination.manifestURL, {
         optOutFlow: true,
