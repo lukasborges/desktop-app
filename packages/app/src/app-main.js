@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { parse } from 'url';
-import { app, webContents } from 'electron';
+import { app, session, webContents } from 'electron';
 import log from 'electron-log';
 
 import services from './services/servicesManager';
@@ -19,6 +19,7 @@ export default class BrowserXAppMain extends EventEmitter {
 
   initAppLifeCycle() {
     app.on('ready', async () => {
+      enhanceSession(session.defaultSession);
       // can register a onOpen function that should return a promise
       if (typeof this.onOpen === 'function') {
         await this.onOpen();

@@ -1,7 +1,18 @@
-import { Session, OnBeforeSendHeadersListenerDetails, BeforeSendResponse, OnHeadersReceivedListenerDetails, HeadersReceivedResponse } from 'electron';
+import {
+  Session,
+  OnBeforeSendHeadersListenerDetails,
+  BeforeSendResponse,
+  OnHeadersReceivedListenerDetails,
+  HeadersReceivedResponse,
+  desktopCapturer,
+  dialog,
+} from 'electron';
 import enhanceWebRequest from 'electron-better-web-request';
+import log from 'electron-log';
 
 import { isGoogleAccountsUrl, withoutChromeVersion } from './utils/userAgent';
+
+const enhancedSessions = new WeakSet<Session>();
 
 const orderListeners = (listeners: any) => {
   const orderableOrigins = [
@@ -126,8 +137,75 @@ export const getRefererForApp = (referer: string): string => {
   return referer && referer.startsWith('http://localhost') ? '' : referer;
 };
 
+export const isGoogleMeetOrigin = (origin: string): boolean => {
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'https:' && url.hostname === 'meet.google.com';
+  } catch (_error) {
+    return false;
+  }
+};
+
+const selectDisplayMediaSource = async () => {
+  const sources = await desktopCapturer.getSources({
+    types: ['screen', 'window'],
+    thumbnailSize: { width: 0, height: 0 },
+    fetchWindowIcons: false,
+  });
+
+  // PipeWire presents its own system picker and returns only the selected source.
+  if (sources.length <= 1) {
+    return sources[0];
+  }
+
+  const cancelId = sources.length;
+  const { response } = await dialog.showMessageBox({
+    type: 'question',
+    title: 'Share your screen',
+    message: 'Choose what to share',
+    detail: 'Google Meet will be able to see the selected screen or window.',
+    buttons: [...sources.map(source => source.name), 'Cancel'],
+    cancelId,
+    defaultId: 0,
+    noLink: true,
+  });
+
+  return response === cancelId ? undefined : sources[response];
+};
+
+const enhanceDisplayMedia = (session: Session) => {
+  session.setDisplayMediaRequestHandler(async (request, callback) => {
+    if (!isGoogleMeetOrigin(request.securityOrigin) || !request.videoRequested) {
+      callback({});
+      return;
+    }
+
+    try {
+      const source = await selectDisplayMediaSource();
+      if (!source) {
+        callback({});
+        return;
+      }
+
+      callback({
+        video: source,
+        ...(request.audioRequested && process.platform === 'win32'
+          ? { audio: 'loopback' as const }
+          : {}),
+      });
+    } catch (error) {
+      log.error('[session] Unable to select a display media source', error);
+      callback({});
+    }
+  }, { useSystemPicker: true });
+};
+
 export const enhanceSession = (session: Session) => {
+  if (enhancedSessions.has(session)) return;
+  enhancedSessions.add(session);
+
   enhanceWebRequest(session);
+  enhanceDisplayMedia(session);
 
   for (const callbackMethod of callbackMethods) {
     // @ts-ignore
