@@ -9,6 +9,7 @@ import { isNotInstallableApplication } from '../application-settings/selectors';
 import {
   getApplicationCustomURL,
   getApplicationId,
+  getApplicationIconURL,
   getApplicationIdentityId,
   getApplicationManifestURL,
 } from '../applications/get';
@@ -359,11 +360,17 @@ export default class URLRouter {
       ? bxApp.manifest.name
       : 'Application';
     const description = getApplicationDescription(this.state, application);
-    const label = description
-      ? `${applicationName} — ${description}`
-      : `${applicationName} — Instance ${index + 1}`;
+    const manifestIcon = bxApp
+      && bxApp.manifest
+      && bxApp.manifest.icons
+      && (bxApp.manifest.icons.find(icon => icon.platform === 'browserx') || bxApp.manifest.icons[0]);
 
-    return { applicationId, label };
+    return {
+      applicationId,
+      name: applicationName,
+      description: description || `Instance ${index + 1}`,
+      iconURL: getApplicationIconURL(application) || (manifestIcon && manifestIcon.src),
+    };
   }
 
   // Gather all the scopes (+ extended scopes) recorded in the manifest of an App

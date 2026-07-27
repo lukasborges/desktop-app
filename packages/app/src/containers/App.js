@@ -22,6 +22,7 @@ import { getCursorIcon, getUISettingsActiveTabTitle, getUISettingsIsVisible } fr
 import SettingsOverlay from '../settings/Container';
 import SubdockItemDragLayer from '../subdock/components/SubdockItemDragLayer';
 import LocationFragmentUpdater from './LocationFragmentUpdater';
+import ApplicationRoutingChooser from '../urlrouter/ApplicationRoutingChooser';
 
 @DragDropContext(HTML5Backend)
 @connect(
@@ -100,6 +101,7 @@ export default class App extends React.PureComponent {
         }
         <DownloadToaster />
         <Dialogs />
+        <ApplicationRoutingChooser />
         <div id="portal-application-scene" />
 
         {this.props.kbdShortcutsOverlayVisibility &&

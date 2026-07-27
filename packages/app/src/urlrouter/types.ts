@@ -24,7 +24,9 @@ export interface RoutingOrigin {
 
 export interface ApplicationRoutingChoice {
   applicationId: string,
-  label: string,
+  name: string,
+  description: string,
+  iconURL?: string,
 }
 
 export interface ParsedURL {

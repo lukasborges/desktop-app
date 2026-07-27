@@ -1,5 +1,6 @@
 import * as remote from '@electron/remote';
 import log from 'electron-log';
+import * as shortid from 'shortid';
 import { SagaIterator } from 'redux-saga';
 import { all, call, delay, fork, getContext, put, race, select, take } from 'redux-saga/effects';
 import { getApplicationManifestURL } from '../applications/get';
@@ -16,7 +17,12 @@ import {
 import { getApplicationById } from '../applications/selectors';
 import { REHYDRATION_COMPLETE } from '../store/duck';
 import { navigateTabToURL, changeHashAndNavigateToTab } from '../tab-webcontents/duck';
-import { setCursorIcon } from '../ui/duck';
+import {
+  RESOLVE_APPLICATION_ROUTING_CHOOSER,
+  ResolveApplicationRoutingChooser,
+  setCursorIcon,
+  showApplicationRoutingChooser,
+} from '../ui/duck';
 import { getCursorIcon } from '../ui/selectors';
 import { callService, takeEveryWitness, tryCatch } from '../utils/sagas';
 import { ApplicationItem, URLRouterAction, URLRouterActionAndDestination } from './types';
@@ -159,24 +165,16 @@ function* triggerCorrespondingAction(
       yield put(createNewTab(destination.applicationId, url, { detach: true, navigateToApplication: true }));
       break;
     case URLRouterAction.CHOOSE_APPLICATION: {
-      const cancelId = destination.applications.length;
-      const { response } = yield call(() => remote.dialog.showMessageBox({
-        type: 'question',
-        title: 'Open link',
-        message: 'Choose where to open this link',
-        detail: url,
-        buttons: [
-          ...destination.applications.map(application => application.label),
-          'Cancel',
-        ],
-        cancelId,
-        defaultId: 0,
-        noLink: true,
-      }));
+      const requestId = shortid.generate();
+      yield put(showApplicationRoutingChooser(requestId, url, destination.applications));
+      const resolution: ResolveApplicationRoutingChooser = yield take(
+        (candidate: ResolveApplicationRoutingChooser) =>
+          candidate.type === RESOLVE_APPLICATION_ROUTING_CHOOSER
+          && candidate.requestId === requestId
+      );
 
-      if (response !== cancelId) {
-        const application = destination.applications[response];
-        yield put(createNewTab(application.applicationId, url, { navigateToApplication: true }));
+      if (resolution.applicationId) {
+        yield put(createNewTab(resolution.applicationId, url, { navigateToApplication: true }));
       }
       break;
     }
