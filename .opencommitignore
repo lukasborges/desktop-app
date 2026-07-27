@@ -1,0 +1,16 @@
+# Arquivos gerados: inflam o diff enviado ao modelo sem agregar nada à mensagem
+# de commit. Acima de ~7000 tokens o opencommit quebra o diff em uma requisição
+# por arquivo/hunk, e o Ollama local (OLLAMA_NUM_PARALLEL=1) as serializa.
+
+# Lockfiles
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Manifests gerados por scripts/application_manifests/
+scripts/application_manifests/applications-ids.json
+
+# Builds e sourcemaps
+*.min.js
+*.min.css
+*.map
