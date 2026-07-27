@@ -10,7 +10,7 @@ import {
 import enhanceWebRequest from 'electron-better-web-request';
 import log from 'electron-log';
 
-import { isGoogleAccountsUrl, withoutChromeVersion } from './utils/userAgent';
+import { isGoogleAccountsUrl, isGoogleMeetUrl, withoutChromeVersion } from './utils/userAgent';
 
 const enhancedSessions = new WeakSet<Session>();
 
@@ -137,15 +137,6 @@ export const getRefererForApp = (referer: string): string => {
   return referer && referer.startsWith('http://localhost') ? '' : referer;
 };
 
-export const isGoogleMeetOrigin = (origin: string): boolean => {
-  try {
-    const url = new URL(origin);
-    return url.protocol === 'https:' && url.hostname === 'meet.google.com';
-  } catch (_error) {
-    return false;
-  }
-};
-
 const selectDisplayMediaSource = async () => {
   const sources = await desktopCapturer.getSources({
     types: ['screen', 'window'],
@@ -175,7 +166,7 @@ const selectDisplayMediaSource = async () => {
 
 const enhanceDisplayMedia = (session: Session) => {
   session.setDisplayMediaRequestHandler(async (request, callback) => {
-    if (!isGoogleMeetOrigin(request.securityOrigin) || !request.videoRequested) {
+    if (!isGoogleMeetUrl(request.securityOrigin) || !request.videoRequested) {
       callback({});
       return;
     }
