@@ -1,4 +1,5 @@
 import { RecursiveImmutableMap } from '../types';
+import { ApplicationRoutingChoice } from '../urlrouter/types';
 
 export enum OnboardingType {
   Undefined = 0,
@@ -34,6 +35,11 @@ export type StationUi = {
   },
   confirmResetApplicationModal?: {
     isVisible?: number | false,
+  },
+  applicationRoutingChooser?: {
+    requestId: string,
+    url: string,
+    applications: ApplicationRoutingChoice[],
   },
 };
 

@@ -9,6 +9,11 @@ export const getUILeftDockApplicationTabAdded = (state: StationState) =>
 export const getCursorIcon = (state: StationState): string =>
   state.getIn(['ui', 'cursorIcon'], 'default');
 
+export const getApplicationRoutingChooser = (state: StationState) => {
+  const chooser = state.getIn(['ui', 'applicationRoutingChooser']);
+  return chooser ? chooser.toJS() : null;
+};
+
 export const getUISettingsActiveTabTitle = (state: StationState): string =>
   state.getIn(['ui', 'settings', 'activeTabTitle'], 'General');
 

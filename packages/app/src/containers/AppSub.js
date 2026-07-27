@@ -20,6 +20,7 @@ import { canTabGoBack, canTabGoForward, getTabApplicationId, getTabTitle } from 
 import { getTabById } from '../tabs/selectors';
 import { isDarwin } from '../utils/process';
 import ConfirmResetApplication from '../applications/components/ConfirmResetApplication';
+import ApplicationRoutingChooser from '../urlrouter/ApplicationRoutingChooser';
 
 const styles = () => ({
   container: {
@@ -99,6 +100,7 @@ class AppSub extends React.PureComponent {
         <ConfirmResetApplication applicationId={this.props.application.get('applicationId')}/>
         <DownloadToaster />
         <Dialogs />
+        <ApplicationRoutingChooser />
       </div>
     );
   }
