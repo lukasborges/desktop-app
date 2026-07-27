@@ -1,8 +1,8 @@
 import { observer, shallowEquals } from 'redux-observers';
 import { getForeFrontNavigationStateProperty } from '../applications/utils';
-import { getAppBadge } from '../applications/selectors';
 import { getActiveApplicationId } from '../nav/selectors';
 import { changeSelectedAppMain } from '../nav/duck';
+import { getNotificationBadgeCount } from '../notification-center/selectors';
 import services from '../services/servicesManager';
 
 
@@ -74,12 +74,9 @@ const observeBackAndForwardState = observer(
   },
 );
 
-const updateAppBadge = observer(getAppBadge, (dispatch, appBadge) => {
-  let badge = '';
-  if (appBadge !== 'snooze' && appBadge !== null) {
-    badge = `${appBadge}`;
-  }
-  services.electronApp.dockSetBadge(badge);
+const updateAppBadge = observer(getNotificationBadgeCount, (dispatch, notificationCount) => {
+  const badge = notificationCount > 0 ? `${notificationCount}` : '';
+  services.electronApp.dockSetBadge(badge).catch(console.error);
 });
 
 export default [
