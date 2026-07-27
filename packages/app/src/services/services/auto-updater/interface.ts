@@ -49,9 +49,10 @@ export class AutoUpdaterServiceObserver extends ServiceBase implements RPC.Inter
 
   /**
   * Will be called when `electron.autoUpdater` emits `'update-available'`.
+  * @param param.releaseName the version of the available release
   */
   // @ts-ignore
-  onUpdateAvailable() {}
+  onUpdateAvailable(param: { releaseName: string }) {}
 
   /**
   * Will be called when `electron.autoUpdater` emits `'error'`.

@@ -4,10 +4,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import withUI from 'redux-ui';
+
 import DockApplicationSubdock from '../common/containers/DockApplicationSubdock';
 import NativeAppDockIcon from '../dock/components/NativeAppDockIcon';
+
 import AutoUpdateSubdock from './components/AutoUpdateSubdock';
-import { openReleaseNotes, quitAndInstall, setReleaseNotesSubdockVisibility, toggleReleaseNotesSubdockVisibility } from './duck';
+import { openReleaseNotes, setReleaseNotesSubdockVisibility, toggleReleaseNotesSubdockVisibility } from './duck';
 import { getReleaseName, isSubdockOpen as getIsSubdockOpen, isUpdateAvailable as getIsUpdateAvailable } from './selectors';
 
 interface UIProp {
@@ -19,7 +21,6 @@ export interface Props {
   isUpdateAvailable: boolean,
   isSubdockOpen: boolean,
   releaseName: string,
-  onClickQuitAndInstall: () => any,
   onClickOpenReleaseNotes: () => any
   onToggleReleaseNotesSubdockVisibility: () => any
   onSetReleaseNotesSubdockVisibility: (visible: boolean) => any
@@ -63,7 +64,8 @@ class AutoUpdateDockNotificationImpl extends React.PureComponent<Props, {}> {
         <AutoUpdateSubdock
           updateAvailable={this.props.isUpdateAvailable}
           releaseName={this.props.releaseName}
-          onClickQuitAndInstall={this.props.onClickQuitAndInstall}
+          onClickOpenReleaseNotes={this.props.onClickOpenReleaseNotes}
+          onClickRemindLater={this.hideSubdock}
         />
       </DockApplicationSubdock>
     );
@@ -77,7 +79,6 @@ export default connect(
     releaseName: getReleaseName(state),
   }),
   (dispatch: Dispatch) => bindActionCreators({
-    onClickQuitAndInstall: quitAndInstall,
     onClickOpenReleaseNotes: openReleaseNotes,
     onToggleReleaseNotesSubdockVisibility: toggleReleaseNotesSubdockVisibility,
     onSetReleaseNotesSubdockVisibility: (visible: boolean) => setReleaseNotesSubdockVisibility(visible),

@@ -21,7 +21,8 @@ export interface Props {
   classes?: Classes,
   updateAvailable: boolean,
   releaseName: string,
-  onClickQuitAndInstall: () => any,
+  onClickOpenReleaseNotes: () => any,
+  onClickRemindLater: () => any,
 }
 
 const styles = (theme: Theme) => ({
@@ -77,7 +78,7 @@ const styles = (theme: Theme) => ({
 @injectSheet(styles)
 export default class AutoUpdateSubdock extends React.PureComponent<Props, {}> {
   render() {
-    const { classes, updateAvailable, releaseName, onClickQuitAndInstall } = this.props;
+    const { classes, updateAvailable, releaseName, onClickOpenReleaseNotes, onClickRemindLater } = this.props;
 
     return (
       <div className={classes!.container}>
@@ -95,9 +96,14 @@ export default class AutoUpdateSubdock extends React.PureComponent<Props, {}> {
               <p>A new version is available 🎉</p>
               <p>({releaseName})</p>
               <Button
-                onClick={onClickQuitAndInstall}
+                onClick={onClickOpenReleaseNotes}
               >
-                Quit to install the latest version
+                View downloads
+              </Button>
+              <Button
+                onClick={onClickRemindLater}
+              >
+                Remind me later
               </Button>
             </div>
             :

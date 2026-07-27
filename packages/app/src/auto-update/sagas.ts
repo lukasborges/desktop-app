@@ -1,27 +1,31 @@
 import log from 'electron-log';
+import ms = require('ms');
 import { all, call, fork, put, select } from 'redux-saga/effects';
 // @ts-ignore - no typing for redux-ui
 import { updateUI } from 'redux-ui/transpiled/action-reducer';
+
 import { READY } from '../app/duck';
+import { BrowserXAppWorker } from '../app-worker';
 import services from '../services/servicesManager';
 import { dispatchUrlSaga } from '../urlrouter/sagas';
 import { consumeLockFileIfExists, createLockFile, FILE } from '../utils/AppData';
 import { callService, periodicTick, serviceAddObserverChannel, takeEveryWitness } from '../utils/sagas';
+
 import {
   CHECK_FOR_UPDATES,
   OPEN_RELEASE_NOTES,
   QUIT_AND_INSTALL,
   SET_UPDATE_IS_AVAILABLE,
+  setReleaseNotesSubdockVisibility,
   setCheckingForUpdate,
   setDownloadingUpdate,
   setUpdateIsAvailable,
   toggleReleaseNotesSubdockVisibility,
 } from './duck';
-import { isDownloadingUpdate, isUpdateAvailable } from './selectors';
-import ms = require('ms');
-import { BrowserXAppWorker } from '../app-worker';
+import { getReleaseName, isDownloadingUpdate, isUpdateAvailable } from './selectors';
 
 const POLL_UPDATE_INTERVAL = ms('30mins');
+const RELEASES_URL = 'https://github.com/lukasborges/platform/releases';
 
 function* onQuitAndInstall() {
   services.electronApp.quit();
@@ -55,8 +59,9 @@ function* initAppUpdater() {
         yield put(setCheckingForUpdate(false));
         yield put(setDownloadingUpdate(false));
       }),
-      takeEveryWitness(updateAvailableChannel, function* handle() {
-        yield put(setDownloadingUpdate(true));
+      takeEveryWitness(updateAvailableChannel, function* handle({ releaseName }: { releaseName: string }) {
+        yield put(setUpdateIsAvailable(releaseName));
+        yield put(setReleaseNotesSubdockVisibility(true));
       }),
       takeEveryWitness(errorChannel, function* handle({ message }: { message: string }) {
         log.error(new Error(message));
@@ -65,6 +70,10 @@ function* initAppUpdater() {
       }),
     ]);
   });
+
+  if (!process.env.STATION_NO_CHECK_FOR_UPDATE) {
+    yield call(checkForUpdates);
+  }
 }
 
 function* checkForUpdates() {
@@ -80,7 +89,13 @@ function* checkForUpdates() {
 }
 
 function* doOpenReleaseNotes() {
-  yield call(dispatchUrlSaga, { url: 'https://github.com/lukasborges/platform/releases/' });
+  const releaseName = yield select(getReleaseName);
+  const normalizedReleaseName = releaseName && releaseName.replace(/^v/, '');
+  const url = normalizedReleaseName
+    ? `${RELEASES_URL}/tag/v${encodeURIComponent(normalizedReleaseName)}`
+    : RELEASES_URL;
+
+  yield call(dispatchUrlSaga, { url });
 }
 
 function* consumeUpdateLockFile() {
