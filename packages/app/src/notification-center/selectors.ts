@@ -33,6 +33,11 @@ export const isVisible = (state: StationState): boolean =>
 export const getNotifications = (state: StationState) =>
   state.getIn(['notificationCenter', 'notifications']);
 
+export const getNotificationBadgeCount = createSelector(
+  [getNotifications, getSnoozeDuration],
+  (notifications, snoozeDuration) => snoozeDuration ? 0 : notifications.size
+);
+
 export const getFullNotifications = createSelector(
   getNotifications, getNotificationsObjects,
   (orderedIds, notifications) => {

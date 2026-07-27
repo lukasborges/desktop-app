@@ -89,7 +89,9 @@ export class ElectronAppServiceImpl extends ElectronAppService implements RPC.In
   }
 
   async dockSetBadge(badge: string) {
-    app.dock.setBadge(badge);
+    if (app.dock) {
+      app.dock.setBadge(badge);
+    }
   }
 
   async getAppMetadata() {
