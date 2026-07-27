@@ -58,3 +58,4 @@ yalc.lock
 # Generated files
 **/*generated.ts
 **/*generated.tsx
+/.opencommitignore
