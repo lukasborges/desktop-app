@@ -6,9 +6,19 @@ import { uniq } from 'ramda';
 import { BehaviorSubject } from 'rxjs';
 import { URL as NodeURL } from 'url';
 import { isNotInstallableApplication } from '../application-settings/selectors';
-import { getApplicationId, getApplicationManifestURL, getApplicationCustomURL } from '../applications/get';
+import {
+  getApplicationCustomURL,
+  getApplicationId,
+  getApplicationIdentityId,
+  getApplicationManifestURL,
+} from '../applications/get';
 import ManifestProvider from '../applications/manifest-provider/manifest-provider';
-import { getApplicationById, getApplications, getApplicationCustomURLsWithApplicationId } from '../applications/selectors';
+import {
+  getApplicationById,
+  getApplicationDescription,
+  getApplications,
+  getApplicationCustomURLsWithApplicationId,
+} from '../applications/selectors';
 import { ApplicationImmutable } from '../applications/types';
 import { handleError } from '../services/api/helpers';
 import { getTabIdMatchingURL } from '../tabs/selectors';
@@ -88,12 +98,27 @@ export default class URLRouter {
       }
 
       // Deeplink
-      const application = await this.findApplicationInInstalledScopes(url);
-      if (application) {
+      const applications = await this.findApplicationsInInstalledScopes(url);
+      if (applications.length === 1) {
+        const application = applications[0];
         const applicationId = getApplicationId(application);
         return (newWindow)
           ? [URLRouterAction.NEW_WINDOW, { applicationId }]
           : [URLRouterAction.NEW_TAB, { applicationId }];
+      }
+      if (applications.length > 1) {
+        const application = this.findApplicationWithOriginIdentity(applications, origin);
+        if (application) {
+          const applicationId = getApplicationId(application);
+          return (newWindow)
+            ? [URLRouterAction.NEW_WINDOW, { applicationId }]
+            : [URLRouterAction.NEW_TAB, { applicationId }];
+        }
+
+        const choices = await Promise.all(applications.map(
+          (candidate, index) => this.toApplicationRoutingChoice(candidate, index)
+        ));
+        return [URLRouterAction.CHOOSE_APPLICATION, { applications: choices }];
       }
 
       // Others
@@ -136,19 +161,29 @@ export default class URLRouter {
    * @param url URL to check against all the installed scopes
    */
   async findApplicationInInstalledScopes(url: string): Promise<ApplicationImmutable | null> {
+    const applications = await this.findApplicationsInInstalledScopes(url);
+    return applications[0] || null;
+  }
+
+  /**
+   * Returns every installed application whose scope covers the URL. Custom URL
+   * applications remain first for callers that intentionally need one result.
+   */
+  async findApplicationsInInstalledScopes(url: string): Promise<ApplicationImmutable[]> {
     const allApps: ApplicationImmutable[] = getApplications(this.state).toArray();
     const appsWithCustomUrls: ApplicationImmutable[] = allApps.filter(app => !!getApplicationCustomURL(app));
     const appsWithoutCustomUrls: ApplicationImmutable[] = allApps.filter(app => !getApplicationCustomURL(app));
 
     const apps = [...appsWithCustomUrls, ...appsWithoutCustomUrls];
+    const matches: ApplicationImmutable[] = [];
 
     for (const app of apps) {
       const scopes = await this.getScopes(app);
 
-      if (this.searchScopes(url, scopes)) return app;
+      if (this.searchScopes(url, scopes)) matches.push(app);
     }
 
-    return null;
+    return matches;
   }
 
   /**
@@ -295,6 +330,40 @@ export default class URLRouter {
 
   private hasMatchingTab(url: string) {
     return getTabIdMatchingURL(this.state, url);
+  }
+
+  private findApplicationWithOriginIdentity(
+    applications: ApplicationImmutable[],
+    origin?: RoutingOrigin,
+  ): ApplicationImmutable | undefined {
+    if (!origin || !origin.applicationId) return undefined;
+
+    const originApplication = getApplicationById(this.state, origin.applicationId);
+    if (!originApplication) return undefined;
+
+    const identityId = getApplicationIdentityId(originApplication);
+    if (!identityId) return undefined;
+
+    const matchingApplications = applications.filter(
+      application => getApplicationIdentityId(application) === identityId
+    );
+
+    return matchingApplications.length === 1 ? matchingApplications[0] : undefined;
+  }
+
+  private async toApplicationRoutingChoice(application: ApplicationImmutable, index: number) {
+    const applicationId = getApplicationId(application);
+    const manifestURL = getApplicationManifestURL(application);
+    const bxApp = await this.manifestProvider.getFirstValue(manifestURL);
+    const applicationName = bxApp && bxApp.manifest && bxApp.manifest.name
+      ? bxApp.manifest.name
+      : 'Application';
+    const description = getApplicationDescription(this.state, application);
+    const label = description
+      ? `${applicationName} — ${description}`
+      : `${applicationName} — Instance ${index + 1}`;
+
+    return { applicationId, label };
   }
 
   // Gather all the scopes (+ extended scopes) recorded in the manifest of an App

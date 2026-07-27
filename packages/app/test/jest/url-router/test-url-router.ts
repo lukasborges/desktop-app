@@ -1,4 +1,8 @@
 import UrlRouter from '../../../src/urlrouter/URLRouter';
+import {
+  isMicrosoftTeamsMeetingUrl,
+  unwrapGoogleRedirectUrl,
+} from '../../../src/utils/applicationLinks';
 
 const fakeState = {};
 const fakeManifestProvider = {};
@@ -80,5 +84,44 @@ describe('Url Router', () => {
         expect(actual).toBeFalsy();
       });
     });
+  });
+});
+
+describe('Application deep links', () => {
+  it('recognizes Microsoft Teams meeting URLs without matching lookalike hosts', () => {
+    expect(isMicrosoftTeamsMeetingUrl(
+      'https://teams.live.com/meet/9383241103607?p=l8i9Mb63rHfWWzfwn0'
+    )).toBe(true);
+    expect(isMicrosoftTeamsMeetingUrl(
+      'https://teams.microsoft.com/l/meetup-join/example'
+    )).toBe(true);
+    expect(isMicrosoftTeamsMeetingUrl('https://teams.live.com/')).toBe(false);
+    expect(isMicrosoftTeamsMeetingUrl(
+      'https://teams.live.com.evil.example/meet/9383241103607'
+    )).toBe(false);
+    expect(isMicrosoftTeamsMeetingUrl('not a URL')).toBe(false);
+  });
+
+  it('unwraps Google redirect URLs before routing', () => {
+    const teamsUrl = 'https://teams.live.com/meet/9383241103607?p=l8i9Mb63rHfWWzfwn0';
+    const googleUrl = `https://www.google.com/url?q=${encodeURIComponent(teamsUrl)}`;
+
+    expect(unwrapGoogleRedirectUrl(googleUrl)).toBe(teamsUrl);
+    expect(isMicrosoftTeamsMeetingUrl(unwrapGoogleRedirectUrl(googleUrl))).toBe(true);
+  });
+
+  it('unwraps Google redirects for any catalog application', () => {
+    const zoomUrl = 'https://zoom.us/j/123456789';
+    const googleUrl = `https://www.google.com/url?url=${encodeURIComponent(zoomUrl)}`;
+
+    expect(unwrapGoogleRedirectUrl(googleUrl)).toBe(zoomUrl);
+  });
+
+  it('does not unwrap lookalike hosts or unsafe protocols', () => {
+    const lookalike = 'https://www.google.com.evil.example/url?q=https://teams.live.com/meet/123';
+    const unsafe = 'https://www.google.com/url?q=javascript%3Aalert(1)';
+
+    expect(unwrapGoogleRedirectUrl(lookalike)).toBe(lookalike);
+    expect(unwrapGoogleRedirectUrl(unsafe)).toBe(unsafe);
   });
 });
