@@ -30,24 +30,24 @@ yarn workspace platform-desktop-app gql-gen
 
 The development, build and lint scripts also run GraphQL generation automatically.
 
-The hide-main-menu setting is a compact working example:
+The download-prompt setting is a compact working example:
 
 - Schema fields: [`schema.graphql`](schema.graphql)
-- Query and mutation: [`../settings/components/SettingsHideMainMenu/queries@local.gql`](../settings/components/SettingsHideMainMenu/queries@local.gql)
+- Query and mutation: [`../settings/components/SettingsDownloads/queries@local.gql`](../settings/components/SettingsDownloads/queries@local.gql)
 - Resolver: [`../app/resolvers.ts`](../app/resolvers.ts)
-- Generated HOC usage: [`../settings/components/SettingsHideMainMenu/SettingsHideMainMenu.tsx`](../settings/components/SettingsHideMainMenu/SettingsHideMainMenu.tsx)
+- Generated HOC usage: [`../settings/components/SettingsDownloads/SettingsDownloadFolder.tsx`](../settings/components/SettingsDownloads/SettingsDownloadFolder.tsx)
 
 ## Local operations
 
 Client documents use the `@local` directive:
 
 ```graphql
-query GetHideMainMenuStatus @live @local {
-  hideMainMenu
+query GetPromptDownloadStatus @live @local {
+  promptDownloadEnabled
 }
 
-mutation EnableHideMainMenu($hide: Boolean!) @local {
-  setHideMainMenu(hide: $hide)
+mutation EnablePromptDownload($enabled: Boolean!) @local {
+  setPromptDownload(enabled: $enabled)
 }
 ```
 
@@ -60,8 +60,8 @@ A resolver may return a value, a promise or an RxJS Observable. Use `subscribeSt
 ```typescript
 const resolvers: Resolvers = {
   Query: {
-    hideMainMenu: (_parent, _args, context) =>
-      subscribeStore(context.store, getAppHideMainMenuStatus)
+    promptDownloadEnabled: (_parent, _args, context) =>
+      subscribeStore(context.store, getPromptDownloadEnabled)
         .pipe(map(Boolean), distinctUntilChanged()),
   },
 };
