@@ -11,13 +11,11 @@ import { openProcessManager } from '../../app/duck';
 import { areBetaIncludedInUpdates, getDownloadFolder } from '../../app/selectors';
 import { clickBrowseDownloadFolder, revealPathInFinder } from '../../downloads/duck';
 import { StationState } from '../../types';
-import SettingsAutoLaunch from './SettingsAutoLaunch/SettingsAutoLaunch';
+
 import SettingsDeveloperTools from './SettingsDeveloperTools';
 import SettingsDownloadFolder from './SettingsDownloads/SettingsDownloadFolder';
 import SettingsOpenSourceInfo from './SettingsOpenSourceInfo';
 import SettingsUpdatesButton from './SettingsUpdatesButton/SettingsUpdatesButton';
-import SettingsHideMainMenu from './SettingsHideMainMenu/SettingsHideMainMenu';
-import { isDarwin } from '../../utils/process';
 
 export interface Classes {
   container: string,
@@ -77,10 +75,6 @@ class SettingsPanelGeneralImpl extends React.PureComponent<Props, {}> {
 
           <SettingsUpdatesButton />
         </div>
-
-        <SettingsAutoLaunch />
-
-        { !isDarwin && <SettingsHideMainMenu /> }
 
         <SettingsDownloadFolder
           currentDownloadFolder={this.props.downloadFolder}
