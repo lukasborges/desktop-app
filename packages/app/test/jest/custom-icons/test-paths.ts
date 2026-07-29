@@ -16,7 +16,9 @@ describe('custom icon paths', () => {
     expect(key).toMatch(/^[a-f0-9]{64}$/);
     expect(path.basename(iconPath)).toBe(`${key}.png`);
     expect(iconPath).not.toContain(applicationId);
-    expect(path.dirname(iconPath)).toBe('/tmp/platform-profile/custom-icons');
+    expect(path.dirname(iconPath)).toBe(
+      path.join('/tmp/platform-profile', 'custom-icons'),
+    );
   });
 
   test('only creates candidates inside the custom icon directory', () => {
