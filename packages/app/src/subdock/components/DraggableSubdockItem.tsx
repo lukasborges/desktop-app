@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DragSource, DragSourceMonitor, DropTarget } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import SubdockItem, { BareApplication, WrappedActions } from './SubdockItem';
-import { findDOMNode } from 'react-dom';
 import { compose } from 'redux';
 import { withReorderFavoriteMutation, withReorderTabMutation } from '../../tabs/queries@local.gql.generated';
 
@@ -64,7 +63,7 @@ const SubdockItemTarget = {
   drop: () => ({
     type: 'DND_SUBDOCK',
   }),
-  hover(props: Props, monitor: any, component: any) {
+  hover(props: Props, monitor: any, component: DraggableSubdockItemImpl | null) {
     const { favorite, reorderTab, reorderFavorite } = props;
     const { tabId, index: dragIndex } = monitor.getItem();
     const hoverIndex = props.index;
@@ -75,7 +74,7 @@ const SubdockItemTarget = {
     }
 
     // Determine rectangle on screen
-    const domNode = findDOMNode(component);
+    const domNode = component && component.getRootElement();
     if (!domNode) return;
     const hoverBoundingRect = domNode.getBoundingClientRect();
 
@@ -133,6 +132,12 @@ const collectSource = (connect: any, monitor: any) => ({
 @DropTarget(({ dragType }: Props) => dragType, SubdockItemTarget, collectTarget)
 @DragSource(({ dragType }: Props) => dragType, dockAppSource, collectSource)
 class DraggableSubdockItemImpl extends React.PureComponent<Props> {
+  private rootElement: HTMLDivElement | null;
+
+  getRootElement() {
+    return this.rootElement;
+  }
+
   componentDidMount() {
     // Use empty image as a drag preview so browsers don't draw it
     // and we can draw whatever we want on the custom drag layer instead.
@@ -154,7 +159,12 @@ class DraggableSubdockItemImpl extends React.PureComponent<Props> {
     const opacity = isDragging ? 0 : undefined;
 
     return connectDragSource && connectDropTarget && connectDragSource(connectDropTarget(
-      <div style={{ opacity }}>
+      <div
+        ref={(element: HTMLDivElement | null) => {
+          this.rootElement = element;
+        }}
+        style={{ opacity }}
+      >
         <SubdockItem
           application={application}
           actions={actions}

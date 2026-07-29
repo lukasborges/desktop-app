@@ -1,7 +1,6 @@
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
-import ReactDOM = require('react-dom');
 
 import { ActiveTab } from '../../Container';
 
@@ -36,7 +35,7 @@ type OwnProps = SubdockActionsProps & {
 export type Props = OwnProps & InjectSheetProps;
 
 class SubdockPanel extends React.PureComponent<Props, State> {
-  tabsRef: React.RefObject<HTMLDivElement> = React.createRef();
+  tabsElement: HTMLDivElement | null;
 
   constructor(props: Props) {
     super(props);
@@ -58,10 +57,9 @@ class SubdockPanel extends React.PureComponent<Props, State> {
     if (!application) return;
     onOpenNewTab();
 
-    if (this.tabsRef.current) {
-      const element = ReactDOM.findDOMNode(this.tabsRef.current) as Element;
-      if (element && element.scrollTop) {
-        element.scrollTop = 0;
+    if (this.tabsElement) {
+      if (this.tabsElement.scrollTop) {
+        this.tabsElement.scrollTop = 0;
       }
     }
   }
@@ -119,7 +117,9 @@ class SubdockPanel extends React.PureComponent<Props, State> {
 
         <Tabs
           {...this.props}
-          ref={this.tabsRef}
+          innerRef={(element: HTMLDivElement | null) => {
+            this.tabsElement = element;
+          }}
           application={bareApp}
           tabs={reducedTabs}
           activeTab={activeTab}

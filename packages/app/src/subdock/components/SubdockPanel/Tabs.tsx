@@ -43,7 +43,7 @@ export interface RawTabActions {
 }
 
 export type OwnProps = SubdockActionsProps & {
-  ref?: React.Ref<HTMLDivElement>,
+  innerRef?: (element: HTMLDivElement | null) => void,
   className?: string,
   application: MinimalSubdockApplication,
   tabs: Tab[],

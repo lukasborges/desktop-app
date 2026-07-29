@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DragSource, DragSourceMonitor, DropTarget } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { findDOMNode } from 'react-dom';
 import { compose } from 'react-apollo';
 import { oc } from 'ts-optchain';
 
@@ -70,7 +69,7 @@ const dockAppTarget = {
   drop: () => ({
     type: 'DND_DOCK',
   }),
-  hover(props: Props, monitor: any, component: any) {
+  hover(props: Props, monitor: any, component: DraggableAppDockIcon | null) {
     const { index: dragIndex, applicationId: dragApplicationId, manifestURL } = monitor.getItem();
     const hoverIndex = props.index;
 
@@ -80,7 +79,7 @@ const dockAppTarget = {
     }
 
     // Determine rectangle on screen
-    const domNode = findDOMNode(component);
+    const domNode = component && component.getRootElement();
     if (!domNode) return;
     const hoverBoundingRect = domNode.getBoundingClientRect();
 
@@ -129,6 +128,12 @@ const dockAppTarget = {
   isDragging: monitor.isDragging(),
 }))
 class DraggableAppDockIcon extends React.PureComponent<Props> {
+  private rootElement: HTMLDivElement | null;
+
+  getRootElement() {
+    return this.rootElement;
+  }
+
   componentDidMount() {
     // Use empty image as a drag preview so browsers don't draw it
     // and we can draw whatever we want on the custom drag layer instead.
@@ -151,7 +156,12 @@ class DraggableAppDockIcon extends React.PureComponent<Props> {
     const opacity = isDragging ? 0 : undefined;
 
     return connectDragSource && connectDropTarget && connectDragSource(connectDropTarget(
-      <div style={{ opacity }}>
+      <div
+        ref={(element: HTMLDivElement | null) => {
+          this.rootElement = element;
+        }}
+        style={{ opacity }}
+      >
         <AppDockIcon
           applicationId={applicationId}
           active={active}
