@@ -72,6 +72,8 @@ extraResources:
 
 files:
   - '!**/*.map'
+  - '!node_modules/electron{,/**}'
+  - '!node_modules/@electron-internal{,/**}'
   - from: 'src/static/icon--provider'
     to: 'static/icon--provider'
     filter:
