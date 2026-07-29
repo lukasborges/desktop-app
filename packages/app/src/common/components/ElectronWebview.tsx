@@ -4,7 +4,6 @@ import camelCase = require('lodash.camelcase');
 // @ts-ignore: no declaration file
 import { shallowEquals } from 'redux-observers';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { logger } from '../../api/logger';
 import { Omit } from '../../types';
 import { dissoc } from 'ramda';
@@ -239,7 +238,7 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
   }
 
   componentDidMount() {
-    const container = ReactDOM.findDOMNode(this.ref);
+    const container = this.ref;
 
     let propString = '';
     Object.keys(this.props).forEach((propName) => {

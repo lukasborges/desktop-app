@@ -1,6 +1,5 @@
 import { GradientType, ThemeTypes, withGradient } from '@getstation/theme';
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import {
@@ -85,7 +84,7 @@ const styles = (theme: ThemeTypes) => ({
 
 @injectSheet(styles)
 class RecentSubdock extends React.PureComponent<Props> {
-  private highlightedItemComponent: BangItem | null;
+  private highlightedItemElement: HTMLLIElement | null;
 
   constructor(props: Props) {
     super(props);
@@ -137,9 +136,8 @@ class RecentSubdock extends React.PureComponent<Props> {
   }
 
   componentDidUpdate() {
-    const item = findDOMNode(this.highlightedItemComponent);
-    if (item) {
-      item.scrollIntoView({ behavior: 'smooth' });
+    if (this.highlightedItemElement) {
+      this.highlightedItemElement.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
@@ -239,8 +237,8 @@ class RecentSubdock extends React.PureComponent<Props> {
                 selected={isHighLighted}
                 onClick={() => selectItem(entry, 'click', index)}
                 smallSize={true}
-                ref={(itemComp: HTMLDivElement) => {
-                  if (isHighLighted) this.highlightedItemComponent = itemComp;
+                innerRef={(element: HTMLLIElement | null) => {
+                  if (isHighLighted) this.highlightedItemElement = element;
                 }}
               />;
             })}

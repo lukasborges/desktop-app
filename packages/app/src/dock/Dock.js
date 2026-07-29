@@ -5,7 +5,6 @@ import mod from 'mod-op';
 import PropTypes from 'prop-types';
 import { findIndex, prop, propEq, tail } from 'ramda';
 import React from 'react';
-import { findDOMNode } from 'react-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { compose } from 'react-apollo';
 import injectSheet from 'react-jss';
@@ -180,15 +179,14 @@ class DockImpl extends React.PureComponent {
 
   scrollToHighlightedItemComponent = (el) => {
     if (this.shouldScrollToHighlightedItemComponent) {
-      const item = findDOMNode(el);
-      if (item) {
+      if (el) {
         // Since C73, the traditional `DOMElement.scrollIntoView()`
         // **seemed** to trigger a scroll even if the element is already
         // visible.
         // Using the `DOMElement.scrollIntoViewIfNeeded()` seemed to
         // avoid that, but there is no 'smooth' option
         // That's why we're using the ponyfill `smooth-scroll-into-view-if-needed`
-        scrollIntoViewIfNeeded(item, {
+        scrollIntoViewIfNeeded(el, {
           behavior: 'smooth',
           scrollMode: 'if-needed',
           block: 'nearest',
@@ -250,7 +248,7 @@ class DockImpl extends React.PureComponent {
     // we let a 50ms delay for the UI to have mounted
     // the application
     setTimeout(() => {
-      const node = findDOMNode(this.state.iconRefs[applicationId]);
+      const node = this.state.iconRefs[applicationId];
       if (!node) return;
       scrollIntoViewIfNeeded(node, {
         behavior: 'smooth',

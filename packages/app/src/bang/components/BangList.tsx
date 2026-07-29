@@ -5,7 +5,6 @@ import * as scrollIntoView from 'dom-scroll-into-view';
 // @ts-ignore: no declaration file
 import * as isBlank from 'is-blank';
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import { EMPTY_SECTION, flattenResults, sectionsAlwaysExpanded } from '../api';
@@ -170,7 +169,8 @@ const itemIsCollapsed = (
   },
 }))
 export default class BangList extends React.PureComponent<Props, State> {
-  private highlightedItemComponent: Element | null;
+  private highlightedItemElement: HTMLLIElement | null;
+  private listElement: HTMLDivElement | null;
 
   constructor(props: Props) {
     super(props);
@@ -245,10 +245,10 @@ export default class BangList extends React.PureComponent<Props, State> {
       this.setState({ collapseSections: {} });
     }
 
-    if (this.highlightedItemComponent) {
+    if (this.highlightedItemElement && this.listElement) {
       scrollIntoView(
-        findDOMNode(this.highlightedItemComponent),
-        findDOMNode(this),
+        this.highlightedItemElement,
+        this.listElement,
         { onlyScrollIfNeeded: true }
       );
     }
@@ -338,8 +338,8 @@ export default class BangList extends React.PureComponent<Props, State> {
         themeColor={item.themeColor!}
         // todo change all `highlighted` by `selected`
         selected={highlighted}
-        ref={(itemComp: Element) => {
-          if (highlighted) this.highlightedItemComponent = itemComp;
+        innerRef={(element: HTMLLIElement | null) => {
+          if (highlighted) this.highlightedItemElement = element;
         }}
         onClick={() => this.props.onItemClick(id, position)}
       />
@@ -350,7 +350,12 @@ export default class BangList extends React.PureComponent<Props, State> {
     const { classes, items, historyItems, forEmptyQuery } = this.props;
 
     return (
-      <div className={classes!.list}>
+      <div
+        className={classes!.list}
+        ref={(element: HTMLDivElement | null) => {
+          this.listElement = element;
+        }}
+      >
         {forEmptyQuery ? (
           <>
             <>
