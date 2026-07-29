@@ -41,6 +41,7 @@ export interface OwnProps {
   onClick: () => void,
   ctrlTabCycling?: boolean,
   smallSize?: boolean,
+  innerRef?: (element: HTMLLIElement | null) => void,
 }
 
 interface State {
@@ -174,10 +175,11 @@ class BangItem extends React.PureComponent<OwnProps & InjectSheetProps, State> {
   }
 
   render() {
-    const { classes, selected, onClick, label, context } = this.props;
+    const { classes, selected, onClick, label, context, innerRef } = this.props;
 
     return (
       <li
+        ref={innerRef}
         onMouseEnter={this.setIsHover}
         onMouseLeave={this.unsetIsHover}
         onClick={onClick}
