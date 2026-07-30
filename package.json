@@ -15,6 +15,7 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "yarn workspaces foreach --all --topological run build",
+    "catalog:refresh-icons": "node scripts/application_manifests/refresh-icons.mjs",
     "clean": "yarn workspaces foreach --all run clean && rimraf release",
     "release": "yarn clean && yarn workspaces foreach --all --topological run release",
     "release:arch": "bash ./scripts/build-arch.sh",

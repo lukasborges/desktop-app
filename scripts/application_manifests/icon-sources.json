@@ -1,0 +1,51 @@
+{
+  "87": "https://basecamp.com",
+  "100": "https://atlassian.com",
+  "14": {
+    "page": "https://workspace.google.com/products/gmail/",
+    "icon": "https://www.gstatic.com/images/branding/productlogos/gmail_2026/v2/web/192px.svg"
+  },
+  "18": {
+    "page": "https://workspace.google.com/products/calendar/",
+    "icon": "https://www.gstatic.com/images/branding/productlogos/calendar_2026/v2/web/192px.svg"
+  },
+  "21": {
+    "page": "https://slack.com/media-kit",
+    "icon": "https://a.slack-edge.com/80588/marketing/img/meta/slack_hash_256.png"
+  },
+  "27": {
+    "page": "https://slite.com",
+    "icon": "https://storage.googleapis.com/slite-cdn/slite-assets/apple-touch-icon.png?v=2"
+  },
+  "14025": "https://gotomeeting.com",
+  "14658": false,
+  "14825": "https://taiga.io",
+  "156": {
+    "page": "https://workspace.google.com/products/keep/",
+    "icon": "https://www.gstatic.com/images/branding/productlogos/keep_2026/v2/web/192px.svg"
+  },
+  "157": "https://todoist.com",
+  "22734": {
+    "page": "https://claude.ai",
+    "icon": "https://claude.ai/images/claude_app_icon.png"
+  },
+  "299": {
+    "page": "https://workspace.google.com/products/meet/",
+    "icon": "https://www.gstatic.com/images/branding/productlogos/meet_2026/v2/web/192px.svg"
+  },
+  "338": "https://youtrack.com",
+  "425": {
+    "page": "https://coda.io",
+    "icon": "https://cdn.coda.io/icons/png/color/coda-192.png"
+  },
+  "517": {
+    "page": "https://workspace.google.com/products/chat/",
+    "icon": "https://www.gstatic.com/images/branding/productlogos/chat_2026/v2/web/192px.svg"
+  },
+  "557": "https://rocket.chat",
+  "573": {
+    "page": "https://wire.com",
+    "icon": "https://app.wire.com/image/meta/wire-icon-256.png"
+  },
+  "682": "https://zulip.com"
+}

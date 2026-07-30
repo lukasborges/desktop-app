@@ -41,9 +41,15 @@ export default class AppStoreApplicationLogo extends React.PureComponent<AppStor
     return (
       <div className={classes!.iconContainer}>
         { iconURL ?
-          <svg className={classes!.icon}>
+          <svg className={classes!.iconFrame}>
             {isAnimationStopped &&
-              <image xlinkHref={`${iconURL}`} width={40} height={40} className={classes!.icon}/>
+              <image
+                xlinkHref={`${iconURL}`}
+                width={24}
+                height={24}
+                preserveAspectRatio="xMidYMid meet"
+                className={classes!.icon}
+              />
             }
           </svg>
           :

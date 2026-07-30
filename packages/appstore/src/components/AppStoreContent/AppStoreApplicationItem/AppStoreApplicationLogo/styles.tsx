@@ -1,15 +1,3 @@
-import * as isBlank from 'is-blank';
-
-import { AppStoreApplicationLogoProps } from './AppStoreApplicationLogo';
-
-const defaultThemeColor = '#3070C2';
-const checkThemeColor = (color: string | undefined) => {
-  if (isBlank(color)) return false;
-  if (color!.length !== 7) return false;
-
-  return true;
-};
-
 const styles = () => ({
   iconContainer: {
     margin: '0 10px 0 0',
@@ -17,14 +5,23 @@ const styles = () => ({
     width: 40,
     minWidth: 40,
     height: 40,
-    backgroundColor: (props: AppStoreApplicationLogoProps) => checkThemeColor(props.themeColor) ? props.themeColor : defaultThemeColor,
-    borderRadius: '50%',
+    backgroundColor: 'rgba(255, 255, 255, .09)',
+    borderRadius: 11,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconFrame: {
+    display: 'inline-block',
+    width: 24,
+    height: 24,
+    borderRadius: 7,
     overflow: 'hidden',
   },
   icon: {
     display: 'inline-block',
-    width: 40,
-    height: 40,
+    width: 24,
+    height: 24,
   },
   animationIcon: {
     position: 'absolute',
@@ -35,6 +32,7 @@ const styles = () => ({
 
 export interface AppStoreApplicationLogoClasses {
   iconContainer: string,
+  iconFrame: string,
   icon: string,
   animationIcon: string,
 }
