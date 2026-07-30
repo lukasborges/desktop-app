@@ -11,6 +11,7 @@ class DockItem extends React.PureComponent {
     active: PropTypes.bool.isRequired,
     badge: PropTypes.any,
     isInstanceLogoInDockIcon: PropTypes.bool.isRequired,
+    faviconURL: PropTypes.string,
     logoURL: PropTypes.string.isRequired,
     onOverStateChange: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
@@ -28,12 +29,17 @@ class DockItem extends React.PureComponent {
     iconRef: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    faviconURL: undefined,
+  };
+
   render() {
     const {
       applicationId,
       active,
       badge,
       isInstanceLogoInDockIcon,
+      faviconURL,
       logoURL,
       onOverStateChange,
       onClick,
@@ -66,6 +72,7 @@ class DockItem extends React.PureComponent {
                   active={active}
                   badge={badge}
                   isInstanceLogoInDockIcon={isInstanceLogoInDockIcon}
+                  faviconURL={faviconURL}
                   logoURL={logoURL}
                   onOverStateChange={onOverStateChange}
                   onClick={onClick}

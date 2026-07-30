@@ -44,7 +44,7 @@ import DockItem from './components/DockItem';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
 import DockIconDragLayer from './DockIconDragLayer';
 import * as dockActions from './duck';
-import { getApplicationsForDock } from './selectors';
+import { getApplicationsWithFaviconsForDock } from './selectors';
 import DockWrapper from './components/DockWrapper';
 import DockTopSection from './components/DockTopSection';
 import { getIsApplicationInstanceLogoInDock } from '../application-settings/selectors';
@@ -492,6 +492,7 @@ class DockImpl extends React.PureComponent {
               const passwordManagerLinkLogo = passwordManagerLink ? passwordManagerLink.get('avatar') : '';
               const tabAdded = applicationsTabAdded ? (applicationsTabAdded.get(applicationId) || false) : false;
               const logoURL = getApplicationIconURL(application) || passwordManagerLinkLogo;
+              const faviconURL = application.get('faviconURL');
               const isInstanceLogoInDockIcon = this.props.getIsInstanceLogoInDock(manifestURL) && logoURL;
               const isActive = !tabAdded && applicationId === this.getSelectedApplicationId();
 
@@ -502,6 +503,7 @@ class DockImpl extends React.PureComponent {
                   active={isActive}
                   badge={getApplicationBadge(application)}
                   isInstanceLogoInDockIcon={isInstanceLogoInDockIcon}
+                  faviconURL={faviconURL}
                   logoURL={logoURL}
                   onOverStateChange={this.onIconOverStateChange(applicationId)}
                   onClick={this.handleClickDockItem(applicationId)}
@@ -555,7 +557,7 @@ const Dock = compose(
   }),
   connect(
     (state) => ({
-      applications: getApplicationsForDock(state),
+      applications: getApplicationsWithFaviconsForDock(state),
       activeApplicationId: getActiveApplicationId(state),
       highlightedItemId: getUIRecentSubdockHighlightedItemId(state),
       isRecentSubdockVisible: getUIRecentSubdockIsVisible(state),

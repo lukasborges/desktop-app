@@ -1,14 +1,15 @@
 import * as Immutable from 'immutable';
 import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
-import { getApplicationId } from '../applications/get';
+
+import { getApplicationActiveTab, getApplicationId } from '../applications/get';
 import { getApplications, getBadgeForApplication } from '../applications/selectors';
 import { ApplicationImmutable, StationApplication } from '../applications/types';
 import { getOrderedFavoritesForApplicationId } from '../ordered-favorites/selectors';
 import { getOrderedTabsForApplicationId } from '../ordered-tabs/selectors';
-import { getTabsForApplication } from '../tabs/selectors';
+import { getFavicon, getLastActivityAt, getTabIsApplicationHome, getTabFavoriteId } from '../tabs/get';
+import { getTabs, getTabsForApplication } from '../tabs/selectors';
 import { StationState } from '../types';
-import { getLastActivityAt, getTabIsApplicationHome, getTabFavoriteId } from '../tabs/get';
 
 export const getDock = (state: StationState) => state.get('dock');
 
@@ -57,4 +58,12 @@ export const getApplicationsForDock = createSelector([getDock, getApplications, 
       return application.merge(Immutable.Map(extendedAttrs));
     })
     .toList()
+);
+
+export const getApplicationsWithFaviconsForDock = createSelector([getApplicationsForDock, getTabs],
+  (applications, tabs) => applications.map((application: ApplicationImmutable) => {
+    const activeTab = tabs.get(getApplicationActiveTab(application));
+    const faviconURL = activeTab ? getFavicon(activeTab) : undefined;
+    return application.merge(Immutable.Map({ faviconURL }));
+  })
 );
