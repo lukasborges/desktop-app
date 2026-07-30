@@ -19,6 +19,7 @@ export interface OwnProps {
   active?: boolean,
   badge?: string | number | null,
   isInstanceLogoInDockIcon?: boolean,
+  faviconURL?: string,
   logoURL?: string,
   /**
    * If passed to `true`, when the `AppDockIcon` will
@@ -39,6 +40,10 @@ interface GraphQLProps {
 }
 
 type Props = OwnProps & GraphQLProps;
+
+interface State {
+  failedFaviconURL?: string,
+}
 
 @injectSheet({
   anchor: {
@@ -70,15 +75,20 @@ type Props = OwnProps & GraphQLProps;
     '100%': { transform: 'scale(1)' },
   },
 })
-export class AppDockIcon extends React.PureComponent<Props> {
+export class AppDockIcon extends React.PureComponent<Props, State> {
   static defaultProps = {
     active: false,
     onClick: () => { },
     onOverStateChange: () => { },
   };
 
+  state: State = {
+    failedFaviconURL: undefined,
+  };
+
   private readonly primaryClip: string;
   private readonly secondaryClip: string;
+
   constructor(props: Props) {
     super(props);
     this.primaryClip = `logo-primary-clip-${shortid.generate()}`;
@@ -88,6 +98,8 @@ export class AppDockIcon extends React.PureComponent<Props> {
   handleMouseEnter = () => this.props.onOverStateChange!(true);
 
   handleMouseLeave = () => this.props.onOverStateChange!(false);
+
+  handleFaviconError = () => this.setState({ failedFaviconURL: this.props.faviconURL });
 
   renderSurroundingLink(element: JSX.Element): JSX.Element {
     const { active, classes, onClick, onRightClick, iconRef } = this.props;
@@ -123,21 +135,24 @@ export class AppDockIcon extends React.PureComponent<Props> {
   }
 
   renderLogos() {
-    const { classes, iconURL, isInstanceLogoInDockIcon, logoURL } = this.props;
-    const primaryURL = isInstanceLogoInDockIcon && logoURL ? logoURL : iconURL;
-    const secondaryURL = isInstanceLogoInDockIcon ? iconURL : logoURL;
+    const { classes, faviconURL, iconURL, isInstanceLogoInDockIcon, logoURL } = this.props;
+    const serviceURL = faviconURL && faviconURL !== this.state.failedFaviconURL ? faviconURL : iconURL;
+    const primaryURL = isInstanceLogoInDockIcon && logoURL ? logoURL : serviceURL;
+    const secondaryURL = isInstanceLogoInDockIcon ? serviceURL : logoURL;
+    const primaryIsFavicon = primaryURL === faviconURL;
 
     return (
       <g className={classes!.logo}>
         {primaryURL &&
           <image
             clipPath={`url(#${this.primaryClip})`}
-            height="26"
+            height={primaryIsFavicon ? 24 : 26}
             href={primaryURL}
+            onError={primaryIsFavicon ? this.handleFaviconError : undefined}
             preserveAspectRatio="xMidYMid meet"
-            width="26"
-            x="7"
-            y="7"
+            width={primaryIsFavicon ? 24 : 26}
+            x={primaryIsFavicon ? 8 : 7}
+            y={primaryIsFavicon ? 8 : 7}
           />
         }
         {secondaryURL &&
@@ -147,6 +162,7 @@ export class AppDockIcon extends React.PureComponent<Props> {
               clipPath={`url(#${this.secondaryClip})`}
               height="12"
               href={secondaryURL}
+              onError={secondaryURL === faviconURL ? this.handleFaviconError : undefined}
               preserveAspectRatio="xMidYMid meet"
               width="12"
               x="26"
