@@ -136,6 +136,34 @@ Open `db/station.db` inside the active Electron user-data directory with any SQL
 
 ## Manual Packaging
 
+### Refresh catalog icons
+
+Catalog icons are checked into `packages/app/manifests/icons` so the App Store
+works offline and does not expose catalog browsing to a third-party icon
+service. Refresh them from the canonical public service domains with:
+
+```bash
+yarn catalog:refresh-icons
+```
+
+The updater asks Icon Horse for the domain favicon, normalizes modern ICO files
+to PNG when necessary, validates the downloaded file, and keeps the existing
+icon if resolution or validation fails. Use `--dry-run` to inspect candidates
+without writing files, or `--id <manifest-id>` to update selected applications:
+
+```bash
+yarn catalog:refresh-icons --dry-run
+yarn catalog:refresh-icons --id 10 --id 129
+```
+
+When an application's `scope` or `start_url` is not its canonical public
+website, add an entry to `scripts/application_manifests/icon-sources.json`.
+Use a page URL as a string to select another hostname, or `{ "page": "...",
+"icon": "..." }` to pin an official high-resolution asset. Set an entry to
+`false` to preserve its existing icon. A self-hosted Besticon
+`/allicons.json` endpoint can be selected through `BESTICON_URL` or
+`--provider`.
+
 ### Arch Linux package
 
 The Arch package is built separately from the targets configured in
