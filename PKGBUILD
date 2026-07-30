@@ -1,6 +1,6 @@
 pkgname=platform-desktop-app
 pkgver=3.3.0.b1
-pkgrel=6
+pkgrel=7
 pkgdesc='Platform desktop application'
 arch=('x86_64')
 url='https://github.com/lukasborges/platform'
