@@ -28,7 +28,7 @@ import { observer } from '../services/lib/helpers';
 import { RPC } from '../services/lib/types';
 import { OSNotification } from '../services/services/os-notification/interface';
 import { NewNotificationProps } from '../services/services/tab-webcontents/interface';
-import { ATTACH_WEBCONTENTS_TO_TAB } from '../tab-webcontents/duck';
+import { NEW_WEBCONTENTS_ATTACHED_TO_TAB } from '../tab-webcontents/duck';
 import { getWebcontentsIdForTabId } from '../tab-webcontents/selectors';
 import { getTabApplicationId } from '../tabs/get';
 import { getTabById } from '../tabs/selectors';
@@ -301,7 +301,7 @@ function* toggleAppNotifications({ applicationId }: { applicationId: string }): 
 
 export default function* main(): SagaIterator {
   yield all([
-    takeEveryWitness(ATTACH_WEBCONTENTS_TO_TAB, interceptNotificationEventsFromWebContents),
+    takeEveryWitness(NEW_WEBCONTENTS_ATTACHED_TO_TAB, interceptNotificationEventsFromWebContents),
     takeLatestWitness(SET_SNOOZE_DURATION, sagaSnooze),
     takeLatestWitness(RESET_SNOOZE_DURATION, sagaResetSnooze),
     takeEveryWithAck(NEW_NOTIFICATION, sagaNewNotification),
