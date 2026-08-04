@@ -8,8 +8,8 @@ const styles = {
   '@global': {
     body: {
       margin: 0,
-      backgroundColor: '#17181b',
-      color: '#e8e8ea',
+      backgroundColor: 'var(--appstore-background)',
+      color: 'var(--appstore-text)',
       fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
                   sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
       fontWeight: 'normal',
@@ -26,8 +26,8 @@ const styles = {
   appStore: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#17181b',
-    color: '#e8e8ea',
+    backgroundColor: 'var(--appstore-background)',
+    color: 'var(--appstore-text)',
     overflow: ({ isAppModalOpen }: WithAppModalStatusProps) => isAppModalOpen ? 'hidden' : 'visible',
     minWidth: '300px',
     '-webkit-overflow-scrolling': 'touch',

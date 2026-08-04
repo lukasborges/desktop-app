@@ -21,11 +21,11 @@ export interface StateToProps {
 const styles = (_theme: Theme) => ({
   container: {
     width: 250,
-    backgroundColor: '#202124',
+    backgroundColor: 'var(--app-surface-elevated)',
     backgroundImage: 'none',
-    border: '1px solid rgba(255, 255, 255, .1)',
+    border: '1px solid var(--app-border)',
     borderRadius: 10,
-    boxShadow: '0 14px 42px rgba(0, 0, 0, .46)',
+    boxShadow: '0 14px 42px var(--app-shadow)',
     overflow: 'hidden',
   },
 });

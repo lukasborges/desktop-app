@@ -71,7 +71,7 @@ const styles = (theme: ThemeTypes) => ({
     left: 0,
     ...theme.mixins.size('100%'),
     zIndex: 101,
-    backgroundColor: '#16171a',
+    backgroundColor: 'var(--app-surface)',
   },
   section: {
     display: 'flex',
@@ -80,8 +80,8 @@ const styles = (theme: ThemeTypes) => ({
     flexDirection: 'column',
     width: 490,
     height: '100%',
-    backgroundColor: '#f4f4f5',
-    borderRight: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-surface-raised)',
+    borderRight: '1px solid var(--app-border-subtle)',
   },
   sectionHeader: {
     padding: [60, 60, 0, 60],
@@ -99,7 +99,7 @@ const styles = (theme: ThemeTypes) => ({
   },
   illustration: {
     flex: 1,
-    backgroundColor: '#16171a',
+    backgroundColor: 'var(--app-surface)',
     backgroundImage: 'url("static/illustrations/illustration--onboarding@2x.png")',
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
@@ -107,8 +107,8 @@ const styles = (theme: ThemeTypes) => ({
   onboardingDock: {
     width: 60,
     height: '100%',
-    backgroundColor: '#2b2c31',
-    borderLeft: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-rail-background)',
+    borderLeft: '1px solid var(--app-border-subtle)',
     padding: [60, 15, 20],
     transition: '300ms ease-in-out',
   },

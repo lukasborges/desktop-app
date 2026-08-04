@@ -12,10 +12,11 @@ import { Icon, IconSymbol } from '@getstation/theme';
     top: 0,
     right: 0,
     zIndex: theme.$zIndexUltime,
-    backgroundColor: props => theme.mixinDarkenColor(props.themeColors[0])
+    backgroundColor: 'var(--app-surface-elevated)',
+    border: '1px solid var(--app-border)',
   },
   searchIcon: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'var(--app-active)',
     ...theme.avatarMixin('24px'),
     margin: '5px',
   },
@@ -27,11 +28,11 @@ import { Icon, IconSymbol } from '@getstation/theme';
     marginTop: '7px',
     padding: '0 45px 0 4px',
     width: '220px',
-    color: 'rgba(255, 255, 255, 0.6)',
-    caretColor: 'rgba(255, 255, 255, 0.6)',
+    color: 'var(--app-text-primary)',
+    caretColor: 'var(--app-text-primary)',
     ...theme.fontMixin(14),
     '&::selection': {
-      background: 'white'
+      background: 'var(--app-active)'
     }
   },
   number: {
@@ -40,7 +41,7 @@ import { Icon, IconSymbol } from '@getstation/theme';
     marginTop: '9px',
     height: '20px',
     lineHeight: '20px',
-    color: 'rgba(255, 255, 255, 0.2)',
+    color: 'var(--app-text-muted)',
     ...theme.fontMixin(12)
   },
   closeIcon: {
@@ -82,7 +83,7 @@ export default class TabSearchInput extends PureComponent {
     return (
       <div className={classes.container}>
         <Icon
-          color="rgba(255, 255, 255, 0.6)"
+          color="var(--app-icon)"
           size={24}
           symbolId={IconSymbol.SEARCH}
           className={classes.searchIcon}
@@ -101,7 +102,7 @@ export default class TabSearchInput extends PureComponent {
         <Icon
           symbolId={IconSymbol.CROSS}
           size={24}
-          color="rgba(255, 255, 255, 0.6)"
+          color="var(--app-icon)"
           className={classes.closeIcon}
           onClick={this.props.onClose}
         />

@@ -130,16 +130,16 @@ const AdwaitaSwitch = ({
   item: {
     marginBottom: 20,
     padding: 20,
-    backgroundColor: '#222327',
-    border: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-surface-raised)',
+    border: '1px solid var(--app-border-subtle)',
     borderRadius: 12,
     transition: [
       ['background-color', '300ms', 'ease-in'],
     ],
   },
   highlightedItem: {
-    backgroundColor: 'rgba(255, 255, 255, .1)',
-    borderColor: 'rgba(255, 255, 255, .16)',
+    backgroundColor: 'var(--app-active)',
+    borderColor: 'var(--app-border-strong)',
     transition: [
       ['background-color', '300ms', 'ease-out'],
     ],
@@ -187,7 +187,7 @@ const AdwaitaSwitch = ({
     background: 'transparent',
     border: 0,
     borderRadius: 8,
-    color: 'rgba(255, 255, 255, .72)',
+    color: 'var(--app-text-secondary)',
     cursor: 'default',
     display: 'inline-flex',
     height: 34,
@@ -202,14 +202,14 @@ const AdwaitaSwitch = ({
       width: 16,
     },
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .08)',
-      color: '#ff7b63',
+      backgroundColor: 'var(--app-hover)',
+      color: 'var(--app-danger)',
     },
     '&:active': {
-      backgroundColor: 'rgba(255, 255, 255, .13)',
+      backgroundColor: 'var(--app-pressed)',
     },
     '&:focus-visible': {
-      boxShadow: '0 0 0 2px #3584e4',
+      boxShadow: '0 0 0 2px var(--app-accent)',
     },
   },
   listInstances: {
@@ -223,7 +223,7 @@ const AdwaitaSwitch = ({
     height: 26,
     position: 'relative',
     '&:hover $switchTrack': {
-      backgroundColor: '#56575c',
+      backgroundColor: 'var(--app-switch-track-hover)',
     },
     '&:focus-within $switchTrack': {
       boxShadow: '0 0 0 2px rgba(53, 132, 228, .6)',
@@ -240,8 +240,8 @@ const AdwaitaSwitch = ({
     position: 'absolute',
     width: 1,
     '&:checked + $switchTrack': {
-      backgroundColor: '#3584e4',
-      borderColor: '#3584e4',
+      backgroundColor: 'var(--app-accent)',
+      borderColor: 'var(--app-accent)',
     },
     '&:checked + $switchTrack $switchThumb': {
       transform: 'translateX(18px)',
@@ -251,8 +251,8 @@ const AdwaitaSwitch = ({
     },
   },
   switchTrack: {
-    backgroundColor: '#4a4b50',
-    border: '1px solid rgba(255, 255, 255, .1)',
+    backgroundColor: 'var(--app-switch-track)',
+    border: '1px solid var(--app-border)',
     borderRadius: 999,
     boxSizing: 'border-box',
     display: 'inline-flex',

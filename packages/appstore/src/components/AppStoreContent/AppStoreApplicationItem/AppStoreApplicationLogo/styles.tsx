@@ -5,7 +5,7 @@ const styles = () => ({
     width: 40,
     minWidth: 40,
     height: 40,
-    backgroundColor: 'rgba(255, 255, 255, .09)',
+    backgroundColor: 'var(--appstore-surface-raised)',
     borderRadius: 11,
     display: 'flex',
     alignItems: 'center',

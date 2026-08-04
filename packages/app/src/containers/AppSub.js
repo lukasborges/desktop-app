@@ -24,7 +24,7 @@ import ApplicationRoutingChooser from '../urlrouter/ApplicationRoutingChooser';
 
 const styles = () => ({
   container: {
-    backgroundColor: '#16171a',
+    backgroundColor: 'var(--app-surface)',
     backgroundImage: 'none',
   }
 });

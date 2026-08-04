@@ -36,9 +36,9 @@ function getItemStyles(props: Props) {
   return {
     transform: transform,
     WebkitTransform: transform,
-    backgroundColor: '#303136',
+    backgroundColor: 'var(--app-surface-subtle)',
     width: 274,
-    border: '1px solid rgba(255, 255, 255, .12)',
+    border: '1px solid var(--app-border)',
     borderRadius: 8,
     boxShadow: '0 8px 24px rgba(0, 0, 0, .32)',
   };

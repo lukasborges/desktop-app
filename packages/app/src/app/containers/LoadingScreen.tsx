@@ -35,8 +35,8 @@ interface JSSProps {
     left: 68,
     right: 0,
     zIndex: 100,
-    backgroundColor: '#16171a',
-    borderLeft: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-surface)',
+    borderLeft: '1px solid var(--app-border-subtle)',
     padding: 24,
   },
   container2: {
@@ -46,7 +46,7 @@ interface JSSProps {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    color: 'white',
+    color: 'var(--app-text-primary)',
     textAlign: 'center',
   },
   cartouche: {
@@ -57,8 +57,8 @@ interface JSSProps {
   },
   mark: {
     alignItems: 'center',
-    backgroundColor: '#2b2c31',
-    border: '1px solid rgba(255, 255, 255, .1)',
+    backgroundColor: 'var(--app-surface-subtle)',
+    border: '1px solid var(--app-border)',
     borderRadius: 12,
     boxShadow: '0 10px 30px rgba(0, 0, 0, .24)',
     display: 'flex',
@@ -67,7 +67,7 @@ interface JSSProps {
     marginBottom: 14,
     width: 48,
     '&::before': {
-      border: '2px solid rgba(255, 255, 255, .22)',
+      border: '2px solid var(--app-scrollbar)',
       borderRadius: '50%',
       content: '""',
       height: 16,
@@ -76,7 +76,7 @@ interface JSSProps {
       width: 16,
     },
     '&::after': {
-      backgroundColor: 'rgba(255, 255, 255, .22)',
+      backgroundColor: 'var(--app-scrollbar)',
       borderRadius: 2,
       bottom: 10,
       content: '""',
@@ -87,13 +87,13 @@ interface JSSProps {
     position: 'relative',
   },
   brand: {
-    color: 'rgba(255, 255, 255, .94)',
+    color: 'var(--app-text-primary)',
     fontSize: 18,
     fontWeight: 600,
     letterSpacing: '.01em',
   },
   salutations: {
-    color: 'rgba(255, 255, 255, .58)',
+    color: 'var(--app-text-muted)',
     fontSize: 13,
     marginBottom: 18,
     '& p': {
@@ -101,12 +101,12 @@ interface JSSProps {
     },
   },
   announcement: {
-    color: 'rgba(255, 255, 255, .58)',
+    color: 'var(--app-text-muted)',
     fontSize: 13,
     maxWidth: '420px',
   },
   progress: {
-    backgroundColor: 'rgba(255, 255, 255, .1)',
+    backgroundColor: 'var(--app-active)',
     borderRadius: 999,
     height: 3,
     overflow: 'hidden',
@@ -115,7 +115,7 @@ interface JSSProps {
   },
   progressBar: {
     animation: 'stationLoading 1.25s ease-in-out infinite',
-    backgroundColor: '#62a0ea',
+    backgroundColor: 'var(--app-accent)',
     borderRadius: 999,
     height: '100%',
     left: 0,

@@ -64,16 +64,16 @@ interface State {
     opacity: .2,
   },
   defaultInner: {
-    fill: '#fff',
+    fill: 'var(--app-icon)',
     fillOpacity: 0,
     transition: 'all 250ms ease-out',
   },
   activeInner: {
-    fill: '#fff',
+    fill: 'var(--app-icon)',
     transition: 'all 250ms ease-out',
   },
   defaultShape: {
-    fill: '#fff',
+    fill: 'var(--app-icon)',
     fillOpacity: 0.6,
     transition: 'all 250ms ease-out',
   },

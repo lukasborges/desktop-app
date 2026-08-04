@@ -35,10 +35,10 @@ const styles = (theme: Theme) => ({
     padding: [0, 10],
     listStyleType: 'none',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .06)',
+      backgroundColor: 'var(--app-hover)',
     },
     '&.isActive': {
-      backgroundColor: 'rgba(255, 255, 255, .1)',
+      backgroundColor: 'var(--app-active)',
     },
     '& $buttons': {
       display: 'none',
@@ -78,7 +78,7 @@ const styles = (theme: Theme) => ({
     },
   },
   txt: {
-    color: 'white',
+    color: 'var(--app-text-primary)',
     flex: '1 1 auto',
     marginRight: '5px',
     position: 'relative',
@@ -194,7 +194,7 @@ const SubdockItem = (props: OwnProps & { classes: OwnStyle }) => {
 
         {icon &&
           <span className={classes!.iconWrapper}>
-            <Icon size={24} color="white" symbolId={icon as IconSymbol} />
+            <Icon size={24} color="var(--app-icon)" symbolId={icon as IconSymbol} />
           </span>
         }
 

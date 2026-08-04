@@ -12,8 +12,8 @@ import { isDarwin } from '../utils/process';
 const styles = () => ({
   container: {
     height: '100%',
-    backgroundColor: '#16171a',
-    color: 'rgba(255, 255, 255, .88)',
+    backgroundColor: 'var(--app-surface)',
+    color: 'var(--app-text-primary)',
   },
   body: {
     display: 'flex',
@@ -21,7 +21,7 @@ const styles = () => ({
     position: 'relative',
     height: '100%',
     padding: '40px 60px 60px 40px',
-    color: 'rgba(255, 255, 255, .88)',
+    color: 'var(--app-text-primary)',
   },
   content: {
     flex: 1,
@@ -34,7 +34,7 @@ const styles = () => ({
     right: 0,
     width: 100,
     height: '100%',
-    backgroundColor: '#2b2c31',
+    backgroundColor: 'var(--app-rail-background)',
     backgroundImage: 'none',
   }
 });

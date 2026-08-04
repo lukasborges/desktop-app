@@ -1,0 +1,68 @@
+:root {
+  color-scheme: dark;
+  --appstore-accent: #8e9198;
+  --appstore-background: #17181b;
+  --appstore-surface: #202125;
+  --appstore-surface-raised: #292a2e;
+  --appstore-surface-subtle: #2b2c31;
+  --appstore-text: #e8e8ea;
+  --appstore-text-muted: #a4a6ac;
+  --appstore-icon: #e8e8ea;
+  --appstore-border: #3a3c42;
+  --appstore-border-strong: #555860;
+  --appstore-hover: #313238;
+  --appstore-active: #34353a;
+  --appstore-input: #292a2e;
+  --appstore-focus: #8e9198;
+  --appstore-page-header: #1b1c20;
+  --appstore-overlay-fade: rgba(23, 24, 27, 0);
+}
+
+html[data-appearance-theme='light'] {
+  color-scheme: light;
+  --appstore-accent: #596273;
+  --appstore-background: #ffffff;
+  --appstore-surface: #f7f7f9;
+  --appstore-surface-raised: #f1f2f4;
+  --appstore-surface-subtle: #e9ebef;
+  --appstore-text: #292b30;
+  --appstore-text-muted: #6f747d;
+  --appstore-icon: #555b65;
+  --appstore-border: #d8dbe1;
+  --appstore-border-strong: #bcc1ca;
+  --appstore-hover: #e8eaee;
+  --appstore-active: #dfe2e7;
+  --appstore-input: #ffffff;
+  --appstore-focus: #5279b8;
+  --appstore-page-header: #fafbfc;
+  --appstore-overlay-fade: rgba(255, 255, 255, 0);
+}
+
+@media (prefers-color-scheme: light) {
+  html[data-appearance-theme='system'] {
+    color-scheme: light;
+    --appstore-accent: #596273;
+    --appstore-background: #ffffff;
+    --appstore-surface: #f7f7f9;
+    --appstore-surface-raised: #f1f2f4;
+    --appstore-surface-subtle: #e9ebef;
+    --appstore-text: #292b30;
+    --appstore-text-muted: #6f747d;
+    --appstore-icon: #555b65;
+    --appstore-border: #d8dbe1;
+    --appstore-border-strong: #bcc1ca;
+    --appstore-hover: #e8eaee;
+    --appstore-active: #dfe2e7;
+    --appstore-input: #ffffff;
+    --appstore-focus: #5279b8;
+    --appstore-page-header: #fafbfc;
+    --appstore-overlay-fade: rgba(255, 255, 255, 0);
+  }
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--appstore-background);
+}

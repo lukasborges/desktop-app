@@ -8,7 +8,7 @@ const styles = {
     padding: [28, 40],
     borderBottom: `1px solid ${colors.dividerColor}`,
     minHeight: 112,
-    backgroundColor: '#1b1c20',
+    backgroundColor: 'var(--appstore-page-header)',
   },
   content: {
     display: 'flex',

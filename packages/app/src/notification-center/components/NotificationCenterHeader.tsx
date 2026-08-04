@@ -29,12 +29,12 @@ export interface Props {
 const styles = () => ({
   container: {
     padding: [10, 14],
-    backgroundColor: '#25262a',
-    borderBottom: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-surface-elevated)',
+    borderBottom: '1px solid var(--app-border-subtle)',
     fontSize: 12,
     // to make sure alignement with dock
     paddingBottom: '13px',
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: 'var(--app-text-primary)',
     lineHeight: '14px',
     minHeight: '52px',
     display: 'flex',

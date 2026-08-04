@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   width: 300px;
-  color: white;
+  color: var(--app-text-primary);
   @include coverer-fixed(0, $app-size, 0, 0);
   z-index: $zindex-large;
   transform: translateX(-300px);
@@ -21,7 +21,7 @@
 }
 
 .l-notification-center_appear {
-  box-shadow: 0 2px 24px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 2px 24px 0 var(--app-shadow-soft);
   transform: translateX(0px);
 }
 
@@ -29,9 +29,9 @@
   display: flex;
   align-items: center;
   padding: 8px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--app-text-muted);
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--app-border-strong);
   border-radius: 4px;
   cursor: pointer;
   outline: none;
@@ -55,15 +55,15 @@
   left: 130px;
   top: 60px;
   padding: 0;
-  background-color: #25262a;
-  border: 1px solid rgba(255, 255, 255, .1);
+  background-color: var(--app-surface-elevated);
+  border: 1px solid var(--app-border);
   border-radius: 10px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, .45);
+  box-shadow: 0 12px 36px var(--app-shadow);
   z-index: $zindex-small;
 }
 
 .l-notification-center__snooze-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--app-border);
   margin-left: ($gutter * 2);
   margin-right: ($gutter * 2);
 
@@ -76,19 +76,19 @@
   font-weight: normal;
   margin: $gutter $gutter 0 $gutter;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--app-text-muted);
 }
 
 .l-notification-center__snooze-item,
 .l-notification-center__snooze-panel-text {
   a span {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--app-text-primary);
   }
 }
 
 .l-notification-center__current-snooze {
   a span {
-    color: white;
+    color: var(--app-text-primary);
     font-weight: 500;
   }
 }
@@ -114,7 +114,7 @@
 // —————————————————————————————————
 
 .l-notification-group {
-  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  border-bottom: 1px solid var(--app-border-subtle);
 
   &:hover {
     .l-notification-group__title-actions {
@@ -152,7 +152,7 @@
   }
 
   &:hover svg {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: var(--app-active);
     opacity: 1;
   }
 }
@@ -165,11 +165,11 @@
 
   padding: 15px 20px 15px 0;
   margin-left: 20px;
-  border-top: 1px solid rgba(255, 255, 255, .1);
+  border-top: 1px solid var(--app-border);
   cursor: pointer;
 
   &:hover {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.03) 100%);
+    background-image: linear-gradient(to right, transparent 0%, var(--app-hover) 100%);
 
     .l-notification-item__content,
     .l-notification-item__text-action,
@@ -218,9 +218,9 @@
 .l-notification-item__button {
   width: 20px;
   height: 20px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--app-text-muted);
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.5);;
+  border: 1px solid var(--app-text-muted);
   border-radius: 3px;
   cursor: pointer;
   outline: none;
@@ -230,7 +230,7 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--app-text-muted);
   font-size: 11px;
 
   .l-notification-item-compact & {
@@ -247,7 +247,7 @@
     font-weight: bold;
 
     &:hover {
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--app-text-secondary);
     }
   }
 }

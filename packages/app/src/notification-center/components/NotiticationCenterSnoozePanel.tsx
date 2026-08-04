@@ -16,8 +16,8 @@ export interface Props {
 
 const styles = () => ({
   container: {
-    backgroundColor: '#25262a',
-    border: '1px solid rgba(255, 255, 255, .1)',
+    backgroundColor: 'var(--app-surface-elevated)',
+    border: '1px solid var(--app-border)',
     borderRadius: 10,
     boxShadow: '0 12px 36px rgba(0, 0, 0, .45)',
     padding: [8, 10],
@@ -25,7 +25,7 @@ const styles = () => ({
     marginTop: 5,
   },
   title: {
-    color: 'rgba(255, 255, 255, .86)',
+    color: 'var(--app-text-primary)',
     fontWeight: 700,
   },
   list: {

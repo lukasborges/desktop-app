@@ -11,7 +11,7 @@ const useStyles = createUseStyles({
     display: 'flex',
     position: 'relative',
     justifyContent: 'space-between',
-    color: 'rgb(38, 33, 33)',
+    color: 'var(--appstore-text)',
     alignItems: 'center',
     width: 200,
     maxHeight: 42,
@@ -21,7 +21,7 @@ const useStyles = createUseStyles({
     borderRadius: '999px',
     transition: '200ms',
     '&:hover': {
-      backgroundColor: '#e7ecf0',
+      backgroundColor: 'var(--appstore-hover)',
     },
     '& > div:nth-child(3)': {
       position: 'fixed',
@@ -63,13 +63,13 @@ const useStyles = createUseStyles({
   },
   categoryName: {
     fontSize: '11px',
-    color: '#949494',
+    color: 'var(--appstore-text-muted)',
   },
   action: {
     width: 28,
     height: 28,
     flexShrink: 0,
-    ...roundedBackground('#a0aeb8'),
+    ...roundedBackground('var(--appstore-text-muted)'),
     opacity: 0,
     cursor: 'pointer',
     transition: '200ms',

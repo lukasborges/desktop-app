@@ -23,7 +23,7 @@ $app-dot-size: 18px;
     @include avatar(16px);
   }
   &:before {
-    background-color: #fff;
+    background-color: var(--app-text-primary);
     transform-origin: center center;
     z-index: 8;
     @include animation(loader 1s infinite alternate linear);
@@ -105,12 +105,12 @@ $app-dot-size: 18px;
 
   //== Children
   span {
-    background-color: rgba(#fff, 0.4);
+    background-color: var(--app-text-muted);
     flex: 0 0 auto;
     @include avatar(3px);
   }
   span.active {
-    background-color: #fff;
+    background-color: var(--app-text-primary);
   }
   span + span {
     margin-left: 3px;
@@ -120,7 +120,7 @@ $app-dot-size: 18px;
 //== Notifications and accounts
 .l-dock__app__account,
 .l-dock__app__notification {
-  color: #fff;
+  color: var(--app-text-primary);
   line-height: 14px;
   position: absolute;
   bottom: -2px;
@@ -156,7 +156,7 @@ $app-dot-size: 18px;
 
 .l-dock__divider {
   border-width: 1px;
-  border-color: rgba(#fff, 0.1);
+  border-color: var(--app-border);
 }
 
 //== Quick search
@@ -165,7 +165,7 @@ $app-dot-size: 18px;
 
   //== Variants
   &.active {
-    background-color: rgba(#fff, 0.1);
+    background-color: var(--app-active);
   }
   &.active .isvg path,
   &.active:hover .isvg path {

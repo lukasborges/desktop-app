@@ -8,6 +8,7 @@ import { compose } from 'redux';
 import {
   withGetAutoUpdateStatus, withCheckForUpdatesMutation, withOpenReleaseNotesMutation,
 } from './queries@local.gql.generated';
+import { settingsButtonStyle } from '../settingsButtonStyle';
 
 export interface Classes {
   checking: string,
@@ -39,7 +40,7 @@ const styles = () => ({
     marginRight: 5,
     borderRadius: '100%',
     backgroundColor: 'transparent',
-    border: '2px solid white',
+    border: '2px solid var(--app-text-primary)',
     animation: '3s ease-in-out 0s infinite checking',
   },
   '@keyframes checking': {
@@ -50,10 +51,11 @@ const styles = () => ({
   info: {
     marginTop: 5,
     fontSize: 11,
-    color: 'rgba(#FFF, .5)',
+    color: 'var(--app-text-muted)',
     textAlign: 'center',
   },
   updateButton: {
+    ...settingsButtonStyle,
     minWidth: '200px',
     marginTop: 2,
   },

@@ -34,7 +34,7 @@ class AppDelete extends React.Component<Props> {
           <Icon
             symbolId={IconSymbol.TRASH}
             size={23}
-            color={'#797979'}
+            color={'var(--appstore-text-muted)'}
           />
           <span className={classes!.deleteButtonText}>Delete this custom app</span>
         </div>

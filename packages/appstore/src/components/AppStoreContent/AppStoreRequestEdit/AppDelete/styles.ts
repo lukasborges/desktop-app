@@ -7,7 +7,7 @@ const styles = {
   subTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#363636',
+    color: 'var(--appstore-text)',
     marginBottom: 10,
   },
   deleteButton: {
@@ -15,7 +15,7 @@ const styles = {
     alignItems: 'center',
     marginLeft: -5,
     cursor: 'pointer',
-    color: '#797979',
+    color: 'var(--appstore-text-muted)',
     transition: 'color .2s',
     '&:hover': {
       color: '#E75858',

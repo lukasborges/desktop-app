@@ -31,8 +31,8 @@ const styles = (theme: Theme) => ({
   },
   header: {
     padding: 20,
-    borderBottom: '1px solid rgba(255, 255, 255, .1)',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottom: '1px solid var(--app-border)',
+    backgroundColor: 'var(--app-active)',
   },
   logo: {
     width: 40,
@@ -55,7 +55,7 @@ const styles = (theme: Theme) => ({
     '& h2': {
       margin: [10, 0],
       ...theme.fontMixin(13, 'bold'),
-      color: 'rgba(255, 255, 255, .4)',
+      color: 'var(--app-text-muted)',
       textTransform: 'uppercase',
     },
     '& ul': {

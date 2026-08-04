@@ -1,4 +1,3 @@
-import { BrowserXThemeProvider } from '@getstation/theme';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Subject } from 'rxjs';
@@ -8,6 +7,10 @@ import '../../../theme/css/app.global.css';
 import { getSearchParams } from '../../../webui/helpers';
 import { WebUIGradientProvider } from '../../../webui/WebUIGradientProvider';
 import MultiInstanceConfigurator from './MultiInstanceConfigurator';
+import PlatformThemeProvider from '../../../theme/PlatformThemeProvider';
+import { initializeAppearanceDocumentTheme } from '../../../theme/appearanceDocument';
+
+initializeAppearanceDocumentTheme();
 
 const params = getSearchParams();
 const manifestURL = params.get('manifestURL')!;
@@ -19,13 +22,13 @@ window.bxApi.theme.addThemeColorsChangeListener(
 );
 
 ReactDOM.render(
-  <BrowserXThemeProvider>
+  <PlatformThemeProvider>
     <WebUIGradientProvider themeColorsObservable={themeColorsObservable}>
       <MultiInstanceConfigurator
         applicationId={applicationId}
         manifestURL={manifestURL}
       />
     </WebUIGradientProvider>
-  </BrowserXThemeProvider>,
+  </PlatformThemeProvider>,
   document.getElementById('root')
 );

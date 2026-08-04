@@ -12,6 +12,9 @@ import configureStore from '../store/configureStore.client';
 import ReduxBasedGradientProvider from '../theme/ReduxBasedGradientProvider';
 import { handleError } from '../services/api/helpers';
 import ConsoleErrorBoundary from '../common/containers/ConsoleErrorBoundary';
+import { initializeAppearanceTheme } from '../theme/appearance';
+
+initializeAppearanceTheme();
 
 configureStore().then(store => {
   // for debug purpose, gives us a way to easily access the store

@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
-import { BrowserXThemeProvider } from '@getstation/theme';
 import './theme/css/app.global.css';
 import '../../../node_modules/font-awesome/css/font-awesome.min.css';
 import { handleError } from './services/api/helpers';
@@ -15,12 +14,15 @@ import configureStore from './store/configureStore.client';
 import ReduxBasedGradientProvider from './theme/ReduxBasedGradientProvider';
 import { getGQlClient } from './utils/graphql';
 import ConsoleErrorBoundary from './common/containers/ConsoleErrorBoundary';
+import { initializeAppearanceTheme } from './theme/appearance';
+import PlatformThemeProvider from './theme/PlatformThemeProvider';
 
 import { ActionsBusReactContext, createActionsEmitter, createActionsBus } from './store/actionsBus';
 
 import { BxNotification } from './notification-center/webview-preload';
 
 window.Notification = BxNotification;
+initializeAppearanceTheme();
 
 // prevent app pinch zomming
 webFrame.setVisualZoomLevelLimits(1, 1);
@@ -57,13 +59,13 @@ const render = (store) => {
       <ActionsBusReactContext.Provider value={{ actionsBus }}>
         <ApolloProvider client={apolloClient}>
           <ApolloHooksProvider client={apolloClient}>
-            <BrowserXThemeProvider>
+            <PlatformThemeProvider>
               <ReduxBasedGradientProvider>
                 <ConsoleErrorBoundary>
                   <App />
                 </ConsoleErrorBoundary>
               </ReduxBasedGradientProvider>
-            </BrowserXThemeProvider>
+            </PlatformThemeProvider>
           </ApolloHooksProvider>
         </ApolloProvider>
       </ActionsBusReactContext.Provider>

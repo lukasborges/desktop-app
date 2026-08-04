@@ -13,7 +13,7 @@ const useStyles = createUseStyles({
     height: '30px',
     backgroundColor: colors.white,
     borderRadius: '15px',
-    border: '1px solid rgba(157, 167, 174, .6)',
+    border: `1px solid ${colors.dividerColor}`,
     display: 'flex',
     alignItems: 'center',
     color: colors.blueGray100,

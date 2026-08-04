@@ -45,9 +45,9 @@ const styles = (theme: ThemeTypes) => ({
   recentSubdock: {
     width: 270,
     height: 390,
-    backgroundColor: '#202124',
+    backgroundColor: 'var(--app-header-background)',
     backgroundImage: 'none',
-    border: '1px solid rgba(255, 255, 255, .1)',
+    border: '1px solid var(--app-border)',
     borderRadius: 12,
     boxShadow: '0 16px 48px rgba(0, 0, 0, .48)',
     overflow: 'hidden',
@@ -58,8 +58,8 @@ const styles = (theme: ThemeTypes) => ({
   },
   recentSubdockTitle: {
     padding: [12, 14],
-    color: 'rgba(255, 255, 255, .4)',
-    backgroundColor: '#25262a',
+    color: 'var(--app-text-muted)',
+    backgroundColor: 'var(--app-surface-elevated)',
     ...theme.fontMixin(9, 600),
     display: 'flex',
     justifyContent: 'space-between',
@@ -67,18 +67,18 @@ const styles = (theme: ThemeTypes) => ({
   },
   navigation: {
     fontSize: 8,
-    color: 'rgba(255, 255, 255, .4)',
+    color: 'var(--app-text-muted)',
   },
   navigationIcon: {
     marginRight: 4,
     padding: [2, 4],
-    background: 'rgba(255, 255, 255, .1)',
+    background: 'var(--app-active)',
     borderRadius: 2,
   },
   recentSubdockItems: {
     height: 'calc(100% - 39px)',
     overflowY: 'auto',
-    borderTop: '1px solid rgba(255, 255, 255, .08)',
+    borderTop: '1px solid var(--app-border-subtle)',
   },
 });
 

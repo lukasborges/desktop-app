@@ -29,11 +29,11 @@ export const subdockListStyle = {
       transition: 'opacity 300ms ease-out',
     },
     '&::before': {
-      background: 'linear-gradient(#202124, rgba(32,33,36,0))',
+      background: 'linear-gradient(var(--app-header-background), transparent)',
     },
     '&::after': {
       bottom: 0,
-      background: 'linear-gradient(rgba(32,33,36,0), #202124)',
+      background: 'linear-gradient(transparent, var(--app-header-background))',
     },
   },
   title: {
@@ -43,7 +43,7 @@ export const subdockListStyle = {
     fontWeight: 600,
     letterSpacing: '.08em',
     opacity: .55,
-    color: '#fff',
+    color: 'var(--app-text-primary)',
   },
   sectionHeader: {
     display: 'flex',

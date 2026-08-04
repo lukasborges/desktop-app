@@ -51,8 +51,8 @@ type Props = DefaultProps & {
     textTransform: 'uppercase',
   },
   list: {
-    backgroundColor: 'rgba(255, 255, 255, .045)',
-    border: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-hover)',
+    border: '1px solid var(--app-border-subtle)',
     borderRadius: 10,
     listStyle: 'none',
     margin: 0,
@@ -67,7 +67,7 @@ type Props = DefaultProps & {
     minHeight: 48,
     padding: [6, 8, 6, 12],
     '&:not(:last-child)': {
-      borderBottom: '1px solid rgba(255, 255, 255, .07)',
+      borderBottom: '1px solid var(--app-border-subtle)',
     },
   },
   identity: {
@@ -77,7 +77,7 @@ type Props = DefaultProps & {
     minWidth: 0,
   },
   logo: {
-    border: '1px solid rgba(255, 255, 255, .16)',
+    border: '1px solid var(--app-border-strong)',
     borderRadius: '50%',
     flexShrink: 0,
     height: 28,
@@ -87,8 +87,8 @@ type Props = DefaultProps & {
   },
   logoFallback: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, .1)',
-    border: '1px solid rgba(255, 255, 255, .12)',
+    backgroundColor: 'var(--app-active)',
+    border: '1px solid var(--app-border)',
     borderRadius: '50%',
     display: 'inline-flex',
     flexShrink: 0,
@@ -108,7 +108,7 @@ type Props = DefaultProps & {
   configureButton: {
     background: 'transparent',
     border: 0,
-    color: '#62a0ea',
+    color: 'var(--app-accent)',
     cursor: 'default',
     font: 'inherit',
     outline: 0,
@@ -122,7 +122,7 @@ type Props = DefaultProps & {
     },
     '&:focus-visible': {
       borderRadius: 4,
-      boxShadow: '0 0 0 2px #3584e4',
+      boxShadow: '0 0 0 2px var(--app-accent)',
     },
   },
   actions: {
@@ -135,17 +135,17 @@ type Props = DefaultProps & {
     background: 'transparent',
     border: 0,
     borderRadius: 7,
-    color: 'rgba(255, 255, 255, .68)',
+    color: 'var(--app-text-secondary)',
     cursor: 'default',
     fontSize: 12,
     outline: 0,
     padding: [6, 8],
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .08)',
-      color: 'rgba(255, 255, 255, .9)',
+      backgroundColor: 'var(--app-hover)',
+      color: 'var(--app-text-primary)',
     },
     '&:focus-visible': {
-      boxShadow: '0 0 0 2px #3584e4',
+      boxShadow: '0 0 0 2px var(--app-accent)',
     },
   },
   removeButton: {
@@ -153,7 +153,7 @@ type Props = DefaultProps & {
     background: 'transparent',
     border: 0,
     borderRadius: 7,
-    color: 'rgba(255, 255, 255, .62)',
+    color: 'var(--app-text-secondary)',
     cursor: 'pointer',
     display: 'inline-flex',
     height: 30,
@@ -162,14 +162,14 @@ type Props = DefaultProps & {
     padding: 0,
     width: 30,
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .08)',
-      color: '#ff7b63',
+      backgroundColor: 'var(--app-hover)',
+      color: 'var(--app-danger)',
     },
     '&:active': {
-      backgroundColor: 'rgba(255, 255, 255, .13)',
+      backgroundColor: 'var(--app-pressed)',
     },
     '&:focus-visible': {
-      boxShadow: '0 0 0 2px #3584e4',
+      boxShadow: '0 0 0 2px var(--app-accent)',
     },
   },
   removeIcon: {

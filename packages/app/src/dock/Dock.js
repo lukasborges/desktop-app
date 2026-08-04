@@ -55,7 +55,7 @@ import { OnApplicationInstalled } from './OnApplicationInstalled';
 const styles = () => ({
   bottomSection: {
     padding: '2px 0',
-    backgroundColor: 'rgba(255,255,255,0.2)'
+    backgroundColor: 'var(--app-pressed)'
   }
 });
 

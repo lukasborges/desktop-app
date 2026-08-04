@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
       top: '350px',
       width: '100%',
       height: '50px',
-      background: 'linear-gradient(rgba(255, 255, 255, 0.05), white)',
+      background: 'linear-gradient(var(--appstore-overlay-fade), var(--appstore-background))',
       pointerEvents: 'none',
     },
   },
