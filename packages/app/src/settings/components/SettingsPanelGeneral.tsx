@@ -14,6 +14,7 @@ import { StationState } from '../../types';
 
 import SettingsDeveloperTools from './SettingsDeveloperTools';
 import SettingsDownloadFolder from './SettingsDownloads/SettingsDownloadFolder';
+import SettingsAppearance from './SettingsAppearance';
 import SettingsOpenSourceInfo from './SettingsOpenSourceInfo';
 import SettingsUpdatesButton from './SettingsUpdatesButton/SettingsUpdatesButton';
 
@@ -75,6 +76,8 @@ class SettingsPanelGeneralImpl extends React.PureComponent<Props, {}> {
 
           <SettingsUpdatesButton />
         </div>
+
+        <SettingsAppearance />
 
         <SettingsDownloadFolder
           currentDownloadFolder={this.props.downloadFolder}

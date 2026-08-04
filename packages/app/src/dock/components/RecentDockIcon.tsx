@@ -61,7 +61,7 @@ const styles = (theme: ThemeTypes) => ({
     position: 'absolute',
     top: 0,
     borderRadius: 100,
-    backgroundColor: 'rgba(0, 0, 0, .3)',
+    backgroundColor: 'var(--app-backdrop)',
     opacity: 0,
     transition: 'opacity 300ms cubic-bezier(0.37, 1.21, 0.89, 0.87)',
     cursor: 'pointer',
@@ -91,7 +91,7 @@ export default class RecentDockIcon extends React.PureComponent<Props, {}> {
           </>
         }
 
-        <Icon className={classes!.recentApplicationArrow} symbolId={IconSymbol.RECENT_ARROW} size={33} color={'#FFF'} />
+        <Icon className={classes!.recentApplicationArrow} symbolId={IconSymbol.RECENT_ARROW} size={33} color={'var(--app-icon)'} />
       </div>
     );
   }

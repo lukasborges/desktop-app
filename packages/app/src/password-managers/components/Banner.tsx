@@ -31,8 +31,8 @@ const styles = (theme: Theme) => ({
     boxSizing: 'border-box',
     padding: [20, 0],
     ...theme.fontMixin(13),
-    color: 'rgba(0, 0, 0, .3)',
-    backgroundColor: 'white',
+    color: 'var(--app-text-secondary)',
+    backgroundColor: 'var(--app-surface-elevated)',
     textAlign: 'center',
     boxShadow: '0 0 0 1px rgba(41,41,41,0.1), 0 0 40px 0 rgba(41,41,41,0.3)',
     zIndex: 3,
@@ -68,7 +68,7 @@ export default class Banner extends React.PureComponent<Props, {}> {
         </Button>
 
         <span className={classes!.close} onClick={onClose}>
-          <Icon symbolId={IconSymbol.CROSS} size={25} color={'#000'} />
+          <Icon symbolId={IconSymbol.CROSS} size={25} color={'var(--app-icon)'} />
         </span>
       </div>
     );

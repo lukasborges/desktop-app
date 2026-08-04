@@ -23,7 +23,7 @@ const styles = {
     textAlign: 'center',
   },
   content: {
-    color: 'white',
+    color: 'var(--app-text-primary)',
     fontSize: 13,
   },
 };

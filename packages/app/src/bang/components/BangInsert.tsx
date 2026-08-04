@@ -28,7 +28,7 @@ export interface Props {
     width: '90%',
     flexDirection: 'column',
     margin: 'auto',
-    color: 'white',
+    color: 'var(--app-text-primary)',
   },
   item: {
     display: 'flex',
@@ -36,10 +36,10 @@ export interface Props {
     alignItems: 'center',
     margin: [15, 0],
     padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, .1)',
+    backgroundColor: 'var(--app-hover)',
     fontSize: 11,
     borderRadius: 100,
-    border: '1px solid rgba(255, 255, 255, .1)',
+    border: '1px solid var(--app-border)',
   },
   itemDescription: {
     flexGrow: 1,
@@ -50,7 +50,7 @@ export interface Props {
     flexShrink: 0,
   },
   kbShortcut: {
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'var(--app-surface-elevated)',
     padding: [3, 8],
     borderRadius: 10,
   },

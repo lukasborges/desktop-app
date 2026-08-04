@@ -73,7 +73,7 @@ const itemIsCollapsed = (
     flex: 1,
     overflowY: 'auto',
     padding: [4, 12, 8],
-    scrollbarColor: 'rgba(255, 255, 255, .24) transparent',
+    scrollbarColor: 'var(--app-scrollbar) transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
       width: 8,
@@ -82,16 +82,16 @@ const itemIsCollapsed = (
       backgroundColor: 'transparent',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(255, 255, 255, .24)',
+      backgroundColor: 'var(--app-scrollbar)',
       borderRadius: 4,
     },
     '&::-webkit-scrollbar-thumb:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .34)',
+      backgroundColor: 'var(--app-text-muted)',
     },
   },
   lastOpened: {
     margin: [14, 6, 7],
-    color: 'rgba(255, 255, 255, .42)',
+    color: 'var(--app-text-muted)',
     letterSpacing: '.08em',
     ...theme.fontMixin(11, 600),
   },
@@ -103,7 +103,7 @@ const itemIsCollapsed = (
   },
   category: {
     padding: [7, 6],
-    color: 'rgba(255,255,255,0.5)',
+    color: 'var(--app-text-muted)',
     textTransform: 'uppercase',
     fontSize: '.8em',
     display: 'flex',
@@ -135,7 +135,7 @@ const itemIsCollapsed = (
     alignItems: 'center',
   },
   expandSectionIcon: {
-    fill: '#fff',
+    fill: 'var(--app-icon)',
     fillOpacity: '0.5',
     transform: 'rotate(90deg)',
     transitionProperty: 'transform',
@@ -145,10 +145,10 @@ const itemIsCollapsed = (
     },
   },
   resultsCount: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'var(--app-pressed)',
     borderRadius: '50%',
     textAlign: 'center',
-    color: 'rgba(255,255,255,0.8)',
+    color: 'var(--app-text-primary)',
     width: 20,
     height: 20,
     paddingTop: 2,

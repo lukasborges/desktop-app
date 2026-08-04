@@ -5,6 +5,7 @@ import injectSheet from 'react-jss';
 import { compose } from 'redux';
 import { isDarwin } from '../../../utils/process';
 import { withGetPromptDownloadStatus, withEnablePromptDownload } from './queries@local.gql.generated';
+import { settingsButtonStyle } from '../settingsButtonStyle';
 
 export interface Classes {
   container: string,
@@ -85,6 +86,7 @@ const styles = (_theme: Theme) => ({
     marginLeft: 'auto',
   },
   button: {
+    ...settingsButtonStyle,
     float: 'right',
   },
 });

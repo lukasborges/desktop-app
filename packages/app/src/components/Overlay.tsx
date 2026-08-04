@@ -53,11 +53,11 @@ const styles = () => ({
     right: 0,
     overflow: 'auto',
     zIndex: 100,
-    backgroundColor: '#16171a',
+    backgroundColor: 'var(--app-surface)',
     backgroundImage: 'none',
     opacity: 1.00,
-    color: 'white',
-    borderLeft: '1px solid rgba(255, 255, 255, .08)',
+    color: 'var(--app-text-primary)',
+    borderLeft: '1px solid var(--app-border-subtle)',
     padding: '26px 32px 32px',
   },
   content: {
@@ -71,7 +71,7 @@ const styles = () => ({
   },
   head: {
     alignItems: 'center',
-    borderBottom: '1px solid rgba(255, 255, 255, .08)',
+    borderBottom: '1px solid var(--app-border-subtle)',
     marginBottom: 24,
     minHeight: 40,
     padding: '0 0 20px 52px',

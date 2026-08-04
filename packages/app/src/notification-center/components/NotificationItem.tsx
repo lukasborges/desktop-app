@@ -37,7 +37,7 @@ export interface Props {
     borderRadius: '50%',
     '&:hover': {
       fill: 'white !important',
-      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      backgroundColor: 'var(--app-active)',
     },
   },
   item: {
@@ -94,7 +94,7 @@ class NotificationItem extends React.PureComponent<Props, {}> {
             symbolId={IconSymbol.CHECKMARK}
             onClick={this.handleClickMarkAsRead}
             size="24px"
-            color={'rgba(255, 255, 255, 0.6)'}
+            color={'var(--app-text-secondary)'}
           />
         </span>
       </div>

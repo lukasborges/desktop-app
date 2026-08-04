@@ -11,7 +11,7 @@ const styles = {
   modalText: {
     fontSize: 14,
     textAlign: 'center',
-    color: '#949494',
+    color: 'var(--appstore-text-muted)',
   },
   appWrapper: {
     display: 'flex',
@@ -37,7 +37,7 @@ const styles = {
     fontStretch: 'normal',
     lineHeight: 'normal',
     letterSpacing: 'normal',
-    color: '#292929',
+    color: 'var(--appstore-text)',
   },
 };
 

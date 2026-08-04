@@ -30,7 +30,7 @@ export interface State {
 const styles = (_theme: Theme) => ({
   container: {
     width: 240,
-    color: 'white',
+    color: 'var(--app-text-primary)',
     textAlign: 'center',
   },
   title: {
@@ -55,12 +55,12 @@ const styles = (_theme: Theme) => ({
     width: '100%',
     border: 0,
     padding: 10,
-    color: 'white',
-    backgroundColor: 'rgba(255, 255, 255, .3)',
+    color: 'var(--app-text-primary)',
+    backgroundColor: 'var(--app-active)',
     fontSize: 15,
     borderRadius: 3,
     '&::-webkit-input-placeholder': {
-      color: '#CCC',
+      color: 'var(--app-text-muted)',
     },
     '&:first-of-type': {
       marginBottom: 10,

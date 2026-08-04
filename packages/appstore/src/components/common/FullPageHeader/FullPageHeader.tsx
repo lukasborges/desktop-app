@@ -35,7 +35,7 @@ const useStyles = createUseStyles({
     top: 0,
     zIndex: 2,
     display: 'flex',
-    background: '#fafcfd',
+    background: 'var(--appstore-page-header)',
     '& $pageHeader': {
       width: '100%',
     },

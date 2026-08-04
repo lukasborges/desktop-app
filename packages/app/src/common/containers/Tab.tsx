@@ -21,7 +21,7 @@ const styles = () => ({
   tab: {
     alignItems: 'center',
     borderRadius: 7,
-    color: 'rgba(255, 255, 255, .68)',
+    color: 'var(--app-text-secondary)',
     display: 'flex',
     lineHeight: '38px',
     margin: [0, 14, 4, 0],
@@ -32,12 +32,12 @@ const styles = () => ({
     backgroundColor: 'none',
     transition: 'background-color 150ms ease-out, color 150ms ease-out',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .055)',
-      color: 'rgba(255, 255, 255, .9)',
+      backgroundColor: 'var(--app-hover)',
+      color: 'var(--app-text-primary)',
     },
     '&.active': {
-      backgroundColor: 'rgba(255, 255, 255, .1)',
-      color: '#fff',
+      backgroundColor: 'var(--app-active)',
+      color: 'var(--app-text-primary)',
     },
   },
 });

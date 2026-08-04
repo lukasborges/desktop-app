@@ -29,7 +29,7 @@ const rejectDisabledAndInvisible: Filter<KeyboardShortcut> = reject(
 
 const styles = () => ({
   subtitle: {
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: 'var(--app-text-muted)',
     textTransform: 'uppercase',
     fontSize: 11,
     fontWeight: 'bold',
@@ -40,13 +40,13 @@ const styles = () => ({
   label: {
     display: 'inline-block',
     flexGrow: 1,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: 'var(--app-text-primary)',
   },
   kbd: {
     display: 'inline-block',
-    color: 'rgba(255, 255, 255, .82)',
-    backgroundColor: 'rgba(255, 255, 255, .1)',
-    border: '1px solid rgba(255, 255, 255, .1)',
+    color: 'var(--app-text-primary)',
+    backgroundColor: 'var(--app-active)',
+    border: '1px solid var(--app-border)',
     padding: '0 8px',
     borderRadius: 5,
     fontSize: 11,

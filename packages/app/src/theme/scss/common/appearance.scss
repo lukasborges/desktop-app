@@ -1,0 +1,73 @@
+:root {
+  color-scheme: dark;
+  --app-accent: #3584e4;
+  --app-danger: #ff7b63;
+  --app-shell-background: #0f1012;
+  --app-header-background: #202124;
+  --app-rail-background: #2b2c31;
+  --app-surface: #16171a;
+  --app-surface-raised: #222327;
+  --app-surface-elevated: #25262a;
+  --app-surface-subtle: #303136;
+  --app-text-primary: rgba(255, 255, 255, .92);
+  --app-text-secondary: rgba(255, 255, 255, .72);
+  --app-text-muted: rgba(255, 255, 255, .5);
+  --app-icon: rgba(255, 255, 255, .82);
+  --app-border: rgba(255, 255, 255, .1);
+  --app-border-subtle: rgba(255, 255, 255, .08);
+  --app-border-strong: rgba(255, 255, 255, .16);
+  --app-hover: rgba(255, 255, 255, .07);
+  --app-active: rgba(255, 255, 255, .11);
+  --app-pressed: rgba(255, 255, 255, .15);
+  --app-scrollbar: rgba(255, 255, 255, .22);
+  --app-switch-track: #4a4b50;
+  --app-switch-track-hover: #56575c;
+  --app-shadow: rgba(0, 0, 0, .48);
+  --app-shadow-soft: rgba(0, 0, 0, .3);
+  --app-backdrop: rgba(0, 0, 0, .3);
+}
+
+@mixin app-light-theme {
+  color-scheme: light;
+  --app-accent: #1a73e8;
+  --app-danger: #c23b32;
+  --app-shell-background: #eef0f3;
+  --app-header-background: #f3f4f6;
+  --app-rail-background: #e8ebef;
+  --app-surface: #f7f8fa;
+  --app-surface-raised: #fff;
+  --app-surface-elevated: #fff;
+  --app-surface-subtle: #eef0f3;
+  --app-text-primary: rgba(25, 27, 31, .92);
+  --app-text-secondary: rgba(25, 27, 31, .7);
+  --app-text-muted: rgba(25, 27, 31, .5);
+  --app-icon: rgba(25, 27, 31, .74);
+  --app-border: rgba(25, 27, 31, .14);
+  --app-border-subtle: rgba(25, 27, 31, .1);
+  --app-border-strong: rgba(25, 27, 31, .2);
+  --app-hover: rgba(25, 27, 31, .06);
+  --app-active: rgba(25, 27, 31, .1);
+  --app-pressed: rgba(25, 27, 31, .14);
+  --app-scrollbar: rgba(25, 27, 31, .22);
+  --app-switch-track: #c5cad1;
+  --app-switch-track-hover: #b6bcc5;
+  --app-shadow: rgba(25, 27, 31, .22);
+  --app-shadow-soft: rgba(25, 27, 31, .14);
+  --app-backdrop: rgba(25, 27, 31, .18);
+}
+
+html[data-appearance-theme='light'] {
+  @include app-light-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  html[data-appearance-theme='system'] {
+    @include app-light-theme;
+  }
+}
+
+html,
+body {
+  background: var(--app-shell-background);
+  color: var(--app-text-primary);
+}

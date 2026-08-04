@@ -12,7 +12,8 @@ import './theme/css/app.global.css';
 import '../../../node_modules/font-awesome/css/font-awesome.min.css';
 import { handleError } from './services/api/helpers';
 import configureStore from './store/configureStore.client';
-import { BrowserXThemeProvider } from '@getstation/theme';
+import { initializeAppearanceTheme } from './theme/appearance';
+import PlatformThemeProvider from './theme/PlatformThemeProvider';
 import ConsoleErrorBoundary from './common/containers/ConsoleErrorBoundary';
 import { getGQlClient } from './utils/graphql';
 
@@ -20,6 +21,7 @@ import { ActionsBusReactContext, createActionsEmitter, createActionsBus } from '
 import { BxNotification } from './notification-center/webview-preload';
 
 window.Notification = BxNotification;
+initializeAppearanceTheme();
 
 // prevent app pinch zomming
 webFrame.setVisualZoomLevelLimits(1, 1);
@@ -56,9 +58,9 @@ const render = (store) => {
         <ActionsBusReactContext.Provider value={{ actionsBus }}>
           <ApolloProvider client={client}>
             <ApolloHooksProvider client={client}>
-              <BrowserXThemeProvider>
+              <PlatformThemeProvider>
                 <AppSub subData={currentWindow.subData} />
-              </BrowserXThemeProvider>
+              </PlatformThemeProvider>
             </ApolloHooksProvider>
           </ApolloProvider>
         </ActionsBusReactContext.Provider>

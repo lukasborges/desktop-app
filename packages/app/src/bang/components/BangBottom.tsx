@@ -22,13 +22,13 @@ export interface Props {
 const styles = {
   container: {
     minHeight: ({ smallSize }: Props) => smallSize ? 32 : 40,
-    backgroundColor: '#25262a',
+    backgroundColor: 'var(--app-surface-elevated)',
     padding: [4, 8, 4, 12],
-    color: 'rgba(255, 255, 255, .8)',
+    color: 'var(--app-text-primary)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderTop: '1px solid rgba(255, 255, 255, .08)',
+    borderTop: '1px solid var(--app-border-subtle)',
   },
   navigationWrapper: {
     display: 'flex',
@@ -36,14 +36,14 @@ const styles = {
   navigation: {
     fontSize: ({ smallSize }: Props) => smallSize ? 8 : 10,
     marginRight: 10,
-    color: 'rgba(255, 255, 255, .7)',
+    color: 'var(--app-text-secondary)',
   },
   navigationIcon: {
     marginRight: 4,
     padding: [2, 4],
-    color: 'white',
-    background: 'rgba(255, 255, 255, .1)',
-    border: '1px solid rgba(255, 255, 255, .08)',
+    color: 'var(--app-text-primary)',
+    background: 'var(--app-active)',
+    border: '1px solid var(--app-border-subtle)',
     borderRadius: 4,
   },
   settings: {
@@ -52,7 +52,7 @@ const styles = {
     opacity: .6,
     cursor: 'default',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .08)',
+      backgroundColor: 'var(--app-hover)',
       borderRadius: 6,
     },
   },
@@ -88,7 +88,7 @@ export default class BangBottom extends React.PureComponent<Props, {}> {
             <Icon
               symbolId={IconSymbol.COG}
               size={25}
-              color="#fff"
+              color="var(--app-icon)"
             />
           </a>
         }

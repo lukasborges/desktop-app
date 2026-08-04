@@ -37,7 +37,7 @@ type Props = DefaultProps & {
   hintText: {
     paddingTop: '20px',
     width: '100%',
-    color: '#949494',
+    color: 'var(--app-text-muted)',
   },
 }))
 class RemoveModalConfirmation extends React.Component<Props> {

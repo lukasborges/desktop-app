@@ -2,22 +2,16 @@
 
 $station-header-height: 54px;
 $station-rail-width: 68px;
-$station-header-background: #202124;
-$station-rail-background: #2b2c31;
-$station-shell-background: #0f1012;
-$station-border: rgba(255, 255, 255, .08);
-$station-accent: #3584e4;
-
 .l-container--syltr-shell {
-  background: $station-shell-background;
+  background: var(--app-shell-background);
 
   .l-appcontainer {
     min-height: 0;
   }
 
   .l-webview {
-    background: $station-shell-background;
-    border-left: 1px solid $station-border;
+    background: var(--app-shell-background);
+    border-left: 1px solid var(--app-border-subtle);
     min-width: 0;
   }
 
@@ -37,10 +31,10 @@ $station-accent: #3584e4;
 .station-main-header {
   -webkit-app-region: drag;
   align-items: center;
-  background: $station-header-background;
-  border-bottom: 1px solid $station-border;
+  background: var(--app-header-background);
+  border-bottom: 1px solid var(--app-border-subtle);
   box-sizing: border-box;
-  color: rgba(255, 255, 255, .92);
+  color: var(--app-text-primary);
   display: grid;
   flex: 0 0 $station-header-height;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -72,7 +66,7 @@ $station-accent: #3584e4;
   background: transparent;
   border: 0;
   border-radius: 10px;
-  color: rgba(255, 255, 255, .9);
+  color: var(--app-icon);
   cursor: default;
   display: inline-flex;
   height: 36px;
@@ -103,23 +97,24 @@ $station-accent: #3584e4;
 
   &:hover,
   &--active {
-    background: rgba(255, 255, 255, .1);
-    color: #fff;
+    background: var(--app-active);
+    color: var(--app-text-primary);
   }
 
   &:active {
-    background: rgba(255, 255, 255, .15);
+    background: var(--app-pressed);
   }
 
   &:disabled {
     background: transparent;
-    color: rgba(255, 255, 255, .3);
+    color: var(--app-text-muted);
   }
 }
 
 .station-main-header__button--close {
   &:hover {
     background: rgba(239, 87, 87, .85);
+    color: #fff;
   }
 }
 
@@ -133,7 +128,7 @@ $station-accent: #3584e4;
 }
 
 .station-main-header__separator {
-  background: $station-border;
+  background: var(--app-border-subtle);
   height: 22px;
   margin: 0 4px;
   width: 1px;
@@ -157,7 +152,7 @@ $station-accent: #3584e4;
 
 .station-main-header__badge {
   background: #ef5757;
-  border: 2px solid $station-header-background;
+  border: 2px solid var(--app-header-background);
   border-radius: 50%;
   height: 7px;
   position: absolute;
@@ -167,8 +162,8 @@ $station-accent: #3584e4;
 }
 
 .station-dock {
-  background: $station-rail-background;
-  border-right: 1px solid $station-border;
+  background: var(--app-rail-background);
+  border-right: 1px solid var(--app-border-subtle);
   box-sizing: border-box;
   display: flex;
   flex: 0 0 $station-rail-width;
@@ -189,11 +184,11 @@ $station-accent: #3584e4;
 }
 
 .station-subdock {
-  color: rgba(255, 255, 255, .88);
+  color: var(--app-text-primary);
 
   .l-subdock__head {
-    background: #25262a;
-    border-bottom: 1px solid $station-border;
+    background: var(--app-surface-elevated);
+    border-bottom: 1px solid var(--app-border-subtle);
     min-height: 58px;
     padding: 13px 14px;
   }
@@ -210,7 +205,7 @@ $station-accent: #3584e4;
     }
 
     small {
-      color: rgba(255, 255, 255, .48);
+      color: var(--app-text-muted);
       font-size: 11px;
       margin-top: 3px;
       overflow: hidden;
@@ -231,9 +226,16 @@ $station-accent: #3584e4;
 }
 
 .station-settings {
-  background: #16171a !important;
+  --settings-accent: var(--app-accent);
+  --settings-background: var(--app-surface);
+  --settings-border: var(--app-border);
+  --settings-focus-ring: color-mix(in srgb, var(--app-accent) 38%, transparent);
+  --settings-muted-text: var(--app-text-muted);
+  --settings-option-background: var(--app-hover);
+  --settings-option-hover-background: var(--app-active);
+  background: var(--settings-background) !important;
   background-image: none !important;
-  color: rgba(255, 255, 255, .86);
+  color: var(--app-text-primary);
   padding: 26px 32px 32px !important;
 
   .station-content-overlay__close {
@@ -243,7 +245,7 @@ $station-accent: #3584e4;
 
   .station-content-overlay__head {
     align-items: center;
-    border-bottom: 1px solid $station-border;
+    border-bottom: 1px solid var(--app-border-subtle);
     display: flex;
     margin-bottom: 24px;
     max-width: none;
@@ -276,14 +278,14 @@ $station-accent: #3584e4;
   }
 
   .station-settings__panel {
-    scrollbar-color: rgba(255, 255, 255, .28) transparent;
+    scrollbar-color: var(--app-scrollbar) transparent;
 
     &::-webkit-scrollbar {
       width: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, .22);
+      background: var(--app-scrollbar);
       border-radius: 99px;
     }
 
@@ -293,14 +295,14 @@ $station-accent: #3584e4;
   }
 
   .station-settings__section-title {
-    color: #fff;
+    color: var(--app-text-primary);
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 20px !important;
   }
 
   .station-settings__app-card {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+    box-shadow: 0 8px 24px var(--app-shadow-soft);
     max-width: 900px;
   }
 
@@ -309,7 +311,7 @@ $station-accent: #3584e4;
   }
 
   code {
-    background: rgba(255, 255, 255, .06);
+    background: var(--app-hover);
     border-radius: 5px;
     padding: 2px 6px;
   }
@@ -345,19 +347,19 @@ $station-accent: #3584e4;
   width: 100%;
 
   &:hover {
-    background: rgba(255, 255, 255, .045);
+    background: var(--app-hover);
   }
 }
 
 .station-dock-item--active {
-  background: rgba(255, 255, 255, .065);
-  box-shadow: inset 3px 0 0 $station-accent;
+  background: var(--app-active);
+  box-shadow: inset 3px 0 0 var(--app-accent);
 }
 
 .station-dock-bottom {
   align-items: center;
   background: transparent !important;
-  border-top: 1px solid $station-border;
+  border-top: 1px solid var(--app-border-subtle);
   display: flex;
   flex-direction: column;
   padding: 7px 0 !important;

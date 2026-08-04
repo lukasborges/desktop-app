@@ -37,7 +37,7 @@ interface Props {
 
 const styles = () => ({
   container: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'var(--app-pressed)',
     paddingBottom: 2,
   },
 });

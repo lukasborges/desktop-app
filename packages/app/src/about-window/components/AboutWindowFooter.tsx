@@ -18,7 +18,7 @@ const styles = () => ({
     position: 'absolute',
     bottom: 0,
     left: 0,
-    color: 'rgba(255, 255, 255, .5)',
+    color: 'var(--app-text-muted)',
     fontSize: 11,
   },
   link: {

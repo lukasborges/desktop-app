@@ -26,10 +26,10 @@ type Props = DefaultProps & {
   },
   button: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, .08)',
-    border: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-hover)',
+    border: '1px solid var(--app-border-subtle)',
     borderRadius: 8,
-    color: 'rgba(255, 255, 255, .88)',
+    color: 'var(--app-text-primary)',
     cursor: 'pointer',
     display: 'inline-flex',
     fontSize: 13,
@@ -39,14 +39,14 @@ type Props = DefaultProps & {
     padding: [0, 13],
     transition: 'background-color 140ms ease-out, border-color 140ms ease-out',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .12)',
-      borderColor: 'rgba(255, 255, 255, .12)',
+      backgroundColor: 'var(--app-active)',
+      borderColor: 'var(--app-border)',
     },
     '&:active': {
-      backgroundColor: 'rgba(255, 255, 255, .16)',
+      backgroundColor: 'var(--app-pressed)',
     },
     '&:focus-visible': {
-      boxShadow: '0 0 0 2px #3584e4',
+      boxShadow: '0 0 0 2px var(--app-accent)',
     },
   },
   icon: {

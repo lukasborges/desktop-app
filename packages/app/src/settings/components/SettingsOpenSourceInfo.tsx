@@ -3,6 +3,7 @@ import * as remote from '@electron/remote';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
+import { settingsButtonStyle } from './settingsButtonStyle';
 
 export interface Classes {
   container: string,
@@ -31,6 +32,7 @@ const styles = {
     fontWeight: 'bold',
   },
   button: {
+    ...settingsButtonStyle,
     marginTop: 10,
   },
 };

@@ -9,13 +9,13 @@ export interface Props {
 
 @injectSheet(() => ({
   item: {
-    color: 'rgba(255, 255, 255, .64)',
+    color: 'var(--app-text-secondary)',
     fontSize: '12px',
     transition: 'all 250ms ease-in-out',
     cursor: 'pointer',
     '&:hover': {
-      color: '#fff',
-      backgroundColor: 'rgba(255, 255, 255, .07)',
+      color: 'var(--app-text-primary)',
+      backgroundColor: 'var(--app-hover)',
     },
     borderRadius: 5,
     margin: [3, 0],

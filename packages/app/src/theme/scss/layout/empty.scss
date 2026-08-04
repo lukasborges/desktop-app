@@ -17,13 +17,13 @@
 
   //== Children
   strong {
-    color: #fff;
+    color: var(--app-text-primary);
     display: block;
     margin-bottom: 5px;
     @include font(13px, 600);
   }
   p {
-    color: rgba(#fff, 0.4);
+    color: var(--app-text-muted);
     line-height: 1.5em;
     @include font(12px);
   }

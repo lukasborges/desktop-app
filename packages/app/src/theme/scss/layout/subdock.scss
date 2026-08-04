@@ -26,8 +26,8 @@ $favicon-size: 16px;
 }
 .l-subdock__head {
   align-items: center;
-  background-color: rgba(#fff, .05);
-  border-bottom: 1px solid rgba(#fff, .1);
+  background-color: var(--app-hover);
+  border-bottom: 1px solid var(--app-border);
   display: flex;
   flex: 0 0 auto;
   min-height: 69px;
@@ -36,14 +36,14 @@ $favicon-size: 16px;
 
   //== Children
   strong {
-    color: #fff;
+    color: var(--app-text-primary);
     flex: 1 0 100%;
     display: block;
     line-height: 1.1em;
     @include font(14px, 500);
   }
   small {
-    color: rgba(#fff, 0.6);
+    color: var(--app-text-secondary);
     display: block;
     flex: 1 0 100%;
     @include font(11px);
@@ -88,15 +88,15 @@ $favicon-size: 16px;
 .l-subdock__btn {
   background-position: center;
   background-repeat: no-repeat;
-  border: 1px solid rgba(#fff, 0.3);
+  border: 1px solid var(--app-border-strong);
   border-radius: $border-radius;
   flex: 0 0 auto;
   height: 24px;
 
   //== States
   &:hover {
-    background-color: rgba(#fff, 0.1);
-    border-color: #fff;
+    background-color: var(--app-active);
+    border-color: var(--app-text-primary);
   }
 
   //== Variants
@@ -107,7 +107,7 @@ $favicon-size: 16px;
   }
   &.l-subdock__btn--txt {
     background-position: 6px center;
-    color: #fff;
+    color: var(--app-text-primary);
     line-height: 22px;
     padding: 0 10px 0 28px;
     @include font(11px, 600)
@@ -140,7 +140,7 @@ $favicon-size: 16px;
 }
 .l-subdock__subtitle {
   align-items: center;
-  background-color: rgba(#000, 0.4);
+  background-color: var(--app-backdrop);
   display: flex;
   height: 40px;
   line-height: 40px;
@@ -159,11 +159,11 @@ $favicon-size: 16px;
     justify-content: space-between;
   }
   strong {
-    color: #fff;
+    color: var(--app-text-primary);
     @include font(11px, 600);
   }
   small {
-    color: rgba(#fff, 0.4);
+    color: var(--app-text-muted);
     @include font(11px);
   }
 }
@@ -173,7 +173,7 @@ $favicon-size: 16px;
   flex: 1;
 }
 .l-subdock__head__detach {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--app-text-muted);
   height: 16px;
   flex: 0 0 auto;
   opacity: 0.4;

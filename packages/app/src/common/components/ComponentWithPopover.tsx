@@ -40,7 +40,7 @@ const styles = (theme: Theme) => ({
     right: 0,
     bottom: 0,
     left: theme.dock.size,
-    backgroundColor: 'rgba(0, 0, 0, .25)',
+    backgroundColor: 'var(--app-backdrop)',
   },
 });
 

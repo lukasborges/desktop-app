@@ -41,9 +41,9 @@ const styles = () => ({
     padding: 2,
     borderTopLeftRadius: '20px',
     borderBottomLeftRadius: '20px',
-    backgroundColor: 'rgba(255,255,255, 0.1)',
+    backgroundColor: 'var(--app-active)',
     '&:hover': {
-      backgroundColor: 'rgba(255,255,255, 0.2)',
+      backgroundColor: 'var(--app-pressed)',
     },
   },
   // this is used so that the divs added by popper don't screw things
@@ -62,7 +62,7 @@ const styles = () => ({
     height: 0,
     borderLeft: '5px solid transparent',
     borderRight: '5px solid transparent',
-    borderBottom: '5px solid #25262a',
+    borderBottom: '5px solid var(--app-surface-elevated)',
   },
 });
 

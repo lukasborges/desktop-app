@@ -9,7 +9,7 @@ const styles = {
     marginBottom: 23,
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#363636',
+    color: 'var(--appstore-text)',
   },
 };
 

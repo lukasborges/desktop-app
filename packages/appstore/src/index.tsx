@@ -8,6 +8,10 @@ import App from './app';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 import { State } from './state';
+import { initializeAppearance } from './appearance';
+import './appearance.css';
+
+initializeAppearance();
 
 const sagaMiddleware = createSagaMiddleware();
 const store: Store<State> = createStore(

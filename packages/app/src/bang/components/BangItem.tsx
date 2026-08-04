@@ -65,11 +65,11 @@ interface State {
       padding: [0, 12],
       transition: 'background-color 120ms ease-out, border-color 120ms ease-out',
       '&.highlighted': {
-        backgroundColor: 'rgba(255, 255, 255, .1)',
-        borderColor: 'rgba(255, 255, 255, .18)',
+        backgroundColor: 'var(--app-active)',
+        borderColor: 'var(--app-border-strong)',
       },
       '&.mediumlighted': {
-        backgroundColor: 'rgba(255, 255, 255, .055)',
+        backgroundColor: 'var(--app-hover)',
       },
       '& $shortcutsButton': {
         display: 'none',
@@ -83,7 +83,7 @@ interface State {
       alignItems: 'center',
       width: '92%',
       marginLeft: 11,
-      color: 'white',
+      color: 'var(--app-text-primary)',
     },
     labelWrapper: {
       width: 'calc(100% - 30px)',
@@ -167,7 +167,7 @@ class BangItem extends React.PureComponent<OwnProps & InjectSheetProps, State> {
             className={classes!.caretIcon}
             symbolId={IconSymbol.RETURN}
             size={35}
-            color="rgba(255, 255, 255, .6)"
+            color="var(--app-text-secondary)"
           />
         )}
       </KeyHold>

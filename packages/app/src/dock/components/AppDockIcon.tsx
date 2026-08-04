@@ -67,7 +67,7 @@ interface State {
   },
   appDockIconActive: {},
   scaleUpAnimation: {},
-  tile: { fill: 'rgba(255, 255, 255, .09)' },
+  tile: { fill: 'var(--app-hover)' },
   logo: { opacity: .96 },
   '@keyframes app-dock-icon-scale-up': {
     '0%': { transform: 'scale(0)' },

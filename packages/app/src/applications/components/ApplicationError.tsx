@@ -23,7 +23,7 @@ export interface Props {
 
 const styles = (_theme: Theme) => ({
   container: {
-    color: 'white',
+    color: 'var(--app-text-primary)',
     textAlign: 'center',
   },
   button: {

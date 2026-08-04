@@ -36,10 +36,10 @@ export interface Props {
     margin: [10, 10, 0, 10],
     padding: 10,
     ...theme.fontMixin(10),
-    backgroundColor: 'rgba(255, 255, 255, .07)',
-    border: '1px solid rgba(255, 255, 255, .08)',
+    backgroundColor: 'var(--app-hover)',
+    border: '1px solid var(--app-border-subtle)',
     borderRadius: 8,
-    color: 'rgba(255, 255, 255, .6)',
+    color: 'var(--app-text-secondary)',
   },
 }))
 class NotificationCenterSubdockContentImpl extends React.PureComponent<Props, {}> {

@@ -33,7 +33,7 @@ const styles = () => ({
     height: '100%',
     marginLeft: 0,
     padding: [0, 8, 32, 32],
-    borderLeft: '1px solid rgba(255, 255, 255, .08)',
+    borderLeft: '1px solid var(--app-border-subtle)',
     overflowY: 'auto',
   },
 });

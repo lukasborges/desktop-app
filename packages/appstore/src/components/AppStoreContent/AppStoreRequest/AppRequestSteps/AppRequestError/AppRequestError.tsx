@@ -16,7 +16,7 @@ const useStyles = createUseStyles({
   },
   text: {
     fontSize: 17,
-    color: '#4a4a4a',
+    color: 'var(--appstore-text)',
     textAlign: 'center',
   },
   errorImage: {
