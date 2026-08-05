@@ -1,8 +1,9 @@
 import * as React from 'react';
 // @ts-ignore no declaration file
 import injectSheet from 'react-jss';
+
 import { Application } from '../types';
-import { ITabSelectedInfo, ActiveTab } from '../Container';
+
 import SubdockHead from './SubdockHead';
 import SubdockPanel from './SubdockPanel';
 
@@ -18,16 +19,6 @@ interface Props {
   onOverStateChange: (change: boolean) => any,
   notificationsEnabled: boolean,
   themeGradient: string,
-  activeTab: ActiveTab,
-  onSelectTab: (tabId: string, info: ITabSelectedInfo) => any,
-  onDetachTab: () => any,
-  onAttachTab: () => any,
-  onSelectFavorite: (tabId: string) => any,
-  onAddTabAsFavorite: () => any,
-  onRemoveFavorite: (favoriteId: string, tabId: string) => any,
-  onDetachFavorite: () => any,
-  onCloseTab: (tabId: string) => any,
-  onOpenNewTab: () => void,
   onClickAddNewInstance: (application: Application) => void,
   openApplicationPreferences: (application: Application) => void,
   toggleNotifications: () => void,
@@ -64,8 +55,7 @@ export default class Subdock extends React.PureComponent<Props, {}> {
   render() {
     const {
       classes, application, onOverStateChange, notificationsEnabled,
-      handleHideSubdock, activeTab, onSelectTab, onDetachTab, onAttachTab, onSelectFavorite, onAddTabAsFavorite,
-      onRemoveFavorite, onDetachFavorite, onCloseTab, onClickAddNewInstance, onOpenNewTab, openApplicationPreferences,
+      onClickAddNewInstance, openApplicationPreferences,
       toggleNotifications, onChangeIcon, onResetIcon, hasCustomIcon,
     } = this.props;
 
@@ -88,18 +78,7 @@ export default class Subdock extends React.PureComponent<Props, {}> {
           {application &&
             <SubdockPanel
               application={application}
-              activeTab={activeTab}
-              onSelectTab={onSelectTab}
-              onDetachTab={onDetachTab}
-              onAttachTab={onAttachTab}
-              onSelectFavorite={onSelectFavorite}
-              onAddTabAsFavorite={onAddTabAsFavorite}
-              onRemoveFavorite={onRemoveFavorite}
-              onDetachFavorite={onDetachFavorite}
-              onCloseTab={onCloseTab}
-              onOpenNewTab={onOpenNewTab}
               onClickAddNewInstance={onClickAddNewInstance}
-              handleHideSubdock={handleHideSubdock}
             />
           }
         </div>
