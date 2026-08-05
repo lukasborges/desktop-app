@@ -57,7 +57,7 @@ interface State {
   },
   appDockIcon: {
     display: 'block',
-    opacity: .82,
+    opacity: 'var(--app-rail-icon-opacity)',
     transition: 'opacity 180ms ease-out, transform 180ms ease-out',
     '&:hover': { opacity: 1 },
     '&$appDockIconActive': { opacity: 1 },
@@ -67,7 +67,10 @@ interface State {
   },
   appDockIconActive: {},
   scaleUpAnimation: {},
-  tile: { fill: 'var(--app-hover)' },
+  tile: {
+    fill: 'var(--app-rail-tile)',
+    stroke: 'var(--app-rail-tile-border)',
+  },
   logo: { opacity: .96 },
   '@keyframes app-dock-icon-scale-up': {
     '0%': { transform: 'scale(0)' },

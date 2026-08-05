@@ -14,7 +14,9 @@ interface Props {
 const styles = (theme: ThemeTypes) => createStyles({
   container: {
     alignItems: 'center',
-    backgroundColor: 'var(--app-hover)',
+    backgroundColor: 'var(--app-rail-tile)',
+    border: '1px solid var(--app-rail-tile-border)',
+    boxSizing: 'border-box',
     borderRadius: (props: Props) => (props.size || 30) * .275,
     display: 'flex',
     flexShrink: 0,
