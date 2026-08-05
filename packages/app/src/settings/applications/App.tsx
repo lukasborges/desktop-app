@@ -22,6 +22,7 @@ import AddNewInstance from '../applications/components/AddNewInstance';
 import { AdwaitaTrashIcon } from '../applications/components/AdwaitaSymbolicIcons';
 import ListInstances from '../applications/components/ListInstances';
 import RemoveModalConfirmation from '../applications/components/RemoveModalConfirmation';
+import AdwaitaSwitch from '../components/AdwaitaSwitch';
 
 import { Instance, Instances } from './types';
 
@@ -40,11 +41,6 @@ interface Classes {
   buttonRemoveAllContainer: string,
   destructiveButton: string,
   listInstances: string,
-  switchControl: string,
-  switchControlDisabled: string,
-  switchInput: string,
-  switchTrack: string,
-  switchThumb: string,
 }
 
 type DefaultProps = {
@@ -90,41 +86,6 @@ interface State {
   lastInstance: boolean,
   removeAction: () => any
 }
-
-interface AdwaitaSwitchProps {
-  checked: boolean,
-  classes: Classes,
-  disabled?: boolean,
-  disabledHint?: string,
-  label: string,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => any,
-}
-
-const AdwaitaSwitch = ({
-  checked,
-  classes,
-  disabled = false,
-  disabledHint = '',
-  label,
-  onChange,
-}: AdwaitaSwitchProps) => (
-  <label
-    className={classNames(classes.switchControl, { [classes.switchControlDisabled]: disabled })}
-    title={disabled && disabledHint ? disabledHint : label}
-  >
-    <input
-      aria-label={label}
-      checked={checked}
-      className={classes.switchInput}
-      disabled={disabled}
-      onChange={onChange}
-      type="checkbox"
-    />
-    <span aria-hidden="true" className={classes.switchTrack}>
-      <span className={classes.switchThumb} />
-    </span>
-  </label>
-);
 
 @injectSheet((theme: Theme) => ({
   item: {
@@ -214,61 +175,6 @@ const AdwaitaSwitch = ({
   },
   listInstances: {
     marginBottom: '20px',
-  },
-  switchControl: {
-    alignItems: 'center',
-    cursor: 'default',
-    display: 'inline-flex',
-    flexShrink: 0,
-    height: 26,
-    position: 'relative',
-    '&:hover $switchTrack': {
-      backgroundColor: 'var(--app-switch-track-hover)',
-    },
-    '&:focus-within $switchTrack': {
-      boxShadow: '0 0 0 2px rgba(53, 132, 228, .6)',
-    },
-  },
-  switchControlDisabled: {
-    cursor: 'not-allowed',
-    opacity: .55,
-  },
-  switchInput: {
-    height: 1,
-    opacity: 0,
-    overflow: 'hidden',
-    position: 'absolute',
-    width: 1,
-    '&:checked + $switchTrack': {
-      backgroundColor: 'var(--app-accent)',
-      borderColor: 'var(--app-accent)',
-    },
-    '&:checked + $switchTrack $switchThumb': {
-      transform: 'translateX(18px)',
-    },
-    '&:disabled + $switchTrack': {
-      boxShadow: 'none',
-    },
-  },
-  switchTrack: {
-    backgroundColor: 'var(--app-switch-track)',
-    border: '1px solid var(--app-border)',
-    borderRadius: 999,
-    boxSizing: 'border-box',
-    display: 'inline-flex',
-    height: 24,
-    padding: 2,
-    transition: 'background-color 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out',
-    width: 42,
-  },
-  switchThumb: {
-    backgroundColor: '#fff',
-    borderRadius: '50%',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, .45)',
-    display: 'block',
-    height: 18,
-    transition: 'transform 160ms ease-out',
-    width: 18,
   },
 }))
 class AppImpl extends React.PureComponent<Props, State> {
@@ -374,6 +280,7 @@ class AppImpl extends React.PureComponent<Props, State> {
         <div className={classes!.header}>
           <AppIcon
             imgUrl={applicationIcon}
+            size={40}
             themeColor={applicationThemeColor}
           />
 
@@ -429,7 +336,6 @@ class AppImpl extends React.PureComponent<Props, State> {
 
           <AdwaitaSwitch
             checked={useInstanceLogoInDock}
-            classes={classes!}
             label={`Use ${instanceWording} logo in the dock`}
             onChange={onToggleInstanceLogoInDock}
           />
@@ -448,7 +354,6 @@ class AppImpl extends React.PureComponent<Props, State> {
           <div>
             <AdwaitaSwitch
               checked={alwaysLoadedByDefault ? true : alwaysLoaded}
-              classes={classes!}
               disabled={alwaysLoadedByDefault}
               disabledHint={`${applicationName} is always kept active in background`}
               label={`Keep ${applicationName} active in background`}

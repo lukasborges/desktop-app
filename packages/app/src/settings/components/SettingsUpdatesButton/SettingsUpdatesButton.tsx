@@ -5,11 +5,11 @@ import * as React from 'react';
 import injectSheet from 'react-jss';
 import { compose } from 'redux';
 
+import { settingsButtonStyle } from '../settingsButtonStyle';
+
 import {
   withGetAutoUpdateStatus, withCheckForUpdatesMutation, withOpenReleaseNotesMutation,
 } from './queries@local.gql.generated';
-import { settingsButtonStyle } from '../settingsButtonStyle';
-
 export interface Classes {
   checking: string,
   info: string,
@@ -56,7 +56,7 @@ const styles = () => ({
   },
   updateButton: {
     ...settingsButtonStyle,
-    minWidth: '200px',
+    minWidth: '160px',
     marginTop: 2,
   },
 });

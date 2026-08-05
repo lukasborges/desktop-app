@@ -4,6 +4,7 @@ import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 
+import AppIcon from '../../../dock/components/AppIcon';
 import Providers from '../../../password-managers/providers/index';
 import { Instance, Instances } from '../types';
 import { orderInstances } from '../utils';
@@ -77,28 +78,23 @@ type Props = DefaultProps & {
     minWidth: 0,
   },
   logo: {
-    border: '1px solid var(--app-border-strong)',
-    borderRadius: '50%',
     flexShrink: 0,
-    height: 28,
     marginRight: 10,
-    objectFit: 'cover',
-    width: 28,
   },
   logoFallback: {
     alignItems: 'center',
     backgroundColor: 'var(--app-active)',
     border: '1px solid var(--app-border)',
-    borderRadius: '50%',
+    borderRadius: 8,
     display: 'inline-flex',
     flexShrink: 0,
     fontSize: 12,
     fontWeight: 600,
-    height: 28,
+    height: 32,
     justifyContent: 'center',
     marginRight: 10,
     textTransform: 'uppercase',
-    width: 28,
+    width: 32,
   },
   name: {
     overflow: 'hidden',
@@ -212,7 +208,7 @@ class ListInstances extends React.PureComponent<Props> {
       <li className={classes!.row} key={instance.id}>
         <div className={classes!.identity}>
           {instance.logoUrl ?
-            <img alt="" className={classes!.logo} src={instance.logoUrl} /> :
+            <AppIcon className={classes!.logo} imgUrl={instance.logoUrl} size={32} /> :
             <span aria-hidden="true" className={classes!.logoFallback}>{instance.name.charAt(0)}</span>
           }
           {instance.needConfiguration ?
