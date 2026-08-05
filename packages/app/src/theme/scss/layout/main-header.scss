@@ -45,6 +45,10 @@ $station-rail-width: 68px;
   z-index: $zindex-supra;
 }
 
+.station-main-header--menu-open {
+  z-index: $zindex-ultime;
+}
+
 .station-main-header__controls {
   align-items: center;
   display: flex;
@@ -172,7 +176,7 @@ $station-rail-width: 68px;
   min-width: 178px;
   padding: 6px;
   position: absolute;
-  z-index: $zindex-mega;
+  z-index: $zindex-ultime;
 }
 
 .station-main-menu--depth-0 {

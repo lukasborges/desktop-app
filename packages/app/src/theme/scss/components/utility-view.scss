@@ -1,0 +1,40 @@
+@import "../common/variables";
+
+.station-utility-view-close {
+  align-items: center;
+  background: var(--app-surface-elevated);
+  border: 1px solid var(--app-border-strong);
+  border-radius: 9px;
+  color: var(--app-icon);
+  cursor: default;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  outline: 0;
+  padding: 0;
+  position: fixed;
+  right: 18px;
+  top: 70px;
+  transition: background-color 140ms ease-out, color 140ms ease-out;
+  width: 36px;
+  z-index: $zindex-supra + 1;
+
+  svg {
+    fill: currentColor;
+    height: 16px;
+    width: 16px;
+  }
+
+  &:hover {
+    background: var(--app-active);
+    color: var(--app-text-primary);
+  }
+
+  &:active {
+    background: var(--app-pressed);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--app-accent);
+  }
+}

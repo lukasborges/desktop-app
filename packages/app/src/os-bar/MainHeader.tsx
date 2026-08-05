@@ -309,7 +309,10 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
     } = this.props;
 
     return (
-      <header className="station-main-header" onDoubleClick={onDoubleClick}>
+      <header
+        className={`station-main-header ${this.state.isMenuOpen ? 'station-main-header--menu-open' : ''}`}
+        onDoubleClick={onDoubleClick}
+      >
         <div className="station-main-header__controls station-main-header__controls--left">
           <button
             aria-label="Main menu"
