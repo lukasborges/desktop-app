@@ -40,6 +40,19 @@ Database migration files are also compiled into `dist/renderer/umzug-runs/` so U
 - The separate web UI is written to disk and does not use HMR.
 - Some runtime resources must remain on disk because they are loaded by path rather than imported into a bundle.
 
+### App Store changes
+
+The App Store is a separate bundle. Its build command writes to `packages/appstore/dist/appstore`, while the development `platform://appstore` handler reads the on-disk copy in `packages/app/dist/renderer/appstore`. The development server can retain an older copy even after Platform is restarted.
+
+After changing `packages/appstore`, run:
+
+```bash
+yarn workspace @getstation/appstore build:1
+cp -a packages/appstore/dist/appstore/. packages/app/dist/renderer/appstore/
+```
+
+Before reporting the change as ready, confirm that `packages/app/dist/renderer/appstore/index.html` contains the new bundle hash, restart or reload the App Store webview, and visually inspect the running local instance. Compilation alone is not sufficient validation for UI changes.
+
 When adding a new entry or resource, verify both `yarn dev` and `yarn build`; a path that works through the development server may still be missing from a packaged build.
 
 ## Packaging

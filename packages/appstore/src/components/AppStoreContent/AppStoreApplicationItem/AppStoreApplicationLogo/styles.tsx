@@ -19,6 +19,7 @@ const styles = () => ({
     overflow: 'hidden',
   },
   icon: {
+    objectFit: 'contain',
     display: 'inline-block',
     width: 24,
     height: 24,

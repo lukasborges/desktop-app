@@ -17,6 +17,34 @@ export type AppStoreApplicationLogoProps = {
 
 export type AppStoreApplicationLogoState = {
   isStopped: boolean,
+  needsContrastBackground: boolean,
+};
+
+const iconNeedsContrastBackground = (image: HTMLImageElement): boolean => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 32;
+  canvas.height = 32;
+  const context = canvas.getContext('2d');
+  if (!context) return false;
+
+  try {
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    let visiblePixels = 0;
+    let lightPixels = 0;
+
+    for (let index = 0; index < pixels.length; index += 4) {
+      if (pixels[index + 3] < 32) continue;
+      visiblePixels += 1;
+      if (pixels[index] >= 235 && pixels[index + 1] >= 235 && pixels[index + 2] >= 235) {
+        lightPixels += 1;
+      }
+    }
+
+    return visiblePixels > 0 && lightPixels / visiblePixels >= .85;
+  } catch (_error) {
+    return false;
+  }
 };
 
 @injectSheet(styles)
@@ -24,11 +52,15 @@ export default class AppStoreApplicationLogo extends React.PureComponent<AppStor
 
   constructor(props: any) {
     super(props);
-    this.state = { isStopped: true };
+    this.state = { isStopped: true, needsContrastBackground: false };
+  }
+
+  handleIconLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    this.setState({ needsContrastBackground: iconNeedsContrastBackground(event.currentTarget) });
   }
 
   render() {
-    const { classes, iconURL, isAnimationStopped, toggleAnimation } = this.props;
+    const { classes, iconURL, themeColor, isAnimationStopped, toggleAnimation } = this.props;
     const defaultOptions = {
       loop: false,
       autoplay: true,
@@ -41,17 +73,19 @@ export default class AppStoreApplicationLogo extends React.PureComponent<AppStor
     return (
       <div className={classes!.iconContainer}>
         { iconURL ?
-          <svg className={classes!.iconFrame}>
+          <div
+            className={classes!.iconFrame}
+            style={{ backgroundColor: this.state.needsContrastBackground ? themeColor : 'transparent' }}
+          >
             {isAnimationStopped &&
-              <image
-                xlinkHref={`${iconURL}`}
-                width={24}
-                height={24}
-                preserveAspectRatio="xMidYMid meet"
+              <img
+                src={iconURL}
+                alt=""
                 className={classes!.icon}
+                onLoad={this.handleIconLoad}
               />
             }
-          </svg>
+          </div>
           :
           <Icon symbolId={IconSymbol.APP_ICON_PLACEHOLDER} size={40}/>
         }

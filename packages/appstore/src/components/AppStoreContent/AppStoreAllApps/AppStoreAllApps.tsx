@@ -89,7 +89,12 @@ class AppStoreAllApps extends React.PureComponent<AppStoreAllAppsComponentProps,
                         onClick={() => this.onSelectCategory(categoryName)}
                       >
                         {!!category &&
-                          <Icon className={classes!.categoryIcon} symbolId={category.icon} size={18}/>
+                          <Icon
+                            className={classes!.categoryIcon}
+                            symbolId={category.icon}
+                            size={18}
+                            color="var(--appstore-text-muted)"
+                          />
                         }
                         <span className={classes!.categoryText}>{categoryName}</span>
                       </button>
@@ -111,7 +116,12 @@ class AppStoreAllApps extends React.PureComponent<AppStoreAllAppsComponentProps,
                 >
                   <span className={classes!.dropDownSelection}>
                     {!!selectedCategoryData &&
-                      <Icon className={classes!.categoryIcon} symbolId={selectedCategoryData.icon} size={18}/>
+                      <Icon
+                        className={classes!.categoryIcon}
+                        symbolId={selectedCategoryData.icon}
+                        size={18}
+                        color="var(--appstore-text-muted)"
+                      />
                     }
                     <span id="app-category-selection" className={classes!.dropDownTitle}>
                       {selectedCategory || 'Choose a category'}
@@ -138,7 +148,12 @@ class AppStoreAllApps extends React.PureComponent<AppStoreAllAppsComponentProps,
                           onClick={() => this.onSelectCategory(categoryName)}
                         >
                           {!!category &&
-                            <Icon className={classes!.categoryIcon} symbolId={category.icon} size={18}/>
+                            <Icon
+                              className={classes!.categoryIcon}
+                              symbolId={category.icon}
+                              size={18}
+                              color="var(--appstore-text-muted)"
+                            />
                           }
                           <span className={classes!.categoryText}>{categoryName}</span>
                         </button>

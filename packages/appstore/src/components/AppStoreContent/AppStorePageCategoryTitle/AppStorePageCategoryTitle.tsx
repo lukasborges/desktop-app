@@ -25,7 +25,12 @@ class AppStorePageCategoryTitle extends React.PureComponent<AppStorePageCategory
             <use xlinkHref={iconUrl}/>
           </svg>}
           {!!iconSymbol &&
-            <Icon className={classes!.categoryIcon} symbolId={iconSymbol} size={20}/>
+            <Icon
+              className={classes!.categoryIcon}
+              symbolId={iconSymbol}
+              size={20}
+              color="var(--appstore-text-muted)"
+            />
           }
           <div className={classes!.categoryName}>{title}</div>
         </div>
