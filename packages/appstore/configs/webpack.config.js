@@ -10,6 +10,7 @@ const PATHS = {
   root: path.resolve(__dirname, '..'),
   nodeModules: path.resolve(__dirname, '../node_modules'),
   src: path.resolve(__dirname, '../src'),
+  sharedAppUtils: path.resolve(__dirname, '../../app/src/utils'),
   dist: path.resolve(__dirname, '../dist/appstore'),
   static: path.resolve(__dirname, '../src/static'),
 };
@@ -67,7 +68,7 @@ module.exports = (env = {}) => {
         // typescript
         {
           test: /\.tsx?$/,
-          include: PATHS.src,
+          include: [PATHS.src, PATHS.sharedAppUtils],
           use: {
             loader: 'ts-loader',
             options: {

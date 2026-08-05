@@ -309,6 +309,7 @@ class AppImpl extends React.PureComponent<Props, State> {
           <div className={classes!.listInstances} >
             <ListInstances
               applications={applications}
+              applicationThemeColor={applicationThemeColor}
               manifestURL={manifestURL}
               instanceTypeWording={instanceWording}
               onRemoveInstance={this.onConfirmRemoveInstance}

@@ -4,6 +4,8 @@ import injectSheet from 'react-jss';
 import * as classNames from 'classnames';
 import * as shortid from 'shortid';
 
+import { iconNeedsContrastBackground } from '../../utils/iconContrast';
+
 interface Classes {
   anchor: string,
   appDockIcon: string,
@@ -43,6 +45,7 @@ type Props = OwnProps & GraphQLProps;
 
 interface State {
   failedFaviconURL?: string,
+  contrastBackgroundURLs: string[],
 }
 
 @injectSheet({
@@ -87,10 +90,12 @@ export class AppDockIcon extends React.PureComponent<Props, State> {
 
   state: State = {
     failedFaviconURL: undefined,
+    contrastBackgroundURLs: [],
   };
 
   private readonly primaryClip: string;
   private readonly secondaryClip: string;
+  private readonly inspectedURLs = new Set<string>();
 
   constructor(props: Props) {
     super(props);
@@ -103,6 +108,33 @@ export class AppDockIcon extends React.PureComponent<Props, State> {
   handleMouseLeave = () => this.props.onOverStateChange!(false);
 
   handleFaviconError = () => this.setState({ failedFaviconURL: this.props.faviconURL });
+
+  componentDidMount() {
+    this.inspectLogoURLs();
+  }
+
+  componentDidUpdate() {
+    this.inspectLogoURLs();
+  }
+
+  inspectLogoURLs() {
+    const { faviconURL, iconURL, logoURL } = this.props;
+    [faviconURL, iconURL, logoURL].forEach(url => {
+      if (!url || this.inspectedURLs.has(url)) return;
+      this.inspectedURLs.add(url);
+
+      const image = new Image();
+      image.onload = () => {
+        if (!iconNeedsContrastBackground(image)) return;
+        this.setState(state => ({
+          contrastBackgroundURLs: state.contrastBackgroundURLs.includes(url) ?
+            state.contrastBackgroundURLs :
+            [...state.contrastBackgroundURLs, url],
+        }));
+      };
+      image.src = url;
+    });
+  }
 
   renderSurroundingLink(element: JSX.Element): JSX.Element {
     const { active, classes, onClick, onRightClick, iconRef } = this.props;
@@ -138,14 +170,24 @@ export class AppDockIcon extends React.PureComponent<Props, State> {
   }
 
   renderLogos() {
-    const { classes, faviconURL, iconURL, isInstanceLogoInDockIcon, logoURL } = this.props;
+    const { classes, faviconURL, iconURL, isInstanceLogoInDockIcon, logoURL, themeColor } = this.props;
     const serviceURL = faviconURL && faviconURL !== this.state.failedFaviconURL ? faviconURL : iconURL;
     const primaryURL = isInstanceLogoInDockIcon && logoURL ? logoURL : serviceURL;
     const secondaryURL = isInstanceLogoInDockIcon ? serviceURL : logoURL;
     const primaryIsFavicon = primaryURL === faviconURL;
+    const primaryNeedsContrast = Boolean(primaryURL && this.state.contrastBackgroundURLs.includes(primaryURL));
+    const secondaryNeedsContrast = Boolean(secondaryURL && this.state.contrastBackgroundURLs.includes(secondaryURL));
 
     return (
       <g className={classes!.logo}>
+        <rect
+          fill={primaryNeedsContrast && themeColor ? themeColor : 'transparent'}
+          height="26"
+          rx="7"
+          width="26"
+          x="7"
+          y="7"
+        />
         {primaryURL &&
           <image
             clipPath={`url(#${this.primaryClip})`}
@@ -160,7 +202,7 @@ export class AppDockIcon extends React.PureComponent<Props, State> {
         }
         {secondaryURL &&
           <>
-            <circle cx="32" cy="32" r="7" fill="#f4f4f5" />
+            <circle cx="32" cy="32" r="7" fill={secondaryNeedsContrast && themeColor ? themeColor : '#f4f4f5'} />
             <image
               clipPath={`url(#${this.secondaryClip})`}
               height="12"
