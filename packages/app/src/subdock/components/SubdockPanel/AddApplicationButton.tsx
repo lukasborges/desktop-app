@@ -2,8 +2,6 @@ import { Button, Style } from '@getstation/theme';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
-import { oc } from 'ts-optchain';
-import { GetApplicationStateQuery } from '../../../applications/queries@local.gql.generated';
 
 interface Classes {
   container: string,
@@ -12,10 +10,7 @@ interface Classes {
 
 interface Props {
   classes?: Classes,
-  onOpenNewTab: () => void,
   onClickAddNewInstance: () => void,
-  loading: boolean,
-  application: GetApplicationStateQuery['application'],
 }
 
 @injectSheet(() => ({
@@ -35,31 +30,14 @@ export default class AddApplicationButton extends React.PureComponent<Props, {}>
   }
 
   render() {
-    const { classes, loading, application, onOpenNewTab, onClickAddNewInstance } = this.props;
-    if (loading || !application) return null;
+    const { classes, onClickAddNewInstance } = this.props;
 
-    const notSingleInstance = !oc(application.manifestData).bx_single_page();
-    if (notSingleInstance) {
-      return (
-        <div className={classes!.container}>
-          <Button className={classes!.button} btnStyle={Style.SECONDARY} onClick={onOpenNewTab}>
-            Add a new page
-          </Button>
-        </div>
-      );
-    }
-
-    const instanceWording = oc(application.manifestData).bx_multi_instance_config.instance_wording();
-    if (instanceWording) {
-      return (
-        <div className={classes!.container}>
-          <Button className={classes!.button} btnStyle={Style.SECONDARY} onClick={onClickAddNewInstance}>
-            Add a new {instanceWording}
-          </Button>
-        </div>
-      );
-    }
-
-    return null;
+    return (
+      <div className={classes!.container}>
+        <Button className={classes!.button} btnStyle={Style.SECONDARY} onClick={onClickAddNewInstance}>
+          Add a new instance
+        </Button>
+      </div>
+    );
   }
 }

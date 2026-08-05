@@ -5,8 +5,10 @@ import * as RadixRouter from 'radix-router';
 import { uniq } from 'ramda';
 import { BehaviorSubject } from 'rxjs';
 import { URL as NodeURL } from 'url';
+
 import { isNotInstallableApplication } from '../application-settings/selectors';
 import {
+  getApplicationActiveTab,
   getApplicationCustomURL,
   getApplicationId,
   getApplicationIconURL,
@@ -22,9 +24,10 @@ import {
 } from '../applications/selectors';
 import { ApplicationImmutable } from '../applications/types';
 import { handleError } from '../services/api/helpers';
-import { getTabIdMatchingURL } from '../tabs/selectors';
+import { getApplicationIdByTabId, getTabIdMatchingURL } from '../tabs/selectors';
 import { StationState, StationStore } from '../types';
-import { DEFAULT_BROWSER, DEFAULT_BROWSER_BACKGROUND, NEW_TAB, NEW_WINDOW, Targets } from './constants';
+
+import { DEFAULT_BROWSER, DEFAULT_BROWSER_BACKGROUND, NEW_WINDOW, Targets } from './constants';
 import {
   ApplicationConnectionNode,
   ApplicationItem,
@@ -70,9 +73,8 @@ export default class URLRouter {
     options: { target?: Targets, forceCaptive?: boolean } = {}
   ): Promise<URLRouterActionAndDestination> {
     // Handy re-usable checks
-    const newTab = options.target === NEW_TAB;
     const newWindow = options.target === NEW_WINDOW;
-    const defaultBrowser = options.target === DEFAULT_BROWSER || options.target == DEFAULT_BROWSER_BACKGROUND;
+    const defaultBrowser = options.target === DEFAULT_BROWSER || options.target === DEFAULT_BROWSER_BACKGROUND;
 
     if (defaultBrowser) {
       return [URLRouterAction.DEFAULT_BROWSER, null];
@@ -83,8 +85,19 @@ export default class URLRouter {
       const match = this.hasMatchingTab(url);
       if (match) {
         if (match.type === 'exact') {
-          return (origin && origin.tabId === match.tabId)
-            ? [URLRouterAction.RELOAD, { tabId: match.tabId }]
+          if (origin && origin.tabId === match.tabId) {
+            return [URLRouterAction.RELOAD, { tabId: match.tabId }];
+          }
+
+          // Old installations can still have persisted secondary tabs. Route
+          // their URLs through the application's active section instead of
+          // bringing a hidden page back to the front.
+          const applicationId = getApplicationIdByTabId(this.state, match.tabId);
+          const application = applicationId && getApplicationById(this.state, applicationId);
+          const activeTabId = application && getApplicationActiveTab(application);
+
+          return activeTabId && activeTabId !== match.tabId
+            ? [URLRouterAction.PUSH_AND_NAV_TO_TAB, { tabId: activeTabId }]
             : [URLRouterAction.NAV_TO_TAB, { tabId: match.tabId }];
         }
         return [URLRouterAction.PUSH_AND_NAV_TO_TAB, { tabId: match.tabId }];
@@ -92,8 +105,8 @@ export default class URLRouter {
 
       // Scope
       if (origin && await this.isInScope(url, origin)) {
-        // Decide where to open
-        if (newTab) return [URLRouterAction.NEW_TAB, origin];
+        // Keep regular in-app links in the application's single web section,
+        // even when the page requested target="_blank".
         if (newWindow) return [URLRouterAction.NEW_WINDOW, origin];
         return [URLRouterAction.NAV_IN_TAB, origin];
       }
@@ -103,16 +116,22 @@ export default class URLRouter {
       if (applications.length === 1) {
         const application = applications[0];
         const applicationId = getApplicationId(application);
-        return (newWindow)
-          ? [URLRouterAction.NEW_WINDOW, { applicationId }]
+        if (newWindow) return [URLRouterAction.NEW_WINDOW, { applicationId }];
+
+        const tabId = getApplicationActiveTab(application);
+        return tabId
+          ? [URLRouterAction.PUSH_AND_NAV_TO_TAB, { tabId }]
           : [URLRouterAction.NEW_TAB, { applicationId }];
       }
       if (applications.length > 1) {
         const application = this.findApplicationWithOriginIdentity(applications, origin);
         if (application) {
           const applicationId = getApplicationId(application);
-          return (newWindow)
-            ? [URLRouterAction.NEW_WINDOW, { applicationId }]
+          if (newWindow) return [URLRouterAction.NEW_WINDOW, { applicationId }];
+
+          const tabId = getApplicationActiveTab(application);
+          return tabId
+            ? [URLRouterAction.PUSH_AND_NAV_TO_TAB, { tabId }]
             : [URLRouterAction.NEW_TAB, { applicationId }];
         }
 

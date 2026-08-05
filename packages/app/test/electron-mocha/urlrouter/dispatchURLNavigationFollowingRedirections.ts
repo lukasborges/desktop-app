@@ -2,12 +2,14 @@ import * as assert from 'assert';
 import { join } from 'path';
 import { app } from 'electron';
 import { runSaga } from 'redux-saga';
+
 import { dispatchUrlSaga } from '../../../src/urlrouter/sagas';
+import ManifestProvider from '../../../src/applications/manifest-provider/manifest-provider';
+import URLRouter from '../../../src/urlrouter/URLRouter';
+
 import { getState } from './data-mock';
 import { addDummyCookieToSession, removeDummyCookieFromSession } from './electron-mock';
 import { startDummyServer } from './server-mock';
-import ManifestProvider from '../../../src/applications/manifest-provider/manifest-provider';
-import URLRouter from '../../../src/urlrouter/URLRouter';
 
 const manifestProvider = new ManifestProvider({
 //  cachePath: join(app.getPath('userData'), 'ApplicationManifestsCache'),
@@ -93,7 +95,7 @@ describe('URL Router Follow Redirects', () => {
     assert.equal(url, shortenedUrl);
   });
 
-  it('Dispatch bit.ly URL that contain a github repo should open github app with a new tab', async () => {
+  it('Dispatch bit.ly URL that contain a github repo should reuse the active github section', async () => {
     const bitlyUrlForGithub = 'https://bit.ly/2rlmr6H';
 
     const { url, action, destination } = await runSaga(
@@ -106,8 +108,8 @@ describe('URL Router Follow Redirects', () => {
       { url: bitlyUrlForGithub })
       .toPromise();
 
-    assert.equal(action, 'NEW_TAB');
-    assert.equal(destination.applicationId, 'github-S1PwoQsDG');
+    assert.equal(action, 'PUSH_AND_NAV_TO_TAB');
+    assert.equal(destination.tabId, 'github-S1PwoQsDG/Bkq6B5OpM');
     assert.equal(url, 'https://github.com/follow-redirects/follow-redirects');
   });
 
@@ -129,7 +131,7 @@ describe('URL Router Follow Redirects', () => {
     assert.equal(url, 'https://getstation.com/');
   });
 
-  it('Dispatch git.io redirect URL that contain a github link should open github app with a new tab', async () => {
+  it('Dispatch git.io redirect URL that contain a github link should reuse the active github section', async () => {
     const gitIoLink = 'https://git.io/vFLqM';
 
     const { url, action, destination } = await runSaga(
@@ -142,8 +144,8 @@ describe('URL Router Follow Redirects', () => {
       { url: gitIoLink })
       .toPromise();
 
-    assert.equal(action, 'NEW_TAB');
-    assert.equal(destination.applicationId, 'github-S1PwoQsDG');
+    assert.equal(action, 'PUSH_AND_NAV_TO_TAB');
+    assert.equal(destination.tabId, 'github-S1PwoQsDG/Bkq6B5OpM');
     assert.equal(url, 'https://github.com/marketplace');
   });
 

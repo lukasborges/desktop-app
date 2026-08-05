@@ -7,21 +7,13 @@ import { pure } from 'recompose';
 import Maybe from 'graphql/tsutils/Maybe';
 
 import {
-  createNewEmptyTab,
   installApplication,
-  navigateToApplicationTabAutomatically,
   pickCustomApplicationIcon,
   resetCustomApplicationIcon,
   toggleNotifications,
 } from '../applications/duck';
-import { getApplicationActiveTab } from '../applications/get';
-import { getTabById } from '../tabs/selectors';
-import { getTabURL } from '../tabs/get';
-import { getApplicationById as getApplicationByIdSelector, getNotificationsEnabled } from '../applications/selectors';
-import { addTabAsFavorite, openFavorite, removeFavorite } from '../favorites/duck';
+import { getNotificationsEnabled } from '../applications/selectors';
 import { openApplicationPreferences, OpenApplicationPreferencesVia } from '../settings/applications/duck';
-import { attach, detach } from '../subwindows/duck';
-import { closeTab } from '../tabs/duck';
 import { StationState } from '../types';
 
 import Subdock from './components/Subdock';
@@ -51,21 +43,11 @@ export interface OuterProps {
 }
 
 export interface OwnProps {
-  activeTab: ActiveTab,
   notificationsEnabled: boolean | undefined,
   themeGradient: string,
-  onSelectTab: (tabId: string) => any,
-  onDetachTab: () => any,
-  onAttachTab: () => any,
-  onSelectFavorite: (favoriteId: string) => void,
-  onAddTabAsFavorite: () => any,
-  onRemoveFavorite: (favoriteId: string, tabId: string) => any,
-  onDetachFavorite: () => any,
-  onCloseTab: (tabId: string) => void,
   onClickAddNewInstance: (application: Application) => void,
   toggleNotifications: () => void,
   openApplicationPreferences: (application: Application) => void,
-  onOpenNewTab: () => void,
   onChangeIcon: () => void,
   onResetIcon: () => void,
 }
@@ -73,37 +55,10 @@ export interface OwnProps {
 type Props = OuterProps & OwnProps & GraphQLProps;
 
 class SubdockContainerImpl extends React.PureComponent<Props, {}> {
-  constructor(args: Props) {
-    super(args);
-
-    this.onSelectFavorite = this.onSelectFavorite.bind(this);
-    this.onSelectTab = this.onSelectTab.bind(this);
-    this.onCloseTab = this.onCloseTab.bind(this);
-  }
-
   componentDidUpdate(prevProps: Props) {
     if (prevProps.loading && !this.props.loading) {
       this.props.onLoaded && this.props.onLoaded();
     }
-  }
-
-  onSelectFavorite(favoriteId: string) {
-    const { onSelectFavorite } = this.props;
-
-    onSelectFavorite(favoriteId);
-  }
-
-  onSelectTab(tabId: string) {
-    const { onSelectTab, handleHideSubdock } = this.props;
-
-    onSelectTab(tabId);
-    handleHideSubdock();
-  }
-
-  onCloseTab(tabId: string) {
-    const { onCloseTab } = this.props;
-
-    onCloseTab(tabId);
   }
 
   render() {
@@ -114,9 +69,6 @@ class SubdockContainerImpl extends React.PureComponent<Props, {}> {
       <Subdock
         {...this.props}
         hasCustomIcon={Boolean(this.props.application && this.props.application.customIconURL)}
-        onSelectFavorite={this.onSelectFavorite}
-        onSelectTab={this.onSelectTab}
-        onCloseTab={this.onCloseTab}
       />
     );
   }
@@ -127,36 +79,17 @@ const SubdockContainer = compose(
   connect(
     (state: StationState, ownProps: Props) => {
       const { applicationId } = ownProps;
-      const application = getApplicationByIdSelector(state, applicationId);
-
-      // By default, its elements are null, but fill them if it exists
-      let activeTab: ActiveTab = { id: null, url: null };
-      if (application) {
-        const activeTabId = getApplicationActiveTab(application);
-        const tab = getTabById(state, activeTabId);
-        if (tab) activeTab = { id: activeTabId, url: getTabURL(tab) };
-      }
 
       return {
-        activeTab: activeTab,
         notificationCount: 0,
         notificationsEnabled: getNotificationsEnabled(state, applicationId),
       };
     },
     (dispatch, ownProps) => {
       return bindActionCreators({
-        onSelectTab: tabId => navigateToApplicationTabAutomatically(tabId, 'mouse_click'),
-        onCloseTab: tabId => closeTab(tabId),
-        onDetachTab: tabId => detach(tabId),
-        onAttachTab: tabId => attach(tabId),
-        onSelectFavorite: favoriteId => openFavorite(favoriteId),
-        onRemoveFavorite: (favoriteId, tabId) => removeFavorite(favoriteId, tabId),
-        onAddTabAsFavorite: tabId => addTabAsFavorite(tabId),
-        onDetachFavorite: favoriteId => openFavorite(favoriteId, true),
         toggleNotifications: () => toggleNotifications(ownProps.applicationId),
         openApplicationPreferences: (application: Application) =>
           openApplicationPreferences(application.manifestURL, OpenApplicationPreferencesVia.APP_SUBDOCK),
-        onOpenNewTab: () => createNewEmptyTab(ownProps.applicationId, false),
         onChangeIcon: () => pickCustomApplicationIcon(ownProps.applicationId),
         onResetIcon: () => resetCustomApplicationIcon(ownProps.applicationId),
         onClickAddNewInstance: (application: Application) => {
