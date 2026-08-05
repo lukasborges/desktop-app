@@ -11,12 +11,15 @@ import { isFullScreen, isKbdShortcutsOverlayVisible } from '../app/selectors';
 import ShortcutsOverlay from '../app/components/ShortcutsOverlay';
 import LoadingScreen from '../app/containers/LoadingScreen';
 import { mainAppReady, setKbdShortcutsVisibility, toggleMaximize } from '../app/duck';
+import { showAppStore } from '../app-store/duck';
+import { isVisible as isAppStoreVisible } from '../app-store/selectors';
 import ApplicationScene from '../applications/ApplicationScene';
 import Dialogs from '../dialogs/Dialogs';
 import DownloadToaster from '../dl-toaster/DownloadToaster';
 import Dock from '../dock/Dock';
 import Onboarding from '../onboarding/Onboarding';
 import MainHeader from '../os-bar/MainHeader';
+import UtilityViewClose from '../components/UtilityViewClose';
 import { isVisible } from '../onboarding/selectors';
 import { getCursorIcon, getUISettingsActiveTabTitle, getUISettingsIsVisible } from '../ui/selectors';
 import SettingsOverlay from '../settings/Container';
@@ -33,6 +36,7 @@ import ApplicationRoutingChooser from '../urlrouter/ApplicationRoutingChooser';
     cursorIcon: getCursorIcon(state),
     settingsActiveTabTitle: getUISettingsActiveTabTitle(state),
     isSettingsVisible: getUISettingsIsVisible(state),
+    isAppStoreVisible: isAppStoreVisible(state),
   }),
   (dispatch) => bindActionCreators({
     onToggleMaximize: toggleMaximize,
@@ -40,6 +44,7 @@ import ApplicationRoutingChooser from '../urlrouter/ApplicationRoutingChooser';
     setKbdShortcutsVisibility,
     setSettingsActiveTabTitle: title => updateUI('settings', 'activeTabTitle', title),
     setSettingsVisibility: isVisible => updateUI('settings', 'isVisible', isVisible),
+    closeAppStore: () => showAppStore(false),
   }, dispatch)
 )
 export default class App extends React.PureComponent {
@@ -56,6 +61,8 @@ export default class App extends React.PureComponent {
     setSettingsActiveTabTitle: PropTypes.func,
     isSettingsVisible: PropTypes.bool,
     setSettingsVisibility: PropTypes.func,
+    isAppStoreVisible: PropTypes.bool,
+    closeAppStore: PropTypes.func,
   };
 
   componentDidMount() {
@@ -96,6 +103,9 @@ export default class App extends React.PureComponent {
           <Dock />
           <ApplicationScene />
         </div>
+        {this.props.isAppStoreVisible &&
+          <UtilityViewClose label="Close App Store" onClick={this.props.closeAppStore} />
+        }
         {isOnboardingVisible &&
           <Onboarding />
         }

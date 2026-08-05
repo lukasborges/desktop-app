@@ -1,4 +1,4 @@
-import { GradientType, withGradient, ButtonIcon, IconSymbol, Style } from '@getstation/theme';
+import { GradientType, withGradient } from '@getstation/theme';
 import * as classNames from 'classnames';
 import * as React from 'react';
 // @ts-ignore: no declaration file
@@ -7,6 +7,7 @@ import ClickOutside from 'react-click-outside';
 import injectSheet from 'react-jss';
 // @ts-ignore: no declaration file
 import KeyHandler, { KEYDOWN } from 'react-key-handler';
+import UtilityViewClose from './UtilityViewClose';
 
 const noop = () => {};
 
@@ -21,7 +22,6 @@ export interface Classes {
   head: string,
   subtitle: string,
   titleText: string,
-  closeButton: string,
 }
 
 type DefaultProps = {
@@ -74,7 +74,7 @@ const styles = () => ({
     borderBottom: '1px solid var(--app-border-subtle)',
     marginBottom: 24,
     minHeight: 40,
-    padding: '0 0 20px 52px',
+    padding: '0 52px 20px 0',
     fontSize: '14px',
     maxWidth: 'none',
     width: '100%',
@@ -87,11 +87,6 @@ const styles = () => ({
     fontWeight: 600,
     letterSpacing: '-.01em',
     margin: 0,
-  },
-  closeButton: {
-    position: 'absolute !important',
-    top: 22,
-    left: 26,
   },
 });
 
@@ -122,12 +117,9 @@ class Overlay extends React.PureComponent<Props & HocProps> {
           keyValue="Escape"
           onKeyHandle={() => onClose('esc')}
         />
-        <ButtonIcon
-          onClick={withClickOutside ? noop : () => onClose('click')}
-          symbolId={IconSymbol.CROSS}
-          btnStyle={Style.SECONDARY}
-          className={classNames(classes!.closeButton, 'station-content-overlay__close')}
-          type="button"
+        <UtilityViewClose
+          label={`Close ${title || 'view'}`}
+          onClick={() => onClose('click')}
         />
         { title &&
         <div className={classNames(classes!.head, 'station-content-overlay__head', headClassName)}>
