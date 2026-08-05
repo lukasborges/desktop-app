@@ -28,7 +28,6 @@ const styles = {
     width: '19px',
     height: '22px',
     marginRight: '13px',
-    filter: 'grayscale(1) brightness(1.8)',
   },
   logoText: {
     fontFamily: 'Asap',

@@ -204,7 +204,7 @@ export class AppDockIcon extends React.PureComponent<Props, State> {
       <svg className={svgClassName} xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
         <g fill="none" fillRule="evenodd">
           {this.renderDefs()}
-          <rect className={classes!.tile} width="40" height="40" rx="11" />
+          <rect className={classes!.tile} width="39" height="39" x=".5" y=".5" rx="10.5" />
           {this.renderLogos()}
           {this.renderBadge()}
         </g>

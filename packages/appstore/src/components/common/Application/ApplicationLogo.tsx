@@ -13,10 +13,16 @@ const useStyles = createUseStyles({
     borderRadius: '50%',
     overflow: 'hidden',
   },
+  iconFrame: {
+    display: 'inline-block',
+    width: 30,
+    height: 30,
+  },
   icon: {
     display: 'inline-block',
     width: 30,
     height: 30,
+    objectFit: 'contain',
   },
 });
 
@@ -34,9 +40,9 @@ const ApplicationLogo = ({
   return (
     <div className={classes!.iconContainer}>
       {applicationIconURL ?
-        <svg className={classes!.icon}>
-          <image xlinkHref={`${applicationIconURL}`} width={30} height={30} className={classes!.icon} />
-        </svg>
+        <div className={classes!.iconFrame}>
+          <img src={applicationIconURL} alt="" className={classes!.icon} />
+        </div>
         :
         <Icon symbolId={IconSymbol.APP_ICON_PLACEHOLDER} size={22} />
       }
