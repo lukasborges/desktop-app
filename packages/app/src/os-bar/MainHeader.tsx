@@ -79,14 +79,100 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 interface State {
   isMaximized: boolean,
+  isMenuOpen: boolean,
+}
+
+interface HeaderMenuLevelProps {
+  depth?: number,
+  items: Electron.MenuItem[],
+  onActivate: (item: Electron.MenuItem) => void,
+}
+
+interface HeaderMenuLevelState {
+  activeSubmenu: number | null,
+}
+
+const formatMenuAccelerator = (accelerator: string): string => accelerator
+  .replace(/CommandOrControl|CmdOrCtrl/g, process.platform === 'darwin' ? '⌘' : 'Ctrl')
+  .replace(/Command|Cmd/g, process.platform === 'darwin' ? '⌘' : 'Super')
+  .replace(/Control/g, 'Ctrl')
+  .replace(/Option/g, process.platform === 'darwin' ? '⌥' : 'Alt');
+
+class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMenuLevelState> {
+  state: HeaderMenuLevelState = { activeSubmenu: null };
+
+  private openSubmenu = (index: number, item: Electron.MenuItem) => {
+    this.setState({ activeSubmenu: item.submenu ? index : null });
+  }
+
+  private selectItem = (item: Electron.MenuItem, index: number) => {
+    if (item.submenu) {
+      this.setState({ activeSubmenu: this.state.activeSubmenu === index ? null : index });
+      return;
+    }
+    this.props.onActivate(item);
+  }
+
+  render() {
+    const { depth = 0, items, onActivate } = this.props;
+
+    return (
+      <div className={`station-main-menu station-main-menu--depth-${depth}`} role="menu">
+        {items.filter(item => item.visible).map((item, index) => {
+          if (item.type === 'separator') {
+            return <div className="station-main-menu__separator" key={`separator-${index}`} role="separator" />;
+          }
+
+          const hasSubmenu = Boolean(item.submenu);
+          const submenuOpen = hasSubmenu && this.state.activeSubmenu === index;
+          const label = item.label.replace(/&/g, '');
+
+          return (
+            <div
+              className="station-main-menu__item-wrapper"
+              key={item.id || `${label}-${index}`}
+              onMouseEnter={() => this.openSubmenu(index, item)}
+            >
+              <button
+                aria-haspopup={hasSubmenu ? 'menu' : undefined}
+                aria-expanded={hasSubmenu ? submenuOpen : undefined}
+                className="station-main-menu__item"
+                disabled={!item.enabled}
+                onClick={() => this.selectItem(item, index)}
+                role="menuitem"
+                type="button"
+              >
+                <span className="station-main-menu__check">
+                  {(item.type === 'checkbox' || item.type === 'radio') && item.checked ? '✓' : ''}
+                </span>
+                <span className="station-main-menu__label">{label}</span>
+                {item.accelerator &&
+                  <span className="station-main-menu__accelerator">
+                    {formatMenuAccelerator(item.accelerator)}
+                  </span>
+                }
+                {hasSubmenu && <span className="station-main-menu__arrow">›</span>}
+              </button>
+              {submenuOpen && item.submenu &&
+                <HeaderMenuLevel depth={depth + 1} items={item.submenu.items} onActivate={onActivate} />
+              }
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 class MainHeaderImpl extends React.PureComponent<Props, State> {
   state: State = {
     isMaximized: remote.getCurrentWindow().isMaximized(),
+    isMenuOpen: false,
   };
 
   private menuButton: HTMLButtonElement | null = null;
+
+  private menuPopover: HTMLDivElement | null = null;
 
   private mainWindow = remote.getCurrentWindow();
 
@@ -98,10 +184,28 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.mainWindow.removeListener('maximize', this.updateMaximizedState);
     this.mainWindow.removeListener('unmaximize', this.updateMaximizedState);
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
+    document.removeEventListener('keydown', this.handleDocumentKeyDown, true);
+  }
+
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (prevState.isMenuOpen === this.state.isMenuOpen) return;
+
+    if (this.state.isMenuOpen) {
+      document.addEventListener('mousedown', this.handleDocumentMouseDown, true);
+      document.addEventListener('keydown', this.handleDocumentKeyDown, true);
+    } else {
+      document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
+      document.removeEventListener('keydown', this.handleDocumentKeyDown, true);
+    }
   }
 
   private setMenuButtonRef = (button: HTMLButtonElement | null) => {
     this.menuButton = button;
+  }
+
+  private setMenuPopoverRef = (popover: HTMLDivElement | null) => {
+    this.menuPopover = popover;
   }
 
   private updateMaximizedState = () => {
@@ -112,16 +216,32 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
     event.stopPropagation();
   }
 
-  private openMainMenu = () => {
-    const menu = remote.Menu.getApplicationMenu();
-    if (!menu || !this.menuButton) return;
+  private handleDocumentMouseDown = (event: MouseEvent) => {
+    const target = event.target as Node;
+    if (this.menuButton?.contains(target) || this.menuPopover?.contains(target)) return;
+    this.closeMainMenu();
+  }
 
-    const rect = this.menuButton.getBoundingClientRect();
-    menu.popup({
-      window: remote.getCurrentWindow(),
-      x: Math.round(rect.left),
-      y: Math.round(rect.bottom),
-    });
+  private handleDocumentKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') this.closeMainMenu();
+  }
+
+  private closeMainMenu = () => {
+    this.setState({ isMenuOpen: false });
+  }
+
+  private toggleMainMenu = () => {
+    this.setState(state => ({ isMenuOpen: !state.isMenuOpen }));
+  }
+
+  private activateMenuItem = (item: Electron.MenuItem) => {
+    this.closeMainMenu();
+    item.click(item, this.mainWindow, {
+      altKey: false,
+      ctrlKey: false,
+      shiftKey: false,
+      triggeredByAccelerator: false,
+    } as Electron.KeyboardEvent);
   }
 
   private goHome = () => {
@@ -193,8 +313,10 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
         <div className="station-main-header__controls station-main-header__controls--left">
           <button
             aria-label="Main menu"
-            className="station-main-header__button"
-            onClick={this.openMainMenu}
+            aria-expanded={this.state.isMenuOpen}
+            aria-haspopup="menu"
+            className={`station-main-header__button ${this.state.isMenuOpen ? 'station-main-header__button--active' : ''}`}
+            onClick={this.toggleMainMenu}
             onDoubleClick={this.stopDoubleClick}
             ref={this.setMenuButtonRef}
             title="Main menu"
@@ -202,6 +324,14 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
           >
             <HeaderIcon name="menu" />
           </button>
+          {this.state.isMenuOpen && remote.Menu.getApplicationMenu() &&
+            <div ref={this.setMenuPopoverRef}>
+              <HeaderMenuLevel
+                items={remote.Menu.getApplicationMenu()!.items}
+                onActivate={this.activateMenuItem}
+              />
+            </div>
+          }
           {this.renderButton('plus', 'Add apps', onAddApplication, { active: appStoreVisible })}
           <span className="station-main-header__separator" />
           {this.renderButton('back', 'Go back', onGoBack, { disabled: !canGoBack })}
