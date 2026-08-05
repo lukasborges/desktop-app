@@ -64,17 +64,17 @@ interface State {
     opacity: .2,
   },
   defaultInner: {
-    fill: 'var(--app-icon)',
+    fill: 'var(--app-rail-icon)',
     fillOpacity: 0,
     transition: 'all 250ms ease-out',
   },
   activeInner: {
-    fill: 'var(--app-icon)',
+    fill: 'var(--app-rail-icon)',
     transition: 'all 250ms ease-out',
   },
   defaultShape: {
-    fill: 'var(--app-icon)',
-    fillOpacity: 0.6,
+    fill: 'var(--app-rail-icon)',
+    fillOpacity: 'var(--app-rail-muted-opacity)',
     transition: 'all 250ms ease-out',
   },
 })

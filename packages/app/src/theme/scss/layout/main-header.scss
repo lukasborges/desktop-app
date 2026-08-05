@@ -347,12 +347,12 @@ $station-rail-width: 68px;
   width: 100%;
 
   &:hover {
-    background: var(--app-hover);
+    background: var(--app-rail-hover);
   }
 }
 
 .station-dock-item--active {
-  background: var(--app-active);
+  background: var(--app-rail-active);
   box-shadow: inset 3px 0 0 var(--app-accent);
 }
 
