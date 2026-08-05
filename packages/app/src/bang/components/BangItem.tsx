@@ -130,25 +130,19 @@ class BangItem extends React.PureComponent<OwnProps & InjectSheetProps, State> {
   }
 
   renderImage() {
-    const { imgUrl, label, type, themeColor, smallSize, classes } = this.props;
+    const { imgUrl, themeColor, smallSize, classes } = this.props;
 
     if (!imgUrl) {
       // if no image put a placeholder
       return <span className={classNames(classes!.image, 'placeholder')} />;
     }
 
-    if (type === 'station-app') {
-      const iconSize = smallSize ? 24 : 30;
-
-      return (
-        <div className={classes!.image}>
-          <AppIcon size={iconSize} imgUrl={imgUrl} themeColor={themeColor} />
-        </div>
-      );
-    }
+    const iconSize = smallSize ? 24 : 30;
 
     return (
-      <img className={classes!.image} src={imgUrl} alt={label} />
+      <div className={classes!.image}>
+        <AppIcon size={iconSize} imgUrl={imgUrl} themeColor={themeColor} />
+      </div>
     );
   }
 

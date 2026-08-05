@@ -3,6 +3,8 @@ import * as React from 'react';
 import injectSheet from 'react-jss';
 import { createStyles, ThemeTypes } from '@getstation/theme';
 
+import { iconNeedsContrastBackground } from '../../utils/iconContrast';
+
 interface Props {
   classes?: any,
   className?: string,
@@ -34,19 +36,30 @@ const styles = (theme: ThemeTypes) => createStyles({
   },
 });
 
-class AppIcon extends React.PureComponent<Props, {}> {
-  constructor(props: Props) {
-    super(props);
+interface State {
+  needsContrastBackground: boolean,
+}
+
+class AppIcon extends React.PureComponent<Props, State> {
+  state = {
+    needsContrastBackground: false,
+  };
+
+  handleIconLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    this.setState({ needsContrastBackground: iconNeedsContrastBackground(event.currentTarget) });
   }
 
   render() {
-    const { classes, className, imgUrl } = this.props;
+    const { classes, className, imgUrl, themeColor } = this.props;
 
     return (
-      <div className={`${classes.container} ${className || ''}`}>
+      <div
+        className={`${classes.container} ${className || ''}`}
+        style={{ backgroundColor: this.state.needsContrastBackground ? themeColor : undefined }}
+      >
       {
         imgUrl ?
-        <img className={classes.icon} src={imgUrl} alt="" />
+        <img className={classes.icon} src={imgUrl} alt="" onLoad={this.handleIconLoad} />
         :
         <span>&nbsp;</span>
       }

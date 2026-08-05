@@ -40,7 +40,7 @@ export const tabAsActivityEntry = (
     type: isApplicationHome ? 'station-app' : 'tab',
     category: isApplicationHome ? SectionKinds.getCategory('apps') : appLabel,
     imgUrl: shouldUseFavicon ? getFavicon(tab) : interpretedIconUrl(manifest),
-    themeColor: shouldUseFavicon ? undefined : manifest.theme_color,
+    themeColor: manifest.theme_color,
     label: isApplicationHome ? manifest.name || '' : title,
     context: label(state, manifest, application),
     additionalSearchString: [appLabel, title || ''].join(' '),

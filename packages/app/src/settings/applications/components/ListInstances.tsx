@@ -37,6 +37,7 @@ type DefaultProps = {
 
 type Props = DefaultProps & {
   classes?: Classes,
+  applicationThemeColor?: string,
   manifestURL: string,
   instances: Instances,
 };
@@ -198,6 +199,7 @@ class ListInstances extends React.PureComponent<Props> {
   renderInstance = (instance: Instance) => {
     const {
       classes,
+      applicationThemeColor,
       instanceTypeWording,
     } = this.props;
     const providerId = instance.passwordManagerLink && instance.passwordManagerLink.providerId;
@@ -208,7 +210,12 @@ class ListInstances extends React.PureComponent<Props> {
       <li className={classes!.row} key={instance.id}>
         <div className={classes!.identity}>
           {instance.logoUrl ?
-            <AppIcon className={classes!.logo} imgUrl={instance.logoUrl} size={32} /> :
+            <AppIcon
+              className={classes!.logo}
+              imgUrl={instance.logoUrl}
+              size={32}
+              themeColor={applicationThemeColor}
+            /> :
             <span aria-hidden="true" className={classes!.logoFallback}>{instance.name.charAt(0)}</span>
           }
           {instance.needConfiguration ?

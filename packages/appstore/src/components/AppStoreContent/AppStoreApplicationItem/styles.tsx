@@ -69,6 +69,9 @@ const styles = {
     padding: 0,
     transition: 'background-color 120ms ease, opacity 120ms ease',
     width: 30,
+    '& svg': {
+      fill: 'currentColor',
+    },
     '&:hover': {
       backgroundColor: colors.blueGray40,
       opacity: 1,
