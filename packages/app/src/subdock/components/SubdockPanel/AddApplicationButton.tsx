@@ -3,6 +3,8 @@ import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 
+import { settingsButtonStyle } from '../../../settings/components/settingsButtonStyle';
+
 interface Classes {
   container: string,
   button: string,
@@ -20,7 +22,7 @@ interface Props {
     textAlign: 'center',
   },
   button: {
-    borderRadius: '999px !important',
+    ...settingsButtonStyle,
     width: '100%',
   },
 }))

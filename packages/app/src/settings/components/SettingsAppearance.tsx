@@ -15,6 +15,8 @@ interface Classes {
   option: string,
   optionActive: string,
   preview: string,
+  previewBack: string,
+  previewFront: string,
   previewLight: string,
   previewDark: string,
   previewSystem: string,
@@ -30,7 +32,7 @@ interface State {
 }
 
 const options: { value: AppearanceTheme, label: string }[] = [
-  { value: 'light', label: 'Light' },
+  { value: 'light', label: 'Default' },
   { value: 'dark', label: 'Dark' },
   { value: 'system', label: 'System' },
 ];
@@ -38,7 +40,7 @@ const options: { value: AppearanceTheme, label: string }[] = [
 const styles = {
   container: {
     maxWidth: 600,
-    padding: [18, 0, 20],
+    padding: [18, 0, 22],
   },
   settingName: {
     marginBottom: 4,
@@ -52,74 +54,119 @@ const styles = {
     marginBottom: 14,
   },
   options: {
-    display: 'flex',
-    gap: 10,
+    background: 'var(--app-surface-raised)',
+    border: '1px solid var(--settings-border)',
+    borderRadius: 12,
+    display: 'grid',
+    gap: 12,
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    padding: 16,
   },
   option: {
     appearance: 'none',
-    background: 'var(--settings-option-background)',
-    border: '1px solid var(--settings-border)',
-    borderRadius: 8,
+    background: 'transparent',
+    border: 0,
+    borderRadius: 10,
     color: 'inherit',
     cursor: 'pointer',
-    flex: 1,
     font: 'inherit',
-    padding: [8, 8, 10],
-    textAlign: 'left',
+    fontSize: 14,
+    padding: [3, 3, 1],
+    textAlign: 'center',
     '&:hover': {
-      background: 'var(--settings-option-hover-background)',
+      background: 'var(--settings-option-background)',
     },
-    '&:focus': {
+    '&:focus-visible': {
       boxShadow: '0 0 0 2px var(--settings-focus-ring)',
       outline: 'none',
     },
   },
   optionActive: {
-    borderColor: 'var(--settings-accent)',
-    boxShadow: '0 0 0 1px var(--settings-accent)',
+    '& $preview': {
+      borderColor: 'var(--settings-accent)',
+      boxShadow: '0 0 0 2px var(--settings-accent)',
+    },
   },
   preview: {
-    border: '1px solid var(--settings-border)',
-    borderRadius: 5,
+    background: 'linear-gradient(135deg, #071c63 0%, #0646db 48%, #101766 100%)',
+    border: '1px solid transparent',
+    borderRadius: 8,
     display: 'block',
-    height: 34,
-    marginBottom: 8,
+    height: 104,
+    marginBottom: 10,
     overflow: 'hidden',
     position: 'relative',
     '&:before': {
-      background: 'currentColor',
-      borderRadius: 2,
+      background: 'rgba(0, 102, 255, .55)',
+      borderRadius: '48% 52% 42% 58%',
       content: '""',
-      height: 4,
-      left: 8,
-      opacity: 0.45,
+      height: 92,
+      left: 18,
       position: 'absolute',
-      top: 8,
-      width: 28,
+      top: 5,
+      transform: 'rotate(30deg)',
+      width: 112,
     },
     '&:after': {
-      background: 'currentColor',
-      borderRadius: 2,
+      background: 'rgba(28, 83, 214, .5)',
+      borderRadius: '50%',
       content: '""',
-      height: 4,
-      left: 8,
-      opacity: 0.22,
+      height: 76,
+      right: 6,
       position: 'absolute',
-      top: 17,
-      width: 44,
+      top: 14,
+      width: 76,
+    },
+  },
+  previewBack: {
+    background: '#202124',
+    borderRadius: 6,
+    boxShadow: '0 6px 14px rgba(0, 0, 0, .28)',
+    height: 58,
+    left: '38%',
+    position: 'absolute',
+    top: 17,
+    width: '52%',
+    zIndex: 1,
+  },
+  previewFront: {
+    background: '#f7f7f8',
+    borderRadius: 6,
+    boxShadow: '0 6px 14px rgba(0, 0, 0, .28)',
+    height: 54,
+    left: '14%',
+    position: 'absolute',
+    top: 39,
+    width: '52%',
+    zIndex: 2,
+    '&:before': {
+      background: 'rgba(0, 0, 0, .08)',
+      borderRadius: [6, 6, 0, 0],
+      content: '""',
+      height: 13,
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      top: 0,
     },
   },
   previewLight: {
-    background: '#f7f7f8',
-    color: '#24262b',
+    '& $previewBack': {
+      background: '#202124',
+    },
   },
   previewDark: {
-    background: '#202126',
-    color: '#f5f5f6',
+    '& $previewFront': {
+      background: '#242527',
+    },
+    '& $previewFront:before': {
+      background: 'rgba(255, 255, 255, .08)',
+    },
   },
   previewSystem: {
-    background: 'linear-gradient(135deg, #f7f7f8 0%, #f7f7f8 49%, #202126 51%, #202126 100%)',
-    color: '#7b7d85',
+    '& $previewFront': {
+      background: 'linear-gradient(135deg, #f7f7f8 0%, #f7f7f8 49%, #242527 51%, #242527 100%)',
+    },
   },
 };
 
@@ -158,8 +205,11 @@ export default class SettingsAppearance extends React.PureComponent<Props, State
                 className={`${classes!.option} ${selected ? classes!.optionActive : ''}`}
                 onClick={this.handleThemeClick}
               >
-                <span className={`${classes!.preview} ${classes![`preview${option.label}` as keyof Classes]}`} />
-                {option.label}
+                <span className={`${classes!.preview} ${classes![`preview${option.value.charAt(0).toUpperCase()}${option.value.slice(1)}` as keyof Classes]}`}>
+                  <span className={classes!.previewBack} />
+                  <span className={classes!.previewFront} />
+                </span>
+                <span>{option.label}</span>
               </button>
             );
           })}

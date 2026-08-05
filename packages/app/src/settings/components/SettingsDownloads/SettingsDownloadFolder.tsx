@@ -1,11 +1,14 @@
-import { Switcher, Button, Size, ThemeTypes as Theme } from '@getstation/theme';
+import { Button, Size, ThemeTypes as Theme } from '@getstation/theme';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import { compose } from 'redux';
+
 import { isDarwin } from '../../../utils/process';
-import { withGetPromptDownloadStatus, withEnablePromptDownload } from './queries@local.gql.generated';
+import AdwaitaSwitch from '../AdwaitaSwitch';
 import { settingsButtonStyle } from '../settingsButtonStyle';
+
+import { withGetPromptDownloadStatus, withEnablePromptDownload } from './queries@local.gql.generated';
 
 export interface Classes {
   container: string,
@@ -64,23 +67,33 @@ const styles = (_theme: Theme) => ({
   label: {
   },
   downloadFolderSection:{
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'start',
+    minHeight: 34,
   },
   downloadFolderVal: {
+    alignItems: 'center',
     cursor: 'pointer',
-    marginLeft: '10px',
-    lineHeight: '18px',
-    display: 'inline',
+    display: 'inline-flex',
     fontSize: 12,
+    height: 34,
+    lineHeight: 'normal',
+    marginLeft: 10,
+    maxWidth: 330,
     opacity: 0.5,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     transition: 'all 250ms ease-out',
+    whiteSpace: 'nowrap',
     '&:hover': {
       opacity: 0.9,
     },
   },
   promptDownloadSection:{
+    alignItems: 'center',
     display: 'flex',
+    minHeight: 26,
   },
   settingsValue:{
     marginLeft: 'auto',
@@ -124,7 +137,11 @@ class SettingsDownloadFolder extends React.PureComponent<Props> {
         <section className={classes!.promptDownloadSection}>
           <label className={classes!.label}>Ask where to save each file before downloading</label>
           <aside className={classes!.settingsValue}>
-            <Switcher checked={promptDownloadEnabled} onChange={onTogglePromptDownload} />
+            <AdwaitaSwitch
+              checked={promptDownloadEnabled}
+              label="Ask where to save each file before downloading"
+              onChange={onTogglePromptDownload}
+            />
           </aside>
         </section>
       </section>

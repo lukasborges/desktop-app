@@ -5,6 +5,7 @@ import { createStyles, ThemeTypes } from '@getstation/theme';
 
 interface Props {
   classes?: any,
+  className?: string,
   imgUrl?: string,
   themeColor?: string,
   size?: number,
@@ -12,18 +13,22 @@ interface Props {
 
 const styles = (theme: ThemeTypes) => createStyles({
   container: {
+    alignItems: 'center',
+    backgroundColor: 'var(--app-hover)',
+    borderRadius: (props: Props) => (props.size || 30) * .275,
+    display: 'flex',
+    flexShrink: 0,
     position: 'relative',
     width: (props: Props) => props.size || 30,
     height: (props: Props) => props.size || 30,
-    borderRadius: 100,
-    backgroundColor: (props: Props) => props.themeColor,
+    justifyContent: 'center',
     overflow: 'hidden',
-    flexShrink: 0,
   },
   icon: {
-    position: 'absolute',
-    width: '100%',
-    transform: 'scale(1.2)',
+    borderRadius: '27%',
+    height: '65%',
+    objectFit: 'contain',
+    width: '65%',
   },
 });
 
@@ -33,10 +38,10 @@ class AppIcon extends React.PureComponent<Props, {}> {
   }
 
   render() {
-    const { classes, imgUrl } = this.props;
+    const { classes, className, imgUrl } = this.props;
 
     return (
-      <div className={classes.container}>
+      <div className={`${classes.container} ${className || ''}`}>
       {
         imgUrl ?
         <img className={classes.icon} src={imgUrl} alt="" />
