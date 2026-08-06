@@ -1,5 +1,115 @@
+diff --git a/lib/focus-assist.cc b/lib/focus-assist.cc
+index b8edab8a314d1fdf95eafdf571d823706aa8ee45..d4e08b7df5f0b1945b7ba332b1472813a315f78e 100644
+--- a/lib/focus-assist.cc
++++ b/lib/focus-assist.cc
+@@ -16,16 +16,18 @@ enum PRIORITY_RESULT
+ };
+ 
+ #ifdef _WIN32
+-  #include <atlbase.h>
++  #include <wrl/client.h>
+   #include "quiethours_h.h"
+ 
++  using Microsoft::WRL::ComPtr;
++
+   #pragma comment(lib, "ntdll.lib")
+ 
+   #define NT_SUCCESS_STATUS(Status) (((NTSTATUS)(Status)) >= 0)
+ 
+-  const LPWSTR ALARMS_ONLY_ID = L"Microsoft.QuietHoursProfile.AlarmsOnly";
+-  const LPWSTR PRIORITY_ONLY_ID = L"Microsoft.QuietHoursProfile.PriorityOnly";
+-  const LPWSTR UNRESTRICTED_ID = L"Microsoft.QuietHoursProfile.Unrestricted";
++  wchar_t ALARMS_ONLY_ID[] = L"Microsoft.QuietHoursProfile.AlarmsOnly";
++  wchar_t PRIORITY_ONLY_ID[] = L"Microsoft.QuietHoursProfile.PriorityOnly";
++  wchar_t UNRESTRICTED_ID[] = L"Microsoft.QuietHoursProfile.Unrestricted";
+ 
+   typedef struct _WNF_STATE_NAME
+   {
+@@ -92,56 +94,53 @@ enum PRIORITY_RESULT
+   {
+     if (IsFailed(CoInitialize(nullptr))) { return API_RESULT::FAILED; }
+ 
+-    CComPtr<IQuietHoursSettings> quietHoursSettings;
+-    if (IsFailed(CoCreateInstance(CLSID_QuietHoursSettings, nullptr, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(&quietHoursSettings)))) { return API_RESULT::FAILED; }
++    ComPtr<IQuietHoursSettings> quietHoursSettings;
++    if (IsFailed(CoCreateInstance(CLSID_QuietHoursSettings, nullptr, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(quietHoursSettings.GetAddressOf())))) { return API_RESULT::FAILED; }
+ 
+-    CComHeapPtr<wchar_t> profileId;
++    LPWSTR profileId = nullptr;
+     if (IsFailed(quietHoursSettings->get_UserSelectedProfile(&profileId))) { return API_RESULT::FAILED; }
+ 
+-    const LPWSTR profileIdWS = static_cast<LPWSTR>(profileId);
++    int status = API_RESULT::Off;
+ 
+-    if (wcscmp(profileIdWS, PRIORITY_ONLY_ID) == 0)
++    if (wcscmp(profileId, PRIORITY_ONLY_ID) == 0)
+     {
+-      return API_RESULT::PRIORITY_ONLY;
++      status = API_RESULT::PRIORITY_ONLY;
+     }
+-    else if (wcscmp(profileIdWS, ALARMS_ONLY_ID) == 0)
+-    {
+-      return API_RESULT::ALARMS_ONLY;
+-    } 
+-    else
++    else if (wcscmp(profileId, ALARMS_ONLY_ID) == 0)
+     {
+-      return API_RESULT::Off;
++      status = API_RESULT::ALARMS_ONLY;
+     }
++
++    CoTaskMemFree(profileId);
++    return status;
+   }
+ 
+   int InternalIsPriority(const LPWSTR appUserModelId)
+   {
+     if (IsFailed(CoInitialize(nullptr))) { return API_RESULT::FAILED; }
+ 
+-    CComPtr<IQuietHoursSettings> quietHoursSettings;
+-    if (IsFailed(CoCreateInstance(CLSID_QuietHoursSettings, nullptr, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(&quietHoursSettings)))) { return API_RESULT::FAILED; }
++    ComPtr<IQuietHoursSettings> quietHoursSettings;
++    if (IsFailed(CoCreateInstance(CLSID_QuietHoursSettings, nullptr, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(quietHoursSettings.GetAddressOf())))) { return API_RESULT::FAILED; }
+ 
+-    CComHeapPtr<wchar_t> profileId;
++    LPWSTR profileId = nullptr;
+     if (IsFailed(quietHoursSettings->get_UserSelectedProfile(&profileId))) { return API_RESULT::FAILED; }
++    CoTaskMemFree(profileId);
+ 
+-    const LPWSTR profileIdWS = static_cast<LPWSTR>(profileId);
+-    CComPtr<IQuietHoursProfile> profile;
+-    if (IsFailed(quietHoursSettings->GetProfile(PRIORITY_ONLY_ID, &profile))) { return API_RESULT::FAILED; }
++    ComPtr<IQuietHoursProfile> profile;
++    if (IsFailed(quietHoursSettings->GetProfile(PRIORITY_ONLY_ID, profile.GetAddressOf()))) { return API_RESULT::FAILED; }
+ 
+     uint32_t count = 0;
++    LPWSTR* apps = nullptr;
++    if (IsFailed(profile->GetAllowedApps(&count, &apps))) { return API_RESULT::FAILED; }
++
++    bool isPriority = false;
++    for (uint32_t i = 0; i < count; i++)
+     {
+-      CComHeapPtr<LPWSTR> apps;
+-      if (IsFailed(profile->GetAllowedApps(&count, &apps))) { return API_RESULT::FAILED; }
+-      for (uint32_t i = 0; i < count; i++)
+-      {
+-        CComHeapPtr<wchar_t> aumid; // Wrapped for CoTaskMemFree on scope exit
+-        aumid.Attach(apps[i]);
+-        auto entry = static_cast<LPWSTR>(aumid);
+-        if (wcscmp(entry, appUserModelId) == 0)
+-          return PRIORITY_RESULT::YES;
+-      }
++      if (wcscmp(apps[i], appUserModelId) == 0) isPriority = true;
++      CoTaskMemFree(apps[i]);
+     }
+-    return PRIORITY_RESULT::NO;
++    CoTaskMemFree(apps);
++    return isPriority ? PRIORITY_RESULT::YES : PRIORITY_RESULT::NO;
+   }
+ #endif
+ 
 diff --git a/package.json b/package.json
-index fd83201677304175cd888e0f9935ca8059e4e52c..e0337b0df6e3fb8d4135b40962d1e6ad7651e9e4 100644
+index fd83201677304175cd888e0f9935ca8059e4e52c..fe2979013c3007be0d1153f595c0281cf06a3ecd 100644
 --- a/package.json
 +++ b/package.json
 @@ -4,6 +4,7 @@

@@ -13,47 +13,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
+  prepare:
     if: "!contains(github.event.head_commit.message, '[skip release]')"
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      next_n: ${{ steps.version.outputs.next_n }}
+      tag: ${{ steps.version.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "yarn"
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install system dependencies (build + RPM tooling)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            graphicsmagick libxtst-dev libx11-dev \
-            rpm
-
-      - name: Install Wine (WineHQ stable, for Windows cross-build)
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo mkdir -pm755 /etc/apt/keyrings
-          sudo wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          codename=$(lsb_release -cs)
-          sudo wget -qNP /etc/apt/sources.list.d/ "https://dl.winehq.org/wine-builds/ubuntu/dists/${codename}/winehq-${codename}.sources"
-          sudo apt-get update
-          sudo apt-get install -y --install-recommends winehq-stable
-          wine --version
-
-      - name: Install Node dependencies
-        run: yarn install --immutable
-
       - name: Compute next fork version
         id: version
+        shell: bash
         run: |
           last_n=$(git tag --list 'v3.3.0-fork.*' | sed 's/.*\.//' | sort -n | tail -1)
           next_n=$((${last_n:-0} + 1))
@@ -62,30 +35,189 @@ jobs:
           echo "next_n=${next_n}" >> "$GITHUB_OUTPUT"
           echo "Next release tag: ${tag}"
 
-      - name: Bump package.json version to match tag
-        run: bash scripts/bump-version.sh "${{ steps.version.outputs.next_n }}"
+  build-linux:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            graphicsmagick libxtst-dev libx11-dev \
+            rpm
+
+      - name: Install Node dependencies
+        run: yarn install --immutable
+
+      - name: Bump package version
+        run: bash scripts/bump-version.sh "${{ needs.prepare.outputs.next_n }}"
 
       - name: Build workspaces
         run: yarn build
 
-      - name: Build Linux + Windows installers
+      - name: Build Linux installers
         working-directory: packages/app
         env:
           NODE_ENV: production
-        run: ../../node_modules/.bin/electron-builder --linux AppImage --linux deb --win
+        run: yarn exec electron-builder --linux AppImage --linux deb
 
       - name: Build RPM
         run: bash scripts/build-rpm.sh
 
-      - name: Push tag
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            release/Platform-x86_64.AppImage
+            release/Platform-amd64.deb
+            release/Platform-x86_64.rpm
+            release/latest-linux.yml
+
+  build-windows:
+    needs: prepare
+    # node-gyp 10 cannot detect the Visual Studio 18 installation on
+    # windows-latest yet. windows-2022 provides Visual Studio 2022 and ATL.
+    runs-on: windows-2022
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Node dependencies
+        run: yarn install --immutable
+
+      - name: Verify Windows SQLite dependency
+        shell: pwsh
         run: |
-          git tag "${{ steps.version.outputs.tag }}"
-          git push origin "${{ steps.version.outputs.tag }}"
+          $bindingRoot = "node_modules/sqlite3/lib/binding"
+          $windowsBinary = Get-ChildItem -LiteralPath $bindingRoot -Recurse -Filter node_sqlite3.node |
+            Where-Object { $_.FullName -match 'napi-v6-win32-.*-x64' }
+          $foreignBinary = Get-ChildItem -LiteralPath $bindingRoot -Recurse -Filter node_sqlite3.node |
+            Where-Object { $_.FullName -match 'linux|darwin' }
+
+          if (-not $windowsBinary) {
+            throw "sqlite3 does not contain a Windows x64 native binary"
+          }
+          if ($foreignBinary) {
+            throw "sqlite3 contains a foreign native binary: $($foreignBinary.FullName)"
+          }
+
+          Write-Output "Using sqlite3 binary: $($windowsBinary.FullName)"
+
+      - name: Bump package version
+        shell: bash
+        run: bash scripts/bump-version.sh "${{ needs.prepare.outputs.next_n }}"
+
+      - name: Build workspaces
+        run: yarn build
+
+      - name: Build Windows installer
+        working-directory: packages/app
+        env:
+          NODE_ENV: production
+        run: yarn exec electron-builder --win
+
+      - name: Verify packaged Windows SQLite binary
+        shell: pwsh
+        run: |
+          $bindingRoot = "release/win-unpacked/resources/app.asar.unpacked/node_modules/sqlite3/lib/binding"
+          $windowsBinary = Get-ChildItem -LiteralPath $bindingRoot -Recurse -Filter node_sqlite3.node |
+            Where-Object { $_.FullName -match 'napi-v6-win32-.*-x64' }
+          $foreignBinary = Get-ChildItem -LiteralPath $bindingRoot -Recurse -Filter node_sqlite3.node |
+            Where-Object { $_.FullName -match 'linux|darwin' }
+
+          if (-not $windowsBinary) {
+            throw "Packaged app does not contain the Windows sqlite3 binary"
+          }
+          if ($foreignBinary) {
+            throw "Packaged app contains a foreign sqlite3 binary: $($foreignBinary.FullName)"
+          }
+
+          Write-Output "Packaged sqlite3 binary: $($windowsBinary.FullName)"
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            release/Platform-Setup.exe
+            release/Platform-Setup.exe.blockmap
+            release/latest.yml
+
+  publish:
+    needs:
+      - prepare
+      - build-linux
+      - build-windows
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      COMMIT_MSG: ${{ github.event.head_commit.message }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: release
+
+      - name: Verify release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            Platform-x86_64.AppImage
+            Platform-amd64.deb
+            Platform-x86_64.rpm
+            Platform-Setup.exe
+            Platform-Setup.exe.blockmap
+            latest-linux.yml
+            latest.yml
+          )
+          for artifact in "${required[@]}"; do
+            test -s "release/${artifact}" || {
+              echo "Missing or empty release artifact: ${artifact}" >&2
+              exit 1
+            }
+          done
+          ls -lh release
 
       - name: Create GitHub release
-        env:
-          TAG: ${{ steps.version.outputs.tag }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        shell: bash
         run: |
           notes_file=$(mktemp)
           {
@@ -96,13 +228,14 @@ jobs:
             printf '```\n\n'
             printf '## Artifacts\n\n'
             printf '### Linux (x86_64)\n- `Platform-x86_64.AppImage` — distro-agnostic\n- `Platform-amd64.deb` — Debian / Ubuntu\n- `Platform-x86_64.rpm` — Fedora / RHEL (built with `scripts/build-rpm.sh`)\n\n'
-            printf '### Windows (x86_64)\n- `Platform-Setup.exe` — NSIS installer (cross-built from Linux via wine)\n- `Platform-Setup.exe.blockmap` — auto-update delta metadata\n\n'
+            printf '### Windows (x86_64)\n- `Platform-Setup.exe` — NSIS installer (built natively on Windows)\n- `Platform-Setup.exe.blockmap` — auto-update delta metadata\n\n'
             printf '### Auto-update metadata\n- `latest-linux.yml`, `latest.yml`\n\n'
             printf 'macOS build is not included.\n'
           } > "$notes_file"
 
           gh release create "$TAG" \
             --prerelease \
+            --target "$GITHUB_SHA" \
             --title "$TAG" \
             --notes-file "$notes_file" \
             release/Platform-x86_64.AppImage \
