@@ -5,8 +5,6 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from 'react-jss';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
 
 import { MinimalApplication } from '../../app/src/applications/graphql/withApplications';
 import { FeaturedApps } from '../../app/manifests';
@@ -20,16 +18,6 @@ export { ContextEnvPlatform };
 // @ts-ignore theme types mismatch
 const ThemeForwarder = withBrowserXTheme(ThemeProvider);
 
-interface IStateProps {
-  foo: string;
-}
-
-interface IDispatchProps {
-  action: () => null,
-}
-
-type Props = IStateProps & IDispatchProps;
-
 interface IState {
   appStoreContext?: ContextEnvPlatform,
   apiClient?: any,
@@ -42,8 +30,8 @@ interface IState {
   applicationsByCategory: Record<string, MinimalApplication[]>;
 }
 
-class AppImpl extends React.Component<Props, IState> {
-  constructor(props: Props) {
+class App extends React.Component<{}, IState> {
+  constructor(props: {}) {
     super(props);
     this.state = {
       appStoreContext: undefined,
@@ -136,17 +124,5 @@ class AppImpl extends React.Component<Props, IState> {
     );
   }
 }
-
-const App = connect<{}, {}, IStateProps, IDispatchProps>(
-  (state) => ({
-    foo: 'bar',
-  }),
-  (dispatch: Dispatch) => bindActionCreators(
-    {
-      action: () => null,
-    },
-    dispatch,
-  )
-)(AppImpl);
 
 export default App;

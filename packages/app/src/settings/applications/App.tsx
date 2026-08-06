@@ -447,8 +447,6 @@ const App = compose(
         dispatch
       );
     },
-    null,
-    { forwardRef: true },
   ),
 )(AppImpl);
 
