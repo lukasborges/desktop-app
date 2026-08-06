@@ -57,8 +57,7 @@ class AppImpl extends React.Component<Props, IState> {
     };
   }
 
-  // tslint:disable-next-line function-name
-  async UNSAFE_componentWillMount() {
+  componentDidMount() {
     if ('bxApi' in window) {
       // @ts-ignore : bx attached to window
       const bxApi = window.bxApi;

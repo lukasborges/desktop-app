@@ -90,7 +90,7 @@ class SettingsMyAppsImpl extends React.PureComponent<Props, State> {
     );
   }
 
-  componentDidUpdate(_: Props, prevState: State) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     const isOpened = !isModalOpened(prevState) && isModalOpened(this.state);
 
     if (isOpened) {
@@ -98,6 +98,17 @@ class SettingsMyAppsImpl extends React.PureComponent<Props, State> {
     }
 
     this.props.onModalStateChanged(false);
+
+    const selectedManifestURL = this.props.selectedManifestURL;
+
+    if (selectedManifestURL) {
+      const currentAppOrder = getManifestsOrder(prevProps.manifestsUrls);
+      const nextAppOrder = getManifestsOrder(this.props.manifestsUrls);
+
+      if (currentAppOrder !== nextAppOrder) {
+        setImmediate(() => this.scrollToSelectedManifestURL());
+      }
+    }
   }
 
   safeSetState(newState: Partial<State>) {
@@ -123,20 +134,6 @@ class SettingsMyAppsImpl extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     this.mounted = false;
     this.props.setSelectedManifestURL(undefined);
-  }
-
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    const selectedManifestURL = nextProps.selectedManifestURL;
-
-    if (selectedManifestURL) {
-      const currentAppOrder = getManifestsOrder(this.props.manifestsUrls);
-      const nextAppOrder = getManifestsOrder(this.props.manifestsUrls);
-
-      if (currentAppOrder !== nextAppOrder) {
-        setImmediate(() => this.scrollToSelectedManifestURL());
-      }
-    }
   }
 
   render() {

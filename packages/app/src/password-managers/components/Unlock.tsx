@@ -42,11 +42,10 @@ export default class Unlock extends React.PureComponent<Props, State> {
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillUpdate(nextProps: Readonly<Props>) {
-    const { process: { step } } = this.props;
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    const { process: { step } } = prevProps;
 
-    if (step === UnlockStep.Test && nextProps.process.step === UnlockStep.Error) {
+    if (step === UnlockStep.Test && this.props.process.step === UnlockStep.Error) {
       this.setState({ masterPassword: '' });
     }
   }

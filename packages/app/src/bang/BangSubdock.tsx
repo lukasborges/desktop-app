@@ -78,7 +78,7 @@ class BangSubdockImpl extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
 
-    this.flatItems = [];
+    this.flatItems = this.getFlatItems(props);
 
     this.setRef = this.setRef.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -104,19 +104,13 @@ class BangSubdockImpl extends React.PureComponent<Props> {
     }
   }
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillMount() {
-    this.setFlatItems(this.getFlatItems());
-  }
-
   componentWillUnmount() {
     this.props.setHighlightedItemId(undefined);
   }
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+  componentDidUpdate(prevProps: Props) {
     const items = this.flatItems;
-    const nextItems = this.getFlatItems(nextProps);
+    const nextItems = this.getFlatItems();
 
     // compare the list of ids
     // if they changed we highlight the first item
@@ -125,9 +119,7 @@ class BangSubdockImpl extends React.PureComponent<Props> {
     if (!nextItemIds.equals(itemIds)) {
       this.setFlatItems(nextItems);
     }
-  }
 
-  componentDidUpdate(prevProps: Props) {
     const prevVisibleAndFocus = prevProps.isVisible && prevProps.focus;
     const visibleAndFocus = this.props.isVisible && this.props.focus;
     // on get visible, focus
@@ -144,6 +136,7 @@ class BangSubdockImpl extends React.PureComponent<Props> {
   }
 
   componentDidMount() {
+    this.setFlatItems(this.flatItems);
     if (this.input) {
       this.input.focus();
       this.input.selectAll();
