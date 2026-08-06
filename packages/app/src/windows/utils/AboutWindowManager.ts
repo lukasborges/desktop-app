@@ -15,12 +15,13 @@ class AboutWindowManager extends GenericWindowManager {
     }
 
     const params: BrowserWindowServiceConstructorOptions = {
-      width: 550,
-      height: 380,
+      width: 390,
+      height: 610,
       show: false,
       frame: false,
       skipTaskbar: true,
       resizable: false,
+      transparent: true,
     };
 
     await super.create(params);

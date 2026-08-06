@@ -170,11 +170,11 @@ $station-rail-width: 68px;
   background: var(--app-surface-elevated);
   border: 1px solid var(--app-border-strong);
   border-radius: 12px;
-  box-shadow: 0 12px 32px var(--app-shadow);
+  box-shadow: 0 4px 14px var(--app-shadow-soft), 0 1px 3px var(--app-shadow-soft);
   box-sizing: border-box;
   color: var(--app-text-primary);
-  min-width: 178px;
-  padding: 6px;
+  min-width: 230px;
+  padding: 7px;
   position: absolute;
   z-index: $zindex-ultime;
 }
@@ -182,6 +182,20 @@ $station-rail-width: 68px;
 .station-main-menu--depth-0 {
   left: 8px;
   top: 47px;
+
+  &::before {
+    background: var(--app-surface-elevated);
+    border-left: 1px solid var(--app-border-strong);
+    border-top: 1px solid var(--app-border-strong);
+    content: '';
+    height: 12px;
+    left: 13px;
+    pointer-events: none;
+    position: absolute;
+    top: -7px;
+    transform: rotate(45deg);
+    width: 12px;
+  }
 }
 
 .station-main-menu--depth-1,
@@ -199,16 +213,16 @@ $station-rail-width: 68px;
   align-items: center;
   background: transparent;
   border: 0;
-  border-radius: 7px;
+  border-radius: 6px;
   color: inherit;
   cursor: default;
   display: grid;
   font: inherit;
-  font-size: 14px;
-  grid-template-columns: 14px minmax(0, 1fr) auto auto;
-  min-height: 34px;
+  font-size: 15px;
+  grid-template-columns: 0 minmax(0, 1fr) auto auto;
+  min-height: 32px;
   outline: 0;
-  padding: 5px 8px;
+  padding: 5px 10px;
   text-align: left;
   width: 100%;
 
@@ -228,14 +242,14 @@ $station-rail-width: 68px;
 }
 
 .station-main-menu__label {
-  padding-right: 16px;
+  padding-right: 14px;
   white-space: nowrap;
 }
 
 .station-main-menu__accelerator {
   color: var(--app-text-muted);
-  font-size: 12px;
-  padding-left: 18px;
+  font-size: 14px;
+  padding-left: 14px;
   white-space: nowrap;
 }
 
@@ -249,7 +263,43 @@ $station-rail-width: 68px;
 .station-main-menu__separator {
   background: var(--app-border-subtle);
   height: 1px;
-  margin: 5px 8px;
+  margin: 5px 0;
+}
+
+.station-main-menu__zoom {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  min-height: 42px;
+
+  button {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    color: inherit;
+    cursor: default;
+    display: flex;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    height: 32px;
+    justify-content: center;
+    outline: 0;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--app-active);
+    }
+
+    &:active {
+      background: var(--app-pressed);
+    }
+
+    &:disabled {
+      color: var(--app-text-muted);
+    }
+  }
 }
 
 .station-dock {
