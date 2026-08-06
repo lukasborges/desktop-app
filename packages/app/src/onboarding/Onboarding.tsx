@@ -174,7 +174,11 @@ class OnboardingImpl extends React.PureComponent<Props, State> {
   }
 
   handleExpandWindow() {
-    this.win.setFullScreen(!this.win.isFullScreen());
+    if (this.win.isMaximized()) {
+      this.win.unmaximize();
+    } else {
+      this.win.maximize();
+    }
   }
 
   render() {

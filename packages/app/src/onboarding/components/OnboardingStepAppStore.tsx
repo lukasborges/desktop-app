@@ -1,19 +1,26 @@
-import { Button, SearchInput, ServiceActionType, Size, theme } from '@getstation/theme';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
+
 import { MinimalApplication } from '../../applications/graphql/withApplications';
-import Application from '../../applications/components/Application';
+import AppIcon from '../../dock/components/AppIcon';
 
 export interface Classes {
   container: string,
+  heading: string,
   title: string,
-  smallSubtitle: string,
   subtitle: string,
+  errorBanner: string,
+  searchContainer: string,
+  searchIcon: string,
+  searchInput: string,
   appsContainer: string,
-  appsContainerContainer: string,
-  buttonsContainer: string,
-  hideOverlay: string,
+  appButton: string,
+  selectedApp: string,
+  appIcon: string,
+  appName: string,
+  check: string,
+  selectedCheck: string,
   noResults: string,
 }
 
@@ -23,124 +30,286 @@ interface Props {
   selectedApplications: (MinimalApplication & { position?: DOMRect })[],
   onHandleApplicationSelect: (
     application: MinimalApplication,
-    iconRef: React.RefObject<HTMLDivElement> | undefined,
+    iconRef?: React.RefObject<HTMLDivElement>,
   ) => any,
-  onValidSubmit: () => any,
   searchInputValue: string,
   handleSearchInputValue: (value: string) => any,
-  isLoading: boolean,
+  setupError?: string,
 }
 
 @injectSheet({
   container: {
     display: 'flex',
+    flex: 1,
     flexDirection: 'column',
-    position: 'relative',
-    alignItems: 'flex-start',
-    padding: [0, 50, 0, 50],
+    margin: '0 auto',
+    maxWidth: 760,
+    minHeight: 0,
+    padding: '44px 32px 32px',
+    width: '100%',
+  },
+  heading: {
+    marginBottom: 24,
+    textAlign: 'center',
   },
   title: {
-    margin: [10, 0],
-    ...theme.titles.h1,
-    color: theme.colors.gray.dark,
-  },
-  appsContainer: {
-    width: '100%',
-    height: 300,
-    marginTop: 20,
-    marginBottom: 20,
-    display: 'grid',
-    gridTemplateColumns: '50% 50%',
-    gridTemplateRows: '20% 20% 20% 20% 20%',
-  },
-  smallSubtitle: {
-    ...theme.titles.h3,
-    color: theme.colors.gray.middle,
-    margin: [20, 0, 20, 10],
-    fontStyle: 'italic',
-    ...theme.fontMixin(12, 500),
-    visibility: ({ selectedApplications }: Props) => selectedApplications.length > 2 ? 'hidden' : 'initial',
+    color: 'var(--app-text-primary)',
+    fontSize: 28,
+    fontWeight: 700,
+    letterSpacing: '-.02em',
+    lineHeight: 1.2,
+    margin: '0 0 8px',
   },
   subtitle: {
-    ...theme.titles.h3,
-    color: theme.colors.gray.middle,
-    marginBottom: 40,
+    color: 'var(--app-text-secondary)',
+    fontSize: 15,
+    lineHeight: 1.45,
+    margin: 0,
   },
-  buttonsContainer: {
-    marginTop: 10,
-    display: 'flex',
+  errorBanner: {
+    background: 'color-mix(in srgb, var(--app-danger) 12%, var(--app-surface-elevated))',
+    border: '1px solid color-mix(in srgb, var(--app-danger) 42%, var(--app-border))',
+    borderRadius: 9,
+    color: 'var(--app-text-primary)',
+    fontSize: 13,
+    lineHeight: 1.4,
+    marginBottom: 16,
+    padding: '10px 12px',
+    textAlign: 'center',
+  },
+  searchContainer: {
     alignItems: 'center',
+    background: 'var(--app-surface-elevated)',
+    border: '1px solid var(--app-border)',
+    borderRadius: 10,
+    boxShadow: '0 1px 2px var(--app-shadow-soft)',
+    display: 'flex',
+    flex: '0 0 auto',
+    height: 42,
+    marginBottom: 20,
+    padding: '0 13px',
+    transition: 'border-color 120ms ease, box-shadow 120ms ease',
+    '&:focus-within': {
+      borderColor: 'var(--app-accent)',
+      boxShadow: '0 0 0 2px color-mix(in srgb, var(--app-accent) 30%, transparent)',
+    },
+  },
+  searchIcon: {
+    border: '2px solid var(--app-text-muted)',
+    borderRadius: '50%',
+    boxSizing: 'border-box',
+    flex: '0 0 auto',
+    height: 13,
+    marginRight: 11,
+    position: 'relative',
+    width: 13,
+    '&::after': {
+      background: 'var(--app-text-muted)',
+      borderRadius: 2,
+      bottom: -4,
+      content: '""',
+      height: 6,
+      position: 'absolute',
+      right: -3,
+      transform: 'rotate(-45deg)',
+      width: 2,
+    },
+  },
+  searchInput: {
+    background: 'transparent',
+    border: 0,
+    color: 'var(--app-text-primary)',
+    fontFamily: 'inherit',
+    fontSize: 14,
+    height: '100%',
+    minWidth: 0,
+    outline: 0,
+    width: '100%',
+    '&::placeholder': {
+      color: 'var(--app-text-muted)',
+    },
+  },
+  appsContainer: {
+    alignContent: 'start',
+    display: 'flex',
+    flex: 1,
+    flexWrap: 'wrap',
+    minHeight: 0,
+    overflowY: 'auto',
+    padding: '2px 4px 12px 2px',
+  },
+  appButton: {
+    alignItems: 'center',
+    background: 'var(--app-surface-elevated)',
+    border: '1px solid var(--app-border-subtle)',
+    borderRadius: 12,
+    color: 'var(--app-text-primary)',
+    cursor: 'pointer',
+    display: 'flex',
+    fontFamily: 'inherit',
+    minHeight: 62,
+    padding: '10px 12px',
+    textAlign: 'left',
+    transition: 'background 120ms ease, border-color 120ms ease, box-shadow 120ms ease',
+    marginBottom: 12,
+    width: 'calc(50% - 6px)',
+    '&:nth-child(odd)': {
+      marginRight: 6,
+    },
+    '&:nth-child(even)': {
+      marginLeft: 6,
+    },
+    '&:hover': {
+      background: 'var(--app-hover)',
+      borderColor: 'var(--app-border)',
+    },
+    '&:focus-visible': {
+      boxShadow: '0 0 0 2px var(--app-accent)',
+      outline: 0,
+    },
+    '@media (max-width: 620px)': {
+      marginLeft: '0 !important',
+      marginRight: '0 !important',
+      width: '100%',
+    },
+  },
+  selectedApp: {
+    background: 'color-mix(in srgb, var(--app-accent) 10%, var(--app-surface-elevated))',
+    borderColor: 'var(--app-accent)',
+    '&:hover': {
+      background: 'color-mix(in srgb, var(--app-accent) 14%, var(--app-surface-elevated))',
+      borderColor: 'var(--app-accent)',
+    },
+  },
+  appIcon: {
+    flex: '0 0 auto',
+    height: 36,
+    marginRight: 12,
+    overflow: 'hidden',
+    width: 36,
+  },
+  appName: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: 600,
+    minWidth: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  check: {
+    alignItems: 'center',
+    border: '1px solid var(--app-border-strong)',
+    borderRadius: '50%',
+    color: 'transparent',
+    display: 'flex',
+    flex: '0 0 auto',
+    fontSize: 13,
+    fontWeight: 700,
+    height: 20,
+    justifyContent: 'center',
+    marginLeft: 10,
+    width: 20,
+  },
+  selectedCheck: {
+    background: 'var(--app-accent)',
+    borderColor: 'var(--app-accent)',
+    color: '#fff',
   },
   noResults: {
-    width: 390,
-    marginTop: 15,
+    alignItems: 'center',
+    color: 'var(--app-text-secondary)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    lineHeight: 1.5,
+    minHeight: 180,
     textAlign: 'center',
-    ...theme.fontMixin(16),
-    lineHeight: '25px',
-    color: theme.colors.gray.dark,
+    width: '100%',
+    '& strong': {
+      color: 'var(--app-text-primary)',
+      fontSize: 16,
+      marginBottom: 4,
+    },
   },
 })
 export default class OnboardingStepAppStore extends React.PureComponent<Props> {
-  constructor(props: Props) {
-    super(props);
-
-    this.handleApplicationSelect = this.handleApplicationSelect.bind(this);
+  handleApplicationSelect = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const applicationId = event.currentTarget.dataset.applicationId;
+    const application = this.props.applications.find(app => app.id === applicationId);
+    if (application) this.props.onHandleApplicationSelect(application);
   }
 
-  handleApplicationSelect(application: MinimalApplication, iconRef?: React.RefObject<HTMLDivElement>) {
-    this.props.onHandleApplicationSelect(application, iconRef);
+  handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.handleSearchInputValue(event.currentTarget.value);
   }
 
   render() {
     const {
-      classes, applications, onValidSubmit, searchInputValue, handleSearchInputValue,
-      selectedApplications, isLoading,
+      classes, applications, searchInputValue, selectedApplications, setupError,
     } = this.props;
+    const selectedCount = selectedApplications.length;
 
     return (
-      <div className={classes!.container}>
-        <h1 className={classes!.title}>
-          Select your most used applications
-        </h1>
+      <main className={classes!.container}>
+        <header className={classes!.heading}>
+          <h1 className={classes!.title}>Choose your apps</h1>
+          <p className={classes!.subtitle} aria-live="polite">
+            {selectedCount < 3
+              ? `Select at least three apps to build your workspace — ${3 - selectedCount} remaining.`
+              : `${selectedCount} apps selected. You can change these later.`}
+          </p>
+        </header>
 
-        <SearchInput
-          value={searchInputValue}
-          placeholder="Search an app..."
-          onChange={handleSearchInputValue}
-        />
+        {setupError &&
+          <div className={classes!.errorBanner} role="alert">{setupError}</div>
+        }
 
-        <div className={classes!.appsContainer}>
+        <label className={classes!.searchContainer}>
+          <span className={classes!.searchIcon} aria-hidden="true" />
+          <input
+            className={classes!.searchInput}
+            type="search"
+            value={searchInputValue}
+            placeholder="Search apps"
+            aria-label="Search apps"
+            onChange={this.handleSearchChange}
+          />
+        </label>
+
+        <div className={classes!.appsContainer} role="group" aria-label="Available apps">
           {applications.length === 0 &&
             <div className={classes!.noResults}>
-              <p>Can’t find your app?</p>
-              <p>You can request it later in the app store.</p>
+              <strong>No apps found</strong>
+              <span>You can request another app from the app store later.</span>
             </div>
           }
 
-          {applications.length > 0 && applications.map((app: MinimalApplication) =>
-            <Application
-              key={app.id}
-              application={app}
-              onAdd={this.handleApplicationSelect}
-              actionType={selectedApplications.find((a: MinimalApplication) =>
-                a.id === app.id) ? ServiceActionType.Remove : ServiceActionType.Add
-              }
-              getIconRef={true}
-            />
-          )
-          }
+          {applications.map((application: MinimalApplication) => {
+            const selected = Boolean(selectedApplications.find(app => app.id === application.id));
+            const buttonClassName = `${classes!.appButton}${selected ? ` ${classes!.selectedApp}` : ''}`;
+            const checkClassName = `${classes!.check}${selected ? ` ${classes!.selectedCheck}` : ''}`;
+
+            return (
+              <button
+                key={application.id}
+                type="button"
+                className={buttonClassName}
+                aria-pressed={selected}
+                data-application-id={application.id}
+                onClick={this.handleApplicationSelect}
+              >
+                <span className={classes!.appIcon}>
+                  <AppIcon imgUrl={application.iconURL} themeColor={application.themeColor} size={36} />
+                </span>
+                <span className={classes!.appName}>{application.name}</span>
+                <span className={checkClassName} aria-hidden="true">✓</span>
+              </button>
+            );
+          })}
         </div>
 
-        <p className={classes!.subtitle}>
-          {selectedApplications.length > 14 && 'You have selected 15 apps. '}Don't worry, you can pick more later!
-        </p>
-
-        <Button btnSize={Size.BIG} onClick={onValidSubmit} disabled={selectedApplications.length < 3} isLoading={isLoading}>
-          Start Platform
-        </Button>
-
-        <p className={classes!.smallSubtitle}>Select at least 3 apps</p>
-      </div>
+      </main>
     );
   }
 }
