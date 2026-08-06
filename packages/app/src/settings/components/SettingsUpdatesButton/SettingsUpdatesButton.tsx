@@ -63,6 +63,8 @@ const styles = () => ({
 
 @injectSheet(styles)
 class SettingsUpdatesButton extends React.PureComponent<Props, State> {
+  private resetFeedbackTimeout?: ReturnType<typeof setTimeout>;
+
   constructor(props: Props) {
     super(props);
 
@@ -71,16 +73,20 @@ class SettingsUpdatesButton extends React.PureComponent<Props, State> {
     };
   }
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillReceiveProps(newProps: any) {
-    if (this.props.isCheckingUpdate && !newProps.isCheckingUpdate) {
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.isCheckingUpdate && !this.props.isCheckingUpdate) {
       this.setState({ justCheckedForUpdate: true });
 
-      setTimeout(
+      if (this.resetFeedbackTimeout) clearTimeout(this.resetFeedbackTimeout);
+      this.resetFeedbackTimeout = setTimeout(
         () => this.setState({ justCheckedForUpdate: false }),
         ms('1min')
       );
     }
+  }
+
+  componentWillUnmount() {
+    if (this.resetFeedbackTimeout) clearTimeout(this.resetFeedbackTimeout);
   }
 
   render() {

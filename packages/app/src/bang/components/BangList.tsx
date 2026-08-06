@@ -2,11 +2,13 @@ import { ThemeTypes } from '@getstation/theme';
 import * as classNames from 'classnames';
 // @ts-ignore: no declaration file
 import * as scrollIntoView from 'dom-scroll-into-view';
-// @ts-ignore: no declaration file
-import * as isBlank from 'is-blank';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
+import {
+  CollapseSections,
+  getCollapsedSectionsForItems,
+} from '../../common/helpers/lifecycleTransitions';
 import { EMPTY_SECTION, flattenResults, sectionsAlwaysExpanded } from '../api';
 import { SearchResultSerialized, SearchSectionSerialized } from '../duck';
 import { findItemById, getId } from '../helpers/utils';
@@ -27,12 +29,10 @@ interface Classes {
   resultsCount: string;
 }
 
-interface CollapseSections {
-  [sectionName: string]: { collapsed: boolean };
-}
-
 interface State {
   collapseSections: CollapseSections;
+  sectionNames: string;
+  forEmptyQuery: boolean;
 }
 
 export interface Props {
@@ -67,6 +67,20 @@ const itemIsCollapsed = (
   collapseSections[item.category] &&
   collapseSections[item.category].collapsed &&
   !itemIsInTopHits(item);
+
+const getSectionNames = (items: SearchSectionSerialized[]) =>
+  items.map(item => item.sectionName).join('\u0000');
+
+const getInitialCollapseSections = (props: Props) => {
+  if (props.forEmptyQuery) return {};
+
+  const collapseSections = getCollapsedSectionsForItems(props.items);
+  const highlightedItem = getHighlightedItem(props);
+  if (highlightedItem && highlightedItem.category) {
+    collapseSections[highlightedItem.category] = { collapsed: false };
+  }
+  return collapseSections;
+};
 
 @injectSheet((theme: ThemeTypes) => ({
   list: {
@@ -175,6 +189,12 @@ export default class BangList extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    this.state = {
+      collapseSections: getInitialCollapseSections(props),
+      sectionNames: getSectionNames(props.items),
+      forEmptyQuery: props.forEmptyQuery,
+    };
+
     this.componentDidUpdate = throttle(this.componentDidUpdate, 100, {
       leading: false,
     });
@@ -184,38 +204,18 @@ export default class BangList extends React.PureComponent<Props, State> {
     this.renderArrow = this.renderArrow.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      collapseSections: this.props.items.reduce((state, item) => {
-        state[item.sectionName] = { collapsed: true };
-        return state;
-      }, {}),
-    });
-  }
+  static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
+    const sectionNames = getSectionNames(props.items);
+    if (state.sectionNames === sectionNames && state.forEmptyQuery === props.forEmptyQuery) return null;
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    const { forEmptyQuery } = nextProps;
-    if (forEmptyQuery) return;
-    if (!this.state) return;
-
-    const { collapseSections } = this.state;
-
-    const nextCollapseSectionsState = nextProps.items.reduce(
-      (collapseSectionsNewState, item) => {
-        if (
-          collapseSections[item.sectionName] &&
-          !collapseSections[item.sectionName].collapsed
-        ) {
-          return collapseSectionsNewState;
-        }
-        collapseSectionsNewState[item.sectionName] = { collapsed: true };
-        return collapseSectionsNewState;
+    return {
+      collapseSections: props.forEmptyQuery ? {} : {
+        ...state.collapseSections,
+        ...getCollapsedSectionsForItems(props.items, state.collapseSections),
       },
-      {},
-    );
-
-    this.updateCollapsedSections(nextCollapseSectionsState);
+      sectionNames,
+      forEmptyQuery: props.forEmptyQuery,
+    };
   }
 
   componentDidUpdate(_: Props, prevState: State) {
@@ -239,10 +239,6 @@ export default class BangList extends React.PureComponent<Props, State> {
 
     if (!forEmptyQuery && highlightedItemIsCollapsed) {
       this.expandSectionForSearchResult(highlightedItem);
-    }
-
-    if (forEmptyQuery && !isBlank(this.state.collapseSections)) {
-      this.setState({ collapseSections: {} });
     }
 
     if (this.highlightedItemElement && this.listElement) {

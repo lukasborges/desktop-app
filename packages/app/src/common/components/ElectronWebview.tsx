@@ -351,6 +351,9 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
         this[changableProps[propName]](propValue);
       }
     });
+    if (prevProps.hidden !== this.props.hidden) {
+      this.updateClassName();
+    }
   }
 
   updateClassName = (props = this.props) => {
@@ -359,13 +362,6 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
       return this.view.setAttribute('class', className);
     }
   };
-
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillReceiveProps(nextProps: ElectronWebviewProps) {
-    if (this.props.hidden !== nextProps.hidden) {
-      this.updateClassName(nextProps);
-    }
-  }
 
   focus() {
     if (!this.view) return;
