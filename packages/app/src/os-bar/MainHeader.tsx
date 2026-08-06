@@ -85,6 +85,7 @@ interface State {
 interface HeaderMenuLevelProps {
   depth?: number,
   items: Electron.MenuItem[],
+  menuRef?: (menu: HTMLDivElement | null) => void,
   onActivate: (item: Electron.MenuItem) => void,
 }
 
@@ -97,6 +98,53 @@ const formatMenuAccelerator = (accelerator: string): string => accelerator
   .replace(/Command|Cmd/g, process.platform === 'darwin' ? '⌘' : 'Super')
   .replace(/Control/g, 'Ctrl')
   .replace(/Option/g, process.platform === 'darwin' ? '⌥' : 'Alt');
+
+const findMenuItem = (
+  items: Electron.MenuItem[],
+  predicate: (item: Electron.MenuItem) => boolean,
+): Electron.MenuItem | undefined => {
+  for (const item of items) {
+    if (predicate(item)) return item;
+    if (item.submenu) {
+      const match = findMenuItem(item.submenu.items, predicate);
+      if (match) return match;
+    }
+  }
+  return undefined;
+};
+
+// The native application menu is organized as a desktop menubar. The header
+// button follows GNOME's application-menu pattern instead: a short, flat list
+// containing the actions that are useful from the shell itself.
+const getHeaderMenuItems = (menu: Electron.Menu): Electron.MenuItem[] => {
+  const items = menu.items;
+  const byId = (id: string) => findMenuItem(items, item => item.id === id);
+  const byLabel = (label: string) => findMenuItem(items, item => item.label === label);
+  const separator = findMenuItem(items, item => item.type === 'separator');
+
+  return [
+    byId('find'),
+    separator,
+    byId('page-zoom-out'),
+    byId('page-reset-zoom'),
+    byId('page-zoom-in'),
+    separator,
+    byId('settings'),
+    byId('toggle-kbd-shortcuts'),
+    byLabel('Bugs && Features request'),
+    byLabel('About Platform'),
+  ].filter((item): item is Electron.MenuItem => Boolean(item));
+};
+
+const getHeaderMenuLabel = (item: Electron.MenuItem): string => {
+  if (item.id === 'toggle-kbd-shortcuts') return 'Keyboard Shortcuts';
+  if (item.label === 'Bugs && Features request') return 'Help';
+
+  return item.label
+    .replace(/&&/g, '\u0000')
+    .replace(/&/g, '')
+    .replace(/\u0000/g, '&');
+};
 
 class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMenuLevelState> {
   state: HeaderMenuLevelState = { activeSubmenu: null };
@@ -114,18 +162,54 @@ class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMe
   }
 
   render() {
-    const { depth = 0, items, onActivate } = this.props;
+    const { depth = 0, items, menuRef, onActivate } = this.props;
 
     return (
-      <div className={`station-main-menu station-main-menu--depth-${depth}`} role="menu">
+      <div className={`station-main-menu station-main-menu--depth-${depth}`} ref={menuRef} role="menu">
         {items.filter(item => item.visible).map((item, index) => {
           if (item.type === 'separator') {
             return <div className="station-main-menu__separator" key={`separator-${index}`} role="separator" />;
           }
 
+          if (item.id === 'page-zoom-out') {
+            const resetZoom = items[index + 1];
+            const zoomIn = items[index + 2];
+
+            return (
+              <div className="station-main-menu__zoom" key="page-zoom" role="group" aria-label="Page zoom">
+                <button
+                  aria-label="Zoom out"
+                  disabled={!item.enabled}
+                  onClick={onActivate.bind(null, item)}
+                  type="button"
+                >
+                  −
+                </button>
+                <button
+                  aria-label="Reset zoom"
+                  disabled={!resetZoom.enabled}
+                  onClick={onActivate.bind(null, resetZoom)}
+                  type="button"
+                >
+                  100%
+                </button>
+                <button
+                  aria-label="Zoom in"
+                  disabled={!zoomIn.enabled}
+                  onClick={onActivate.bind(null, zoomIn)}
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+            );
+          }
+
+          if (item.id === 'page-reset-zoom' || item.id === 'page-zoom-in') return null;
+
           const hasSubmenu = Boolean(item.submenu);
           const submenuOpen = hasSubmenu && this.state.activeSubmenu === index;
-          const label = item.label.replace(/&/g, '');
+          const label = getHeaderMenuLabel(item);
 
           return (
             <div
@@ -308,6 +392,9 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
       quickSwitchVisible,
     } = this.props;
 
+    const applicationMenu = remote.Menu.getApplicationMenu();
+    const headerMenuItems = applicationMenu ? getHeaderMenuItems(applicationMenu) : [];
+
     return (
       <header
         className={`station-main-header ${this.state.isMenuOpen ? 'station-main-header--menu-open' : ''}`}
@@ -327,13 +414,12 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
           >
             <HeaderIcon name="menu" />
           </button>
-          {this.state.isMenuOpen && remote.Menu.getApplicationMenu() &&
-            <div ref={this.setMenuPopoverRef}>
-              <HeaderMenuLevel
-                items={remote.Menu.getApplicationMenu()!.items}
-                onActivate={this.activateMenuItem}
-              />
-            </div>
+          {this.state.isMenuOpen && headerMenuItems.length > 0 &&
+            <HeaderMenuLevel
+              items={headerMenuItems}
+              menuRef={this.setMenuPopoverRef}
+              onActivate={this.activateMenuItem}
+            />
           }
           {this.renderButton('plus', 'Add apps', onAddApplication, { active: appStoreVisible })}
           <span className="station-main-header__separator" />
