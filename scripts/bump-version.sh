@@ -18,11 +18,12 @@ fi
 
 new_version="3.3.0-fork.${n}"
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$repo_root"
 
 bump() {
   local file="$1"
   local current
-  current="$(node -p "require('$file').version")"
+  current="$(node -p "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8')).version" "$file")"
   if [[ "$current" == "$new_version" ]]; then
     echo "  $file already at $new_version"
     return
@@ -39,6 +40,6 @@ NODE
 }
 
 echo "bumping to $new_version"
-bump "$repo_root/package.json"
-bump "$repo_root/packages/app/package.json"
+bump "package.json"
+bump "packages/app/package.json"
 echo "done. review with: git diff package.json packages/app/package.json"
