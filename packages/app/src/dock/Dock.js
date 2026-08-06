@@ -110,7 +110,8 @@ class DockImpl extends React.PureComponent {
       activeCyclingApplicationId: null,
       recentlyInstalledApplicationIds: [],
       iconRefs: {},
-      isDraggingIcon: false
+      isDraggingIcon: false,
+      previousHighlightedItemId: props.highlightedItemId
     };
     this.timeoutIcon = null;
     this.timeoutSubdock = null;
@@ -129,13 +130,17 @@ class DockImpl extends React.PureComponent {
     this.onSubdockOverStateChange = this.onSubdockOverStateChange.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { activeCyclingTabId } = this.state;
-    const highlightedItemIdChanged = this.props.highlightedItemId !== nextProps.highlightedItemId;
-    const activeCyclingTabIdNotChanged = activeCyclingTabId && activeCyclingTabId !== nextProps.highlightedItemId;
-    if (highlightedItemIdChanged && activeCyclingTabIdNotChanged) {
-      this.setState({ activeCyclingTabId: nextProps.highlightedItemId });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.previousHighlightedItemId === nextProps.highlightedItemId) return null;
+
+    if (prevState.activeCyclingTabId && prevState.activeCyclingTabId !== nextProps.highlightedItemId) {
+      return {
+        activeCyclingTabId: nextProps.highlightedItemId,
+        previousHighlightedItemId: nextProps.highlightedItemId,
+      };
     }
+
+    return { previousHighlightedItemId: nextProps.highlightedItemId };
   }
 
   componentDidUpdate(prevProps, prevState) {

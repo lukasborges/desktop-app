@@ -83,11 +83,10 @@ export default class OnePasswordForm extends React.PureComponent<Props & Overrid
       }, {});
   }
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillUpdate(nextProps: Readonly<Props>) {
-    const { configurationProcess: { step } } = this.props;
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    const { configurationProcess: { step } } = prevProps;
 
-    if (step === ConfigurationStep.Test && nextProps.configurationProcess.step === ConfigurationStep.Error) {
+    if (step === ConfigurationStep.Test && this.props.configurationProcess.step === ConfigurationStep.Error) {
       this.setState({ masterPassword: '' });
     }
   }

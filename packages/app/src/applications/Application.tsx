@@ -28,6 +28,7 @@ import { oc } from 'ts-optchain';
 import { format as formatUrl } from 'url';
 import { injectJS } from '../plugins/helpers';
 import { getSnoozeState } from '../notification-center/selectors';
+import { shouldReloadAfterConnectionLoss } from '../common/helpers/lifecycleTransitions';
 import { getFavicon, getSizedAndOrderedFavicons } from './uiHelpers';
 import { ActionsBus, withActionsBus } from '../store/actionsBus';
 import {
@@ -202,24 +203,15 @@ class ApplicationImpl extends React.PureComponent {
     };
   }
 
-  shouldReloadAfterConnectionLoss() {
-    if (!this.props.errorCode) return;
-
-    // see https://cs.chromium.org/chromium/src/net/base/net_error_list.h
-    return ([-105, -106, -109, -130].includes(this.props.errorCode));
-  }
-
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (getTabId(nextProps.tab) !== getTabId(this.props.tab)) {
-      this.detachBus(); // bus will be automatically re-attached in the next render
+  componentDidUpdate(prevProps: Props) {
+    if (getTabId(this.props.tab) !== getTabId(prevProps.tab)) {
+      this.detachBus();
+      this.attachBus();
     }
 
-    if (nextProps.isOnline
-      && !this.props.isOnline
-      && this.shouldReloadAfterConnectionLoss()
-    ) {
-      this.props.onLoadingError(null, null);
+    // see https://cs.chromium.org/chromium/src/net/base/net_error_list.h
+    if (shouldReloadAfterConnectionLoss(prevProps.isOnline, this.props.isOnline, prevProps.errorCode)) {
+      prevProps.onLoadingError(null, null);
       if (this.webView && this.webView.isReady()) this.webView.reload();
     }
   }

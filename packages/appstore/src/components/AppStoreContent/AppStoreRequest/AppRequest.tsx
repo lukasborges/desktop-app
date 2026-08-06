@@ -107,15 +107,12 @@ class AppRequestImpl extends React.Component<Props, IState> {
     this.handleInstallApplicationAfterAdd = this.handleInstallApplicationAfterAdd.bind(this);
   }
 
-  // tslint:disable-next-line function-name
-  UNSAFE_componentWillUpdate(nexProps: Props, nextState: IState) {
-    const { isVisible } = this.state;
-
-    if (nextState.step === Steps.Exit) {
+  componentDidUpdate(_prevProps: Props, prevState: IState) {
+    if (prevState.step !== Steps.Exit && this.state.step === Steps.Exit) {
       this.props.exitFlow(false);
     }
 
-    if (nexProps.appRequestIsOpen && !isVisible) {
+    if (this.props.appRequestIsOpen && !this.state.isVisible) {
       this.setState({
         isVisible: true,
         appRequestVisibleOrigin: CustomAppFormOpenedVia.EmptySearchButton,
