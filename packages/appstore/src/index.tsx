@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { applyMiddleware, createStore, Store } from 'redux';
+import { applyMiddleware, legacy_createStore, Store } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import App from './app';
@@ -14,7 +14,7 @@ import './appearance.css';
 initializeAppearance();
 
 const sagaMiddleware = createSagaMiddleware();
-const store: Store<State> = createStore(
+const store: Store<State> = legacy_createStore(
   rootReducer,
   applyMiddleware(sagaMiddleware)
 );

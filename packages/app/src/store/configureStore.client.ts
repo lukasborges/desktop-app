@@ -3,10 +3,10 @@ import { compact } from 'ramda-adjunct';
 import * as Immutable from 'immutable';
 // @ts-ignore: no declaration file
 import * as installDevTools from 'immutable-devtools';
-import { applyMiddleware, compose, createStore, Store } from 'redux';
+import { applyMiddleware, compose, legacy_createStore, Store } from 'redux';
 // @ts-ignore: no declaration file
 import { observe } from 'redux-observers';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 // @ts-ignore: no declaration file
 import { client } from 'shared-redux';
 import { ElectronIpcRendererDuplex } from '../utils/stream-ipc-proxy';
@@ -84,7 +84,7 @@ export default async function configureStore(actionsEmitter?: ActionsEmitter): P
     applyMiddleware(...middlewares),
   );
 
-  const store = createStore(rootReducer, initialState, enhancer);
+  const store = legacy_createStore(rootReducer, initialState, enhancer);
 
   if (!isPackaged && module.hot) {
     module.hot.accept(() =>
