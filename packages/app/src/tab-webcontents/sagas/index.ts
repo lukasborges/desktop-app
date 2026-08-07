@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import { SagaIterator } from 'redux-saga';
 import { all, call, delay, getContext, put, race, select, spawn, take } from 'redux-saga/effects';
 import { BrowserXAppWorker } from '../../app-worker';
@@ -16,6 +15,7 @@ import { ApplicationsImmutable } from '../../applications/types';
 import { getFrontActiveTabId } from '../../applications/utils';
 import { MARK_AS_DONE } from '../../onboarding/duck';
 import { isDone } from '../../onboarding/selectors';
+import { sendToWebContents } from '../../lib/ipc-send-to';
 import { closeTab, updateBackForwardState, updateLastActivity, updateTabURL } from '../../tabs/duck';
 import { getTabApplicationId, getTabId } from '../../tabs/get';
 import { getTabs } from '../../tabs/selectors';
@@ -270,7 +270,7 @@ function* interceptAutofill({ webcontentsId }: { webcontentsId: number }) {
   const clickChannel = serviceAddObserverChannel(autofillMenu, 'onClickItem', 'autofill-popup-value-selected');
 
   yield takeEveryWitness(clickChannel, function* handle({ action, args }: any) {
-    if (args.length > 0) ipcRenderer.sendTo(webcontentsId, action, args[0]);
+    if (args.length > 0) sendToWebContents(webcontentsId, action, args[0]);
   });
 
   // yield takeEveryWitness(popupChannel, function* handle(rect: any) {
