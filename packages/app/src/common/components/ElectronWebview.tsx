@@ -39,9 +39,7 @@ export interface ElectronWebviewProps extends Omit<Electron.WebviewTag, 'src'> {
   onNewWindow?: EventListener;
   onClose?: EventListener;
   onIpcMessage?: EventListener;
-  onCrashed?: EventListener;
-  onGpuCrashed?: EventListener;
-  onPluginCrashed?: EventListener;
+  onRenderProcessGone?: EventListener;
   onDestroyed?: EventListener;
 }
 
@@ -73,9 +71,9 @@ export const events = [
   'did-navigate-in-page',
   'close',
   'ipc-message',
-  'crashed',
-  'gpu-crashed',
-  'plugin-crashed',
+  // `crashed`, `gpu-crashed` and `plugin-crashed` have been removed in Electron 29
+  // @see https://www.electronjs.org/docs/latest/breaking-changes#removed-crashed-event-on-webcontents-and-webview
+  'render-process-gone',
   'destroyed',
   'media-started-playing',
   'media-paused',
