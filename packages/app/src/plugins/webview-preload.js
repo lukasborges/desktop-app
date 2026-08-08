@@ -1,5 +1,6 @@
   const { contextBridge, ipcRenderer } = require('electron');
   const { Observable } = require('rxjs');
+  const { sendToWebContentsWithSender } = require('../lib/ipc-send-to');
 
   const sendPerformToProxy = (channel, payload) => {
     const p = new Promise(resolve => {
@@ -9,7 +10,8 @@
     });
     setTimeout(() => {
       ipcRenderer.invoke('get-worker-contents-id')
-          .then(workerWebContentsId => ipcRenderer.sendTo(workerWebContentsId, 'bx-api-perform', channel, payload));
+          .then(workerWebContentsId =>
+            sendToWebContentsWithSender(workerWebContentsId, 'bx-api-perform', channel, payload));
     }, 1);
     return p;
   };
@@ -18,7 +20,8 @@
     ipcRenderer.on(`bx-api-subscribe-response-${channel}`, listener);
     setTimeout(() => {
       ipcRenderer.invoke('get-worker-contents-id')
-          .then(workerWebContentsId => ipcRenderer.sendTo(workerWebContentsId, 'bx-api-subscribe', channel));
+          .then(workerWebContentsId =>
+            sendToWebContentsWithSender(workerWebContentsId, 'bx-api-subscribe', channel));
     }, 1);
   };
 

@@ -9,8 +9,8 @@
   "author": "Joël Charles <joel@getstation.com>",
   "main": "dist/app.js",
   "scripts": {
-    "build:1": "yarn run clean && yarn run gql-gen && cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config configs/webpack.config.js --env.build",
-    "build:2": "cross-env NODE_ENV=storybook NODE_OPTIONS=--openssl-legacy-provider build-storybook -o dist/__storybook --quiet ",
+    "build:1": "yarn run clean && yarn run gql-gen && cross-env NODE_OPTIONS=--openssl-legacy-provider DISABLE_V8_COMPILE_CACHE=1 webpack --config configs/webpack.config.js --env.build",
+    "build:2": "cross-env NODE_ENV=storybook NODE_OPTIONS=--openssl-legacy-provider DISABLE_V8_COMPILE_CACHE=1 build-storybook -o dist/__storybook --quiet ",
     "gql-gen": "graphql-codegen --config codegen.yml",
     "build": "yarn run build:1 && yarn run build:2",
     "clean": "rimraf dist",

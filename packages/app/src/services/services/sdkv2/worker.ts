@@ -3,6 +3,7 @@ import { distinctUntilChanged, map, share } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { uninstallAllInstances } from '../../../abstract-application/duck';
 import { setConfigData, uninstallApplication } from '../../../applications/duck';
+import { onFromWebContents, sendToWebContents } from '../../../lib/ipc-send-to';
 import { getSnoozeDurationInMs } from '../../../notification-center/selectors';
 import { getThemeColors } from '../../../theme/selectors';
 import { StationState, StationStoreWorker } from '../../../types';
@@ -175,17 +176,13 @@ export class SDKv2ServiceImpl extends SDKv2Service implements RPC.Interface<SDKv
   }
 }
 
-const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId :
-  typeof e.sender.id === 'number' ? e.sender.id : 0;
-
 const initPreloadListener = (sdkv2: SDKv2ServiceImpl) => {
-  ipcRenderer.on('bx-api-subscribe', async (event: Electron.Event, channel: SDKv2Selectors) => {
-    const senderId = getSenderId(event);
+  onFromWebContents('bx-api-subscribe', async (senderId: number, channel: SDKv2Selectors) => {
     try {
       const subscription = await sdkv2.addObserver(channel, observer({
         on(result: any) {
-          // event.sender.send doesn't seem to work for renderer-to-renderer comms
-          ipcRenderer.sendTo(senderId, `bx-api-subscribe-response-${channel}`, result);
+          // renderer to renderer, relayed by the main process
+          sendToWebContents(senderId, `bx-api-subscribe-response-${channel}`, result);
         },
       }));
 
@@ -197,12 +194,11 @@ const initPreloadListener = (sdkv2: SDKv2ServiceImpl) => {
     }
   });
 
-  ipcRenderer.on('bx-api-perform', (event: Electron.Event, channel: SDKv2Selectors, payload?: any) => {
-    const senderId = getSenderId(event);
+  onFromWebContents('bx-api-perform', (senderId: number, channel: SDKv2Selectors, payload?: any) => {
     sdkv2.callAction(channel, payload)
       .then(result => {
-        // event.sender.send doesn't seem to work for renderer-to-renderer comms
-        ipcRenderer.sendTo(senderId, `bx-api-perform-response-${channel}`, result);
+        // renderer to renderer, relayed by the main process
+        sendToWebContents(senderId, `bx-api-perform-response-${channel}`, result);
       })
       .catch(handleError());
   });
