@@ -30,12 +30,18 @@
   "devDependencies": {
     "rimraf": "^5.0.10"
   },
+  "resolutions": {
+    "node-gyp": "12.4.0",
+    "react-draggable": "4.4.6",
+    "@electron/rebuild": "3.7.2",
+    "@electron/node-gyp": "npm:node-gyp@12.4.0"
+  },
   "devEngines": {
-    "node": ">=18.0.0",
+    "node": ">=20.0.0",
     "yarn": ">=4.1.0"
   },
   "volta": {
-    "node": "18.14.0",
+    "node": "20.20.2",
     "yarn": "4.1.0"
   },
   "packageManager": "yarn@4.1.0"

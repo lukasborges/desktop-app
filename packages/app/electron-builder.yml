@@ -4,8 +4,10 @@ publish:
   provider: 'github'
 
 asar: true
-asarUnpack: 
-  - 'node_modules/**/*.{node,dll}'
+# No explicit asarUnpack: an unpack pattern makes app-builder-lib resolve every
+# packaged file against the app dir, which throws "must be under" for
+# workspace deps symlinked outside packages/app (@getstation/sdk, appstore).
+# electron-builder's smartUnpack already unpacks any package holding .node/.dll.
 
 afterPack: '../../scripts/after-pack.js'
 # afterSign: '../../scripts/notarize.js'

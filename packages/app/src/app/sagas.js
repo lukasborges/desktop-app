@@ -156,7 +156,12 @@ function* sagaLoadingScreen() {
   yield put(setLoadingScreenVisibility(true));
 
   // we let the onboarding flow deal with removing the onbaording screen
-  yield take(REHYDRATION_COMPLETE);
+  // safety net: never keep the loading screen forever if REHYDRATION_COMPLETE was
+  // already dispatched before this saga started
+  yield race({
+    rehydrated: take(REHYDRATION_COMPLETE),
+    timeout: delay(ms('20sec')),
+  });
   const loggedInAndReady = yield select(isFullyReady);
   if (!loggedInAndReady) {
     yield put(setLoadingScreenVisibility(false));

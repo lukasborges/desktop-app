@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "yarn"
       # See https://github.com/nodejs/node-gyp/blob/main/docs/Force-npm-to-use-global-node-gyp.md
       # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
@@ -28,7 +28,7 @@ jobs:
         run: yarn release
 
   MacOs:
-    runs-on: macos-13
+    runs-on: macos-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "yarn"
       - name: Configure Node
         run: |
@@ -56,7 +56,7 @@ jobs:
         run: yarn release
 
   Windows:
-    runs-on: windows-2019
+    runs-on: windows-2025
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Configure Node
         shell: powershell
         run: |

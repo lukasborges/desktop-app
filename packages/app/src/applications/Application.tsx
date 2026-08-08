@@ -185,7 +185,7 @@ class ApplicationImpl extends React.PureComponent {
     this.setWebviewRef = this.setWebviewRef.bind(this);
     this.handleTitleUpdated = this.handleTitleUpdated.bind(this);
     this.handleFaviconUpdated = this.handleFaviconUpdated.bind(this);
-    this.handleWebcontentsCrashed = this.handleWebcontentsCrashed.bind(this);
+    this.handleRenderProcessGone = this.handleRenderProcessGone.bind(this);
     this.handleRemoveApplication = this.handleRemoveApplication.bind(this);
 
     this.state = {
@@ -385,7 +385,13 @@ class ApplicationImpl extends React.PureComponent {
     }
   }
 
-  handleWebcontentsCrashed() {
+  /**
+   * Replaces the `crashed` event, removed in Electron 29.
+   * `render-process-gone` also fires on a normal shutdown, which is not a crash.
+   */
+  handleRenderProcessGone(event: Electron.RenderProcessGoneEvent) {
+    const details = event && event.details;
+    if (details && details.reason === 'clean-exit') return;
     this.props.onWebcontentsCrashed();
   }
 
@@ -476,7 +482,7 @@ class ApplicationImpl extends React.PureComponent {
           onDidStopLoading={this.handleDidStopLoading}
           onDidFailLoad={this.handleDidFailLoad}
           onDomReady={this.handleDomReady}
-          onCrashed={this.handleWebcontentsCrashed}
+          onRenderProcessGone={this.handleRenderProcessGone}
           webpreferences={`allowRunningInsecureContent=true,nativeWindowOpen=${useNativeWindowOpen},contextIsolation=true,nodeIntegration=true`}
         />
 
