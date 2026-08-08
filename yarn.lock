@@ -2303,6 +2303,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@electron/node-gyp@npm:node-gyp@12.4.0, node-gyp@npm:12.4.0":
+  version: 12.4.0
+  resolution: "node-gyp@npm:12.4.0"
+  dependencies:
+    env-paths: "npm:^2.2.0"
+    exponential-backoff: "npm:^3.1.1"
+    graceful-fs: "npm:^4.2.6"
+    nopt: "npm:^9.0.0"
+    proc-log: "npm:^6.0.0"
+    semver: "npm:^7.3.5"
+    tar: "npm:^7.5.4"
+    tinyglobby: "npm:^0.2.12"
+    undici: "npm:^6.25.0"
+    which: "npm:^6.0.0"
+  bin:
+    node-gyp: bin/node-gyp.js
+  checksum: 10c0/9acb7c798e124275a6f9c1f7eb64b5abd6196bb885a3945fb44ee0dccf435514e88cdfb0f228ee7ff76ef25107c1f39ff37a067bf92fd00b9aff9234db29ff9e
+  languageName: node
+  linkType: hard
+
 "@electron/notarize@npm:2.5.0, @electron/notarize@npm:^2.3.2":
   version: 2.5.0
   resolution: "@electron/notarize@npm:2.5.0"
@@ -2331,10 +2351,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron/rebuild@npm:3.6.1":
-  version: 3.6.1
-  resolution: "@electron/rebuild@npm:3.6.1"
+"@electron/rebuild@npm:3.7.2":
+  version: 3.7.2
+  resolution: "@electron/rebuild@npm:3.7.2"
   dependencies:
+    "@electron/node-gyp": "git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2"
     "@malept/cross-spawn-promise": "npm:^2.0.0"
     chalk: "npm:^4.0.0"
     debug: "npm:^4.1.1"
@@ -2343,7 +2364,7 @@ __metadata:
     got: "npm:^11.7.0"
     node-abi: "npm:^3.45.0"
     node-api-version: "npm:^0.2.0"
-    node-gyp: "npm:^9.0.0"
+    node-gyp: "npm:latest"
     ora: "npm:^5.1.0"
     read-binary-file-arch: "npm:^1.0.6"
     semver: "npm:^7.3.5"
@@ -2351,7 +2372,7 @@ __metadata:
     yargs: "npm:^17.0.1"
   bin:
     electron-rebuild: lib/cli.js
-  checksum: 10c0/7d72ea5a0ab656b356cfe300ccdfdb25c06292a31e1729142243460aebe1a9b4c2a50469c6fb114b756575f8713a0532ec6b128e16eb944e8df446a5786ec581
+  checksum: 10c0/e561819926c30c7ad284f721d1d66453f59f8e5ea54a7cc9148a00e8ab3cedb6aa57fe4789f39a3454a3eb90b41a5f7d7461246ee3a16c63c8d3db23db94a391
   languageName: node
   linkType: hard
 
@@ -14161,16 +14182,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:33.3.2":
-  version: 33.3.2
-  resolution: "electron@npm:33.3.2"
+"electron@npm:33.4.11":
+  version: 33.4.11
+  resolution: "electron@npm:33.4.11"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/72880a712423b678b8b5d2171eb011c0aee42af88d5bd67ba378a3d70b94c95ae0433395cfe04455604357e4f4638bbdb0d6ca3b20fe9f2dd330fac0f82ece9e
+  checksum: 10c0/fbc8104454eec5c4693792b236eda028ff4d0025654be972a055ae9314a8b9ac801f28bf9847233eeae584874f633fd7794627d01cd2367a304b133bfee879f5
   languageName: node
   linkType: hard
 
@@ -23420,26 +23441,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-gyp@npm:12.4.0":
-  version: 12.4.0
-  resolution: "node-gyp@npm:12.4.0"
-  dependencies:
-    env-paths: "npm:^2.2.0"
-    exponential-backoff: "npm:^3.1.1"
-    graceful-fs: "npm:^4.2.6"
-    nopt: "npm:^9.0.0"
-    proc-log: "npm:^6.0.0"
-    semver: "npm:^7.3.5"
-    tar: "npm:^7.5.4"
-    tinyglobby: "npm:^0.2.12"
-    undici: "npm:^6.25.0"
-    which: "npm:^6.0.0"
-  bin:
-    node-gyp: bin/node-gyp.js
-  checksum: 10c0/9acb7c798e124275a6f9c1f7eb64b5abd6196bb885a3945fb44ee0dccf435514e88cdfb0f228ee7ff76ef25107c1f39ff37a067bf92fd00b9aff9234db29ff9e
-  languageName: node
-  linkType: hard
-
 "node-int64@npm:^0.4.0":
   version: 0.4.0
   resolution: "node-int64@npm:0.4.0"
@@ -29266,7 +29267,7 @@ __metadata:
     deep-extend: "npm:^0.6.0"
     dom-scroll-into-view: "npm:^1.2.1"
     dotenv: "npm:^16.0.3"
-    electron: "npm:33.3.2"
+    electron: "npm:33.4.11"
     electron-better-web-request: "npm:^1.0.1"
     electron-builder: "npm:^25.1.8"
     electron-chrome-extension: "file:.yalc/electron-chrome-extension"
@@ -29443,7 +29444,7 @@ __metadata:
     webpack: "npm:^4.46.0"
     webpack-cli: "npm:^3.3.12"
     webpack-merge: "npm:^4.2.2"
-    windows-focus-assist: "patch:windows-focus-assist@npm%3A1.3.0#~/.yarn/patches/windows-focus-assist-npm-1.3.0-e02310a164.patch"
+    windows-focus-assist: "npm:1.4.0"
     write-file-webpack-plugin: "npm:^4.5.1"
     ws: "npm:^5.2.2"
     xvfb-maybe: "npm:^0.2.1"
@@ -32710,25 +32711,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"windows-focus-assist@npm:1.3.0":
-  version: 1.3.0
-  resolution: "windows-focus-assist@npm:1.3.0"
+"windows-focus-assist@npm:1.4.0":
+  version: 1.4.0
+  resolution: "windows-focus-assist@npm:1.4.0"
   dependencies:
     bindings: "npm:^1.5.0"
     node-addon-api: "npm:*"
     node-gyp: "npm:latest"
-  checksum: 10c0/0a168df52e517e753fc3310dc3be04c37ca8c9a1afa84798a4ec5db252939382b866b76bf3656ed4b42d79ceed551f620307fb632d3e183cd7bea31a03f10c70
-  languageName: node
-  linkType: hard
-
-"windows-focus-assist@patch:windows-focus-assist@npm%3A1.3.0#~/.yarn/patches/windows-focus-assist-npm-1.3.0-e02310a164.patch":
-  version: 1.3.0
-  resolution: "windows-focus-assist@patch:windows-focus-assist@npm%3A1.3.0#~/.yarn/patches/windows-focus-assist-npm-1.3.0-e02310a164.patch::version=1.3.0&hash=5e48fb"
-  dependencies:
-    bindings: "npm:^1.5.0"
-    node-addon-api: "npm:*"
-    node-gyp: "npm:latest"
-  checksum: 10c0/394ad49aaf273fed06dcccb55deab787387b50263c425fb9b035cd43f52d4cad37e0e63739d92784fc4a554496369672edda80ea8f84201c401028f0566ed5aa
+  checksum: 10c0/e0df9e7906f218772cb9fe81bd64a71643a7ac90ef457fa40e608b793800f72e1eea981fdd25f445adda00cb1d95f7f5e2de15ad0283ec098f8303a70bc4c83c
   languageName: node
   linkType: hard
 

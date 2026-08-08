@@ -46,21 +46,30 @@ function asyncInit(store: StationStoreWorker, sagaMiddleware: SagaMiddleware<any
     const promiseState = getInitialState('local');
 
     // Wait for saga being ready before notifying that Electron App is ready
-    services.electronApp.afterReady().then(() => {
-      return sagaPromise.then(() => store.dispatch(ready()));
+    const readyDispatched = services.electronApp.afterReady().then(() => {
+      return sagaPromise.then(() => {
+        log.info('[store] dispatching READY');
+        store.dispatch(ready());
+      });
     });
 
     store.persistor = persistor;
 
-    // Wait for saga and restored state before dispatching REHYDRATION_COMPLETE and trigerring
-    // observers
+    // Wait for saga, restored state *and* READY before dispatching REHYDRATION_COMPLETE and
+    // triggering observers.
+    // READY must come first: sagas started by READY (e.g. the loading screen one) subscribe to
+    // REHYDRATION_COMPLETE only once they run, so dispatching it earlier makes them wait forever.
     return Promise.all([
       sagaPromise,
       promiseState,
+      readyDispatched,
     ]).then(([, restoredState]) => restoredState)
       .then(restoredState => persistor.rehydrate(restoredState.toObject()))
       .then(() => persistor.resume())
-      .then(() => store.dispatch({ type: REHYDRATION_COMPLETE }))
+      .then(() => {
+        log.info('[store] dispatching REHYDRATION_COMPLETE');
+        store.dispatch({ type: REHYDRATION_COMPLETE });
+      })
       .then(() => eventEmitter.emit('ready'))
       .catch(err => {
         logger.notify(err);
