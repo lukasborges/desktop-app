@@ -26,7 +26,7 @@
     "clean": "yarn run clean-gql-gen && rimraf dist",
     "build": "yarn run build-webpack:prod",
     "release": "yarn build && cross-env NODE_ENV=production electron-builder",
-    "dev": "yarn run gql-gen && yarn run sass && yarn run build-webpack:webui:dev && cross-env NODE_OPTIONS=--openssl-legacy-provider DISABLE_V8_COMPILE_CACHE=1 electron-webpack dev",
+    "dev": "yarn run gql-gen && yarn run sass && yarn run build-webpack:webui:dev && cross-env DISABLE_V8_COMPILE_CACHE=1 electron-webpack dev",
     "lint": "yarn run gql-gen && tslint -p .",
     "test": "cross-env NODE_ENV=test jest --runInBand"
   },
