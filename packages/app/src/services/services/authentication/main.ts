@@ -79,7 +79,7 @@ export class AuthenticationServiceImpl extends AuthenticationService implements 
     this.server = new LoopbackRedirectServer({
       port: LOOPBACK_INTERFACE_REDIRECTION_PORT,
       callbackPath: '/callback',
-      successRedirectURL: 'https://getstation.com/',
+      successRedirectURL: 'https://github.com/getstation/desktop-app',
     });
 
     shell.openExternal(urlToLoad);
