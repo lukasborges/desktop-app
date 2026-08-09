@@ -6416,11 +6416,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=6":
-  version: 26.1.2
-  resolution: "@types/node@npm:26.1.2"
+  version: 26.2.0
+  resolution: "@types/node@npm:26.2.0"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10c0/a45503222c7db8f374afd5c9381db63dd95b6b1f703abea0890dd3d4a09eeb41da489e08a1a45baf18fe89fb77fbf310ff2789f680c490b04dafc41a60800a86
+  checksum: 10c0/f8566d88162241eb55a46f7e4ea097188eab0aaafefea7a58e63adab8c4144eb98c08b7911452c846104c339a0f82282f5e1ed4b26b578d60709614fe2843f4d
   languageName: node
   linkType: hard
 
@@ -8531,9 +8531,9 @@ __metadata:
   linkType: hard
 
 "axe-core@npm:^4.10.0":
-  version: 4.12.1
-  resolution: "axe-core@npm:4.12.1"
-  checksum: 10c0/03438bd98cef38ad57554feea0d8de21705001db2655c27e0c33ff55e16dd7d6f49c28fb420dc93f7532e68ff363c0953056a5836e6f47068f193eb1765c7db7
+  version: 4.13.0
+  resolution: "axe-core@npm:4.13.0"
+  checksum: 10c0/0e3be8be10eea64beddefd3007e1425424ff60c26c5f4d5f748ec48c2825356839c02ad4167fc1f03a6d84ecd82108f49fb2846ab7fe949273787391745561ca
   languageName: node
   linkType: hard
 
@@ -9488,12 +9488,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"baseline-browser-mapping@npm:^2.10.44":
-  version: 2.11.12
-  resolution: "baseline-browser-mapping@npm:2.11.12"
+"baseline-browser-mapping@npm:^2.11.12":
+  version: 2.11.13
+  resolution: "baseline-browser-mapping@npm:2.11.13"
   bin:
     baseline-browser-mapping: dist/cli.cjs
-  checksum: 10c0/1f4b38379784aba3681b06c304e361c9f03ed6c51205a50c9dd3b5ea87b0e203e6f580384e778374999b000e1b0a0d7351552983aab024d9c4b81b91879c8287
+  checksum: 10c0/a02511614ebe0311d4831e7ba11e88e5997d5bf0733e5eadd7d97b4bb69d76f468a982862108cb90721e1a41f4ef36c1a5f9fa18569923702ad2875ca3abfe58
   languageName: node
   linkType: hard
 
@@ -9883,18 +9883,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.1.0, browserslist@npm:^4.12.0, browserslist@npm:^4.24.0, browserslist@npm:^4.28.1":
-  version: 4.28.7
-  resolution: "browserslist@npm:4.28.7"
+"browserslist@npm:^4.1.0, browserslist@npm:^4.12.0, browserslist@npm:^4.24.0, browserslist@npm:^4.28.7":
+  version: 4.28.8
+  resolution: "browserslist@npm:4.28.8"
   dependencies:
-    baseline-browser-mapping: "npm:^2.10.44"
-    caniuse-lite: "npm:^1.0.30001806"
-    electron-to-chromium: "npm:^1.5.393"
-    node-releases: "npm:^2.0.51"
-    update-browserslist-db: "npm:^1.2.3"
+    baseline-browser-mapping: "npm:^2.11.12"
+    caniuse-lite: "npm:^1.0.30001809"
+    electron-to-chromium: "npm:^1.5.402"
+    node-releases: "npm:^2.0.53"
+    update-browserslist-db: "npm:^1.3.0"
   bin:
     browserslist: cli.js
-  checksum: 10c0/dc41922a9ff0d81e5492498bdab2d932e3a3222f4277814ba38ee64f4e51f26e5244a7cce0777b4cac3ceff6eb196f5cadbb2a832620973a7f9c39611f6bc78e
+  checksum: 10c0/047dd517c8d1f1f56a253d752c3127b8ad01c58e4cbb7e21cb5cd07ebd13e083a2237c3afb13eb60674282c9132bd4534aea2c3ff7c6f7d29be0687a00cbd537
   languageName: node
   linkType: hard
 
@@ -10332,10 +10332,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30000884, caniuse-lite@npm:^1.0.30000989, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001806":
-  version: 1.0.30001806
-  resolution: "caniuse-lite@npm:1.0.30001806"
-  checksum: 10c0/9442c8afff0968e9b2ce0104a7340c1ce4a5c09f469ccb9eef10d25712ea0afe542486e5318c697c70dd502f988cfc04eaa1c9438c92ac3bcf4d708a2a17bee1
+"caniuse-lite@npm:^1.0.30000884, caniuse-lite@npm:^1.0.30000989, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001809":
+  version: 1.0.30001809
+  resolution: "caniuse-lite@npm:1.0.30001809"
+  checksum: 10c0/cac2ed4e66cc6c4cbf126b94d2c02012566eb92f93c89949290f99edcd2bdc4ed1290b5c537ccb9b42c773936a479ed468e5d4e9b8938b126a0947090e42e008
   languageName: node
   linkType: hard
 
@@ -11509,18 +11509,18 @@ __metadata:
   linkType: hard
 
 "core-js-compat@npm:^3.43.0, core-js-compat@npm:^3.48.0":
-  version: 3.49.0
-  resolution: "core-js-compat@npm:3.49.0"
+  version: 3.50.0
+  resolution: "core-js-compat@npm:3.50.0"
   dependencies:
-    browserslist: "npm:^4.28.1"
-  checksum: 10c0/546e64b7ce45f724825bc13c1347f35c0459a6e71c0dcccff3ec21fbff463f5b0b97fc1220e6d90302153863489301793276fe2bf96f46001ff555ead4140308
+    browserslist: "npm:^4.28.7"
+  checksum: 10c0/1ccfe07f47f7d8a14e615c5e7adb3b9d8b3dcb2f228fd0d00a59723dbf9b944a4a3f4ceb96c1861cb9fb9838d486163ceebaec3323d15c6d456b45d2a2a03583
   languageName: node
   linkType: hard
 
 "core-js-pure@npm:^3.0.1":
-  version: 3.49.0
-  resolution: "core-js-pure@npm:3.49.0"
-  checksum: 10c0/b4580a57b917d0bf1029356b1a60abf0f9b99562b67bf39c01485d58891f23603459ed71bde1d7f75c0a9a346829d8c281b255c525fb119726341364c513e82e
+  version: 3.50.0
+  resolution: "core-js-pure@npm:3.50.0"
+  checksum: 10c0/e882678bec8dfb1d58371b4645d77f071b9c5989478e5c74c981e553b480a49cad48255377331ec60589338069d529a222af9e4e957c0af80c1b865f8a298fb6
   languageName: node
   linkType: hard
 
@@ -11539,9 +11539,9 @@ __metadata:
   linkType: hard
 
 "core-js@npm:^3.0.1, core-js@npm:^3.0.4":
-  version: 3.49.0
-  resolution: "core-js@npm:3.49.0"
-  checksum: 10c0/2e42edb47eda38fd5368380131623c8aa5d4a6b42164125b17744bdc08fa5ebbbdd06b4b4aa6ca3663470a560b0f2fba48e18f142dfe264b0039df85bc625694
+  version: 3.50.0
+  resolution: "core-js@npm:3.50.0"
+  checksum: 10c0/1bfcfb1dbdf45b0b1428a9fdcb03697d1fc52c7e9bc336f804a86ff2c2705a301dca7d9d6636d09d49d60298183273b9321681baeaf330c78db5393bc73f3f6a
   languageName: node
   linkType: hard
 
@@ -13889,9 +13889,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-chrome-extension@file:.yalc/electron-chrome-extension::locator=station-desktop-app%40workspace%3Apackages%2Fapp":
-  version: 6.0.4
-  resolution: "electron-chrome-extension@file:.yalc/electron-chrome-extension#.yalc/electron-chrome-extension::hash=ef9c0e&locator=station-desktop-app%40workspace%3Apackages%2Fapp"
+"electron-chrome-extension@https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.0/release.tar.gz":
+  version: 7.0.0
+  resolution: "electron-chrome-extension@https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.0/release.tar.gz"
   dependencies:
     capitalize: "npm:^2.0.4"
     content-security-policy-parser: "npm:^0.6.0"
@@ -13913,7 +13913,7 @@ __metadata:
     xml-js: "npm:^1.6.11"
   peerDependencies:
     electron: ">=28.0.0"
-  checksum: 10c0/5457a4a4e74bfd3662e1656e58b3b0df41827cdf73b6114cc415bc7ef0c3f20bddc1159ea459574170ed0206682fa3a4e37dd29732641b679bf529c1986f7895
+  checksum: 10c0/bac53dba0d7dfd6666a8760f5d2c8a28c624ad023fbe3036fe00e92fca5068f5f4be8ccd2e3c59bd368e3ac6676a73a2671c4aa6787fec0ddf1d8e88d0b311cb
   languageName: node
   linkType: hard
 
@@ -14057,10 +14057,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.3.247, electron-to-chromium@npm:^1.3.62, electron-to-chromium@npm:^1.5.393":
-  version: 1.5.399
-  resolution: "electron-to-chromium@npm:1.5.399"
-  checksum: 10c0/5b2ab966e0748d00a2bc2dfd7eee203fe872ce2ca4478eea94f1ceda629172770378128cd6d20be4af8c21874ef250163cd47735e01f38f1182f4312d8c7e78b
+"electron-to-chromium@npm:^1.3.247, electron-to-chromium@npm:^1.3.62, electron-to-chromium@npm:^1.5.402":
+  version: 1.5.403
+  resolution: "electron-to-chromium@npm:1.5.403"
+  checksum: 10c0/42a49260a162bb08f29b6c4dcf3e5970327efeeece14248450d66175b5197dc92145a20e2e239840bcbc848cbbeddae04248d9525abb3466e6fdfd889a48d06d
   languageName: node
   linkType: hard
 
@@ -15885,19 +15885,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flow-estree@npm:0.325.0":
-  version: 0.325.0
-  resolution: "flow-estree@npm:0.325.0"
-  checksum: 10c0/48bf59b8500ae6ccc3072ec3844af6d8598724bdc49c7253405f0cf1fa065950d8209441c33620734e5dc1856bf9dd6b847c287b8e701a4ca83466ce3571850b
+"flow-estree@npm:0.326.0":
+  version: 0.326.0
+  resolution: "flow-estree@npm:0.326.0"
+  checksum: 10c0/4ec66439079413beba650dc18b4d5ff09652fa27fd2a7758924d8e418ed7149711c5cace39b5009052c37877a0fc1bc0237369e166d79732ec1eb0e06feadafc
   languageName: node
   linkType: hard
 
 "flow-parser@npm:0.*":
-  version: 0.325.0
-  resolution: "flow-parser@npm:0.325.0"
+  version: 0.326.0
+  resolution: "flow-parser@npm:0.326.0"
   dependencies:
-    flow-estree: "npm:0.325.0"
-  checksum: 10c0/530ee905f0c3a622e36171d6189accc10f41107dd1d2607fd8fe705eb05acecd27525b7e78b64a155b62cac5c3e6d173edc353031a20660e12797e333afda6f2
+    flow-estree: "npm:0.326.0"
+  checksum: 10c0/555eb7e47d137c2dced1bf04d96996fe912977d3c3d55d7b7991097db1733fa174fc607e1339a3fd4ee45fa78dd8f4d88337be417ba88b2024b427949bf0fcec
   languageName: node
   linkType: hard
 
@@ -23164,11 +23164,11 @@ __metadata:
   linkType: hard
 
 "nanoid@npm:^3.3.8":
-  version: 3.3.17
-  resolution: "nanoid@npm:3.3.17"
+  version: 3.3.18
+  resolution: "nanoid@npm:3.3.18"
   bin:
     nanoid: bin/nanoid.cjs
-  checksum: 10c0/06f7949c7cce5c92c6aea66022f29a1eae7f56e05acbfddf1e049e819b4bf234c44a765cc44da7163482b111677948514012e27acdfa56f95309295768bdae32
+  checksum: 10c0/b994b4e396730f8be2520923284e2040d61eaee55cc6d4935ef6d38d34bafdc46133eda4d3faea5073bda545aa6079d82b886caeac5c731cf9ac18bcc1301425
   languageName: node
   linkType: hard
 
@@ -23496,10 +23496,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^2.0.51":
-  version: 2.0.51
-  resolution: "node-releases@npm:2.0.51"
-  checksum: 10c0/6cf3fe1f9eabe02ce6de67e9db77b73edc9f5625003791e1f8f239f8e2a851450a5aeb1eff2cc43cfb26312e19b26bfe07626bf428479e6a76f56553fc6148da
+"node-releases@npm:^2.0.53":
+  version: 2.0.53
+  resolution: "node-releases@npm:2.0.53"
+  checksum: 10c0/db9fb29b21ec12e223ead8bd9406100ff14fce01678a9a4865e288098456b84869431421a739f216aa520b6f57d9425f6537662501ae8a2d9e1771bfa87751bc
   languageName: node
   linkType: hard
 
@@ -29256,7 +29256,7 @@ __metadata:
     electron: "npm:40.10.6"
     electron-better-web-request: "npm:^1.0.1"
     electron-builder: "npm:^26.15.3"
-    electron-chrome-extension: "file:.yalc/electron-chrome-extension"
+    electron-chrome-extension: "https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.0/release.tar.gz"
     electron-debug: "npm:^3.2.0"
     electron-log: "npm:^2.2.14"
     electron-mocha: "npm:^13.0.0"
@@ -29399,8 +29399,8 @@ __metadata:
     slack: "npm:^11.0.2"
     source-map-support: "npm:^0.5.21"
     sqlite3: "npm:5.1.6"
-    stream-electron-ipc: "file:.yalc/stream-electron-ipc"
-    stream-json-rpc: "file:.yalc/stream-json-rpc"
+    stream-electron-ipc: "https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-electron-ipc-28.0.0.tar.gz"
+    stream-json-rpc: "https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.0.tar.gz"
     style-loader: "npm:^0.23.1"
     suncalc: "npm:^1.9.0"
     terser-webpack-plugin: "npm:^4.2.3"
@@ -29522,10 +29522,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-electron-ipc@file:.yalc/stream-electron-ipc::locator=station-desktop-app%40workspace%3Apackages%2Fapp":
-  version: 15.0.0
-  resolution: "stream-electron-ipc@file:.yalc/stream-electron-ipc#.yalc/stream-electron-ipc::hash=858326&locator=station-desktop-app%40workspace%3Apackages%2Fapp"
-  checksum: 10c0/42e8583b8123594a379e3e410cfa99d8d3c380f1544ff63dc1e4a30b87be267f0ed5213a4e6b0553242c1de87c4d116c1f826d661c1448560900ef3b5101e0ba
+"stream-electron-ipc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-electron-ipc-28.0.0.tar.gz":
+  version: 28.0.0
+  resolution: "stream-electron-ipc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-electron-ipc-28.0.0.tar.gz"
+  checksum: 10c0/af4810a67fa3341767fe71dadcd4f585817ad9c737c70a28666627dad40105edd2cc05c1b69050b40a7750e9ee3a004600119a66cd7534f6a77b411662d46e7e
   languageName: node
   linkType: hard
 
@@ -29542,16 +29542,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-json-rpc@file:.yalc/stream-json-rpc::locator=station-desktop-app%40workspace%3Apackages%2Fapp":
+"stream-json-rpc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.0.tar.gz":
   version: 0.10.0
-  resolution: "stream-json-rpc@file:.yalc/stream-json-rpc#.yalc/stream-json-rpc::hash=645e48&locator=station-desktop-app%40workspace%3Apackages%2Fapp"
+  resolution: "stream-json-rpc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.0.tar.gz"
   dependencies:
     end-of-stream: "npm:^1.4.4"
     json-rpc-peer: "npm:^0.17.0"
     multiplex: "npm:^6.7.0"
     pump: "npm:^3.0.0"
     uuid: "npm:^3.4.0"
-  checksum: 10c0/102cc274e8d5444b9c5833f5cab95cb05fc19ddfef6e5f2c73e1ecfabeb9c7432a5ebdfaeff1e2a878dba4a0e9fcef621819da8d8ad9d64fdaece372c4d1501f
+  checksum: 10c0/d71b8f116d2bfaad0b13927e196c10a2303131d97d22a548f107145f77c5c2824bf8d3a4a5880566d4bc8184e0e2aeefa659a4dbbc469ed624e74d59ca01d65d
   languageName: node
   linkType: hard
 
@@ -30333,8 +30333,8 @@ __metadata:
   linkType: hard
 
 "terser@npm:^5.3.4":
-  version: 5.49.0
-  resolution: "terser@npm:5.49.0"
+  version: 5.49.2
+  resolution: "terser@npm:5.49.2"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.15.0"
@@ -30342,7 +30342,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 10c0/c1f628a7a6226f7283db92ce43247306d612b80a60a075d97e1f5539a032beee05c87f889eacff2ffabd2fa9ac6bd1c147e5eb49c6546c9b174ed241d5f056a7
+  checksum: 10c0/9f2d61c21ad259af2cdc8dc3120dc27678fc660d043ededffbdb062ac54e2f7b0da19e0975502dbfbe0aa9f0c091f87d6037781e4089770569698103d33df0fa
   languageName: node
   linkType: hard
 
@@ -31649,9 +31649,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"update-browserslist-db@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "update-browserslist-db@npm:1.2.3"
+"update-browserslist-db@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "update-browserslist-db@npm:1.3.0"
   dependencies:
     escalade: "npm:^3.2.0"
     picocolors: "npm:^1.1.1"
@@ -31659,7 +31659,7 @@ __metadata:
     browserslist: ">= 4.21.0"
   bin:
     update-browserslist-db: cli.js
-  checksum: 10c0/13a00355ea822388f68af57410ce3255941d5fb9b7c49342c4709a07c9f230bbef7f7499ae0ca7e0de532e79a82cc0c4edbd125f1a323a1845bf914efddf8bec
+  checksum: 10c0/9d9725f24961fa89f28c89112990562f009f699f05f165a9aeca0f9c35fe0e649ec5f7cd54d64b9d6e58b52309bfa689e331f09d3d7cd9754b37d9b140a24f85
   languageName: node
   linkType: hard
 
