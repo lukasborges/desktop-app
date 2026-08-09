@@ -29400,7 +29400,7 @@ __metadata:
     source-map-support: "npm:^0.5.21"
     sqlite3: "npm:5.1.6"
     stream-electron-ipc: "https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-electron-ipc-28.0.0.tar.gz"
-    stream-json-rpc: "https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.0.tar.gz"
+    stream-json-rpc: "https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.1.tar.gz"
     style-loader: "npm:^0.23.1"
     suncalc: "npm:^1.9.0"
     terser-webpack-plugin: "npm:^4.2.3"
@@ -29542,16 +29542,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-json-rpc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.0.tar.gz":
-  version: 0.10.0
-  resolution: "stream-json-rpc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.0.tar.gz"
+"stream-json-rpc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.1.tar.gz":
+  version: 0.10.1
+  resolution: "stream-json-rpc@https://github.com/viktor44/stream-json-rpc/releases/download/v1.0/stream-json-rpc-0.10.1.tar.gz"
   dependencies:
     end-of-stream: "npm:^1.4.4"
     json-rpc-peer: "npm:^0.17.0"
     multiplex: "npm:^6.7.0"
     pump: "npm:^3.0.0"
     uuid: "npm:^3.4.0"
-  checksum: 10c0/d71b8f116d2bfaad0b13927e196c10a2303131d97d22a548f107145f77c5c2824bf8d3a4a5880566d4bc8184e0e2aeefa659a4dbbc469ed624e74d59ca01d65d
+  checksum: 10c0/ce270c245622657d395c1ce17b2f313a5b1e52ffe951fc9ef292407c8024ff6e5db083c6d644b618e1be5150f6975c3b505175d53ab8c15fe28cfd84df25b7cc
   languageName: node
   linkType: hard
 
