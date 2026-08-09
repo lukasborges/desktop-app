@@ -411,7 +411,6 @@ class ApplicationImpl extends React.PureComponent {
 
   render() {
     const tab = this.props.tab;
-    const useNativeWindowOpen = !this.props.notUseNativeWindowOpen;
     const tabUrl = tab.get('url', '');
     const {
       applicationId, applicationName, applicationIcon,
@@ -483,7 +482,7 @@ class ApplicationImpl extends React.PureComponent {
           onDidFailLoad={this.handleDidFailLoad}
           onDomReady={this.handleDomReady}
           onRenderProcessGone={this.handleRenderProcessGone}
-          webpreferences={`allowRunningInsecureContent=true,nativeWindowOpen=${useNativeWindowOpen},contextIsolation=true,nodeIntegration=true`}
+          webpreferences={'allowRunningInsecureContent=true,contextIsolation=true,nodeIntegration=true'}
         />
 
       </div>

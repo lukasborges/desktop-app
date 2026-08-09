@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
       # - name: Configure Node
       #   run: |
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
       - name: Configure Node
         run: |
@@ -61,7 +61,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
       - name: Configure Node
         shell: powershell

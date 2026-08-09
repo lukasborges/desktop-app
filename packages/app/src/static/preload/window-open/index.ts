@@ -18,7 +18,11 @@ const parseOption = <T>(
 const guestInstanceId = parseOption('guest-instance-id', null, value => parseInt(value, 10));
 const openerId = parseOption('opener-id', null, value => parseInt(value, 10));
 const isHiddenPage = hasSwitch('hidden-page');
-const usesNativeWindowOpen = hasSwitch('native-window-open');
+// The `native-window-open` switch has been removed in Electron 22, so `hasSwitch`
+// has been returning `false` ever since. Kept as a constant to preserve the exact
+// same behavior: `window.open` calls go through the proxy below, and popups are
+// handled by `setWindowOpenHandler` in the main process.
+const usesNativeWindowOpen = false;
 
 // Any URL that shouldn't be loaded as `nativeWindowOpen` as a popup
 // should appear here if parent window uses `nativeWindowOpen`

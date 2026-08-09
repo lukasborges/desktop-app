@@ -69,6 +69,12 @@ extraResources:
 
 files:
   - '!**/*.map'
+  # electron-builder 26 walks the peer dependencies of production packages
+  # (`electron-chrome-extension`, `@electron/remote`, ... all peer-depend on
+  # `electron`), which drags the whole 300+MB dev Electron distribution into
+  # the asar. The runtime `require('electron')` always resolves to the built-in
+  # module, never to this one.
+  - '!**/node_modules/electron/**'
   - from: 'src/static/icon--provider'
     to: 'static/icon--provider'
     filter:
