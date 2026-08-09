@@ -190,7 +190,13 @@ const init = () => {
 
   if (!isPackaged && !process.env.STATION_DISABLE_ECX) {
     app.on('session-created', s => {
-      s.setPreloads([path.resolve(__dirname, 'static/preload/dev-preload.js')]);
+      // `setPreloads` is deprecated since Electron 35
+      // @see https://www.electronjs.org/docs/latest/breaking-changes#deprecated-setpreloads-getpreloads-on-session
+      s.registerPreloadScript({
+        id: 'station-dev-preload',
+        type: 'frame',
+        filePath: path.resolve(__dirname, 'static/preload/dev-preload.js'),
+      });
     });
     bxAppMain.onOpen = installDevToolsExtensions;
   }

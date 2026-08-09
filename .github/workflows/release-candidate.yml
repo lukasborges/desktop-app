@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
       # See https://github.com/nodejs/node-gyp/blob/main/docs/Force-npm-to-use-global-node-gyp.md
       # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "yarn"
       - name: Configure Node
         run: |
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Configure Node
         shell: powershell
         run: |
