@@ -33,7 +33,7 @@
   "resolutions": {
     "node-gyp": "12.4.0",
     "react-draggable": "4.4.6",
-    "@electron/rebuild": "3.7.2",
+    "@electron/rebuild": "^4.2.0",
     "@electron/node-gyp": "npm:node-gyp@12.4.0"
   },
   "devEngines": {
