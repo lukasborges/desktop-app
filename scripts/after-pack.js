@@ -15,12 +15,17 @@ exports.default = async function(context) {
 
   fs.moveSync('station-desktop-app', 'station-desktop-app.bin');
 
-  const wrapperScript = 
+  // Since Electron 38 Ozone is the only path and `--ozone-platform` defaults to
+  // `auto`, so the `UseOzonePlatform` feature flag is gone. The explicit
+  // `--ozone-platform=wayland` is kept as a safety net when WAYLAND_DISPLAY is set
+  // but XDG_SESSION_TYPE isn't, which is what auto-detection keys off.
+  // @see https://www.electronjs.org/docs/latest/breaking-changes#removed-electron_ozone_platform_hint-environment-variable
+  const wrapperScript =
   `#!/bin/sh
-if [ -z \${WAYLAND_DISPLAY+x} ]; then 
+if [ -z \${WAYLAND_DISPLAY+x} ]; then
   WAYLAND_PARAMS=""
-else 
-  WAYLAND_PARAMS="--enable-features=UseOzonePlatform --ozone-platform=wayland"
+else
+  WAYLAND_PARAMS="--ozone-platform=wayland"
 fi
 nohup "$(dirname "$(readlink -f "$0")")/station-desktop-app.bin" \$WAYLAND_PARAMS --no-sandbox "$@" >/dev/null 2>&1 &
       `;
