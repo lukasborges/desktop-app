@@ -24,6 +24,11 @@ jobs:
       #     npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
       - name: Install dependencies
         run: yarn install --immutable
+      # Since Electron 42 the `electron` package no longer downloads its binary in a
+      # `postinstall` script; it does so lazily on first use. Prefetch it explicitly so a
+      # download failure is reported here instead of mid-build.
+      - name: Download Electron binary
+        run: yarn workspace station-desktop-app exec install-electron
       - name: Build and Release
         run: yarn release
 
@@ -46,6 +51,8 @@ jobs:
           cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Download Electron binary
+        run: yarn workspace station-desktop-app exec install-electron
       - name: Build and Release
         run: yarn release
 
@@ -64,5 +71,7 @@ jobs:
           node-version: "24"
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Download Electron binary
+        run: yarn workspace station-desktop-app exec install-electron
       - name: Build and Release
         run: yarn release
