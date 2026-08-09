@@ -36,7 +36,6 @@ export interface ElectronWebviewProps extends Omit<Electron.WebviewTag, 'src'> {
   onEnterHtmlFullScreen?: EventListener;
   onLeaveHtmlFullScreen?: EventListener;
   onConsoleMessage?: EventListener;
-  onNewWindow?: EventListener;
   onClose?: EventListener;
   onIpcMessage?: EventListener;
   onRenderProcessGone?: EventListener;
@@ -65,7 +64,8 @@ export const events = [
   'leave-html-full-screen',
   'console-message',
   'found-in-page',
-  'new-window',
+  // `new-window` has been removed in Electron 22, replaced by `setWindowOpenHandler`
+  // in the main process (@see services/services/tab-webcontents/main.ts)
   'will-navigate', // do not use it, not reliable in some cases electron/electron#14751
   'did-navigate',
   'did-navigate-in-page',
