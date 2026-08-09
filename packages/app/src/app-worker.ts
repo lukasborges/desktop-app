@@ -269,7 +269,7 @@ export class BrowserXAppWorker {
         this.dispatch(setReleaseNotesSubdockVisibility(true));
         break;
       case 'station-features':
-        this.dispatch(dispatchUrl('https://getstation.com/features'));
+        this.dispatch(dispatchUrl('https://github.com/getstation/desktop-app'));
         break;
       case 'reset-current-application':
         this.dispatch(updateUI('confirmResetApplicationModal', 'isVisible', getFocus(this.getState())));
