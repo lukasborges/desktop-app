@@ -6,7 +6,10 @@ import * as slack from 'slack';
 import { GradientType, withGradient } from '@getstation/theme';
 import ElectronWebview from '../common/components/ElectronWebview';
 import * as classNames from 'classnames';
-import { clipboard } from 'electron';
+// `clipboard` is deprecated in renderers since Electron 40, so we go through
+// `@electron/remote` to run the call in the main process.
+// @see https://www.electronjs.org/docs/latest/breaking-changes#deprecated-clipboard-api-access-from-renderer-processes
+import * as remote from '@electron/remote';
 // @ts-ignore no declaration file
 import { fetchFavicon, setFetchFaviconTimeout } from '@getstation/fetch-favicon';
 import Maybe from 'graphql/tsutils/Maybe';
@@ -84,7 +87,7 @@ const webviewMethods: WebviewMethods = {
   'go-back': (webview) => webview.isReady() && webview.goBack(),
   'go-forward': (webview) => webview.isReady() && webview.goForward(),
   'toggle-dev-tools': (webview) => webview.isReady() && toggleDevTools(webview),
-  'copy-url-to-clipboard': (webview) => webview.isReady() && clipboard.write({
+  'copy-url-to-clipboard': (webview) => webview.isReady() && remote.clipboard.write({
     bookmark: webview.getTitle(),
     text: webview.getURL(),
   }),
