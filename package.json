@@ -2,7 +2,7 @@
   "name": "station-project",
   "private": true,
   "productName": "Station",
-  "version": "3.3.0-b1",
+  "version": "4.0.0-b1",
   "description": "Station",
   "homepage": "https://getstation.com",
   "author": {
@@ -37,11 +37,13 @@
     "@electron/node-gyp": "npm:node-gyp@12.4.0"
   },
   "devEngines": {
-    "node": ">=22.0.0",
-    "yarn": ">=4.1.0"
+    "runtime": {
+      "name": "node",
+      "version": ">=24.0.0"
+    }
   },
   "volta": {
-    "node": "22.21.1",
+    "node": "24.19.0",
     "yarn": "4.1.0"
   },
   "packageManager": "yarn@4.1.0"
