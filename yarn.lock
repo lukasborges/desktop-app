@@ -13889,9 +13889,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-chrome-extension@https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.0/release.tar.gz":
-  version: 7.0.0
-  resolution: "electron-chrome-extension@https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.0/release.tar.gz"
+"electron-chrome-extension@https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.2/release.tar.gz":
+  version: 7.0.2
+  resolution: "electron-chrome-extension@https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.2/release.tar.gz"
   dependencies:
     capitalize: "npm:^2.0.4"
     content-security-policy-parser: "npm:^0.6.0"
@@ -13913,7 +13913,7 @@ __metadata:
     xml-js: "npm:^1.6.11"
   peerDependencies:
     electron: ">=28.0.0"
-  checksum: 10c0/bac53dba0d7dfd6666a8760f5d2c8a28c624ad023fbe3036fe00e92fca5068f5f4be8ccd2e3c59bd368e3ac6676a73a2671c4aa6787fec0ddf1d8e88d0b311cb
+  checksum: 10c0/97284775fb018c055e674084f6a4a47f2ffe0750b0323367cf598edb4d229d31a7b39eb206a0ae1645d8831735d1a9116b374936ee4c9e5a685053043a6450fb
   languageName: node
   linkType: hard
 
@@ -29256,7 +29256,7 @@ __metadata:
     electron: "npm:40.10.6"
     electron-better-web-request: "npm:^1.0.1"
     electron-builder: "npm:^26.15.3"
-    electron-chrome-extension: "https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.0/release.tar.gz"
+    electron-chrome-extension: "https://github.com/viktor44/electron-chrome-extension/releases/download/v7.0.2/release.tar.gz"
     electron-debug: "npm:^3.2.0"
     electron-log: "npm:^2.2.14"
     electron-mocha: "npm:^13.0.0"
