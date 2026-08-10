@@ -4,7 +4,7 @@ import './dotenv';
 import { webFrame, ipcRenderer } from 'electron';
 import * as remote from '@electron/remote';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
@@ -15,6 +15,7 @@ import configureStore from './store/configureStore.client';
 import { initializeAppearanceTheme } from './theme/appearance';
 import PlatformThemeProvider from './theme/PlatformThemeProvider';
 import ConsoleErrorBoundary from './common/containers/ConsoleErrorBoundary';
+import { renderRootAndNotify } from './common/helpers/renderRoot';
 import { getGQlClient } from './utils/graphql';
 
 import { ActionsBusReactContext, createActionsEmitter, createActionsBus } from './store/actionsBus';
@@ -39,6 +40,7 @@ const currentWindow = remote.getCurrentWindow();
 const client = getGQlClient();
 const actionsEmitter = createActionsEmitter();
 const actionsBus = createActionsBus(actionsEmitter);
+const root = createRoot(document.getElementById('root'));
 
 configureStore(actionsEmitter)
   .then(store => {
@@ -52,7 +54,7 @@ configureStore(actionsEmitter)
 const render = (store) => {
   const AppSub = require('./containers/AppSub').default; // eslint-disable-line global-require
 
-  ReactDOM.render(
+  renderRootAndNotify(root, (
     <Provider store={store}>
       <ConsoleErrorBoundary>
         <ActionsBusReactContext.Provider value={{ actionsBus }}>
@@ -65,11 +67,8 @@ const render = (store) => {
           </ApolloProvider>
         </ActionsBusReactContext.Provider>
       </ConsoleErrorBoundary>
-    </Provider>,
-    document.getElementById('root')
-  );
-
-  ipcRenderer.send('bx-ready-to-show');
+    </Provider>
+  ), () => ipcRenderer.send('bx-ready-to-show'));
 };
 
 if (module.hot) {
