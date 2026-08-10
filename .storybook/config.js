@@ -11,10 +11,11 @@ import '../app/theme/css/app.global.css';
 import { setOptions } from '@storybook/addon-options';
 import backgrounds from '@storybook/addon-backgrounds';
 import { action } from '@storybook/addon-actions';
-import apolloStorybookDecorator from 'apollo-storybook-react';
-import { ApolloLink } from 'apollo-link';
-import { print } from 'graphql';
-import { getMainDefinition } from 'apollo-utilities';
+import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { SchemaLink } from '@apollo/client/link/schema';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { print, visit } from 'graphql';
+import { addMockFunctionsToSchema, makeExecutableSchema } from 'graphql-tools';
 import typeDefs from '../app/graphql/schema.graphql';
 import mocks from './mocks';
 import { withNotes } from '@storybook/addon-notes';
@@ -107,7 +108,9 @@ addDecorator(
 // looks like the local schema executor does not like the presence of
 // directives on the query: let's remove them
 const removeDirectivesLink = new ApolloLink((operation, forward) => {
-  delete operation.query.definitions[0].directives;
+  operation.query = visit(operation.query, {
+    Directive: () => null
+  });
   return forward(operation);
 });
 
@@ -125,15 +128,24 @@ const logMutationsAsStorybookActions = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-addDecorator(
-  apolloStorybookDecorator({
-    typeDefs,
-    mocks,
-    links: () => {
-      return [logMutationsAsStorybookActions, removeDirectivesLink];
-    }
-  })
-);
+const schema = makeExecutableSchema({ typeDefs });
+addMockFunctionsToSchema({ schema, mocks });
+
+const apolloClient = new ApolloClient({
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+  link: ApolloLink.from([
+    logMutationsAsStorybookActions,
+    removeDirectivesLink,
+    new SchemaLink({ schema })
+  ])
+});
+
+addDecorator(story => (
+  <ApolloProvider client={apolloClient}>
+    {story()}
+  </ApolloProvider>
+));
 
 addDecorator(story => (
   <BrowserXThemeProvider>

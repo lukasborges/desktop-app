@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactApolloHooks from 'react-apollo-hooks';
+import * as ReactApolloHooks from '@apollo/client';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';

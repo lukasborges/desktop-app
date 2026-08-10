@@ -1,4 +1,4 @@
-import { MutationFn } from 'react-apollo';
+import { MutationFunction } from '@apollo/client';
 
 export type MutationData = {
   data: {
@@ -17,5 +17,5 @@ type MutationVariables = {
 };
 
 export type MutateSetSearchStringProps = {
-  mutateSetSearchString: MutationFn<MutationData, MutationVariables>,
+  mutateSetSearchString: MutationFunction<MutationData, MutationVariables>,
 };

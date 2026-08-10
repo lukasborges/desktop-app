@@ -2,7 +2,7 @@ import { Hint, ThemeTypes as Theme, Tooltip } from '@getstation/theme';
 import * as classNames from 'classnames';
 import { Iterable, List } from 'immutable';
 import * as React from 'react';
-import { compose } from 'react-apollo';
+import { compose } from 'recompose';
 // @ts-ignore no declaration file
 import injectSheet from 'react-jss';
 import { connect } from 'react-redux';

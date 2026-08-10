@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DragSource, DragSourceMonitor, DropTarget } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { compose } from 'react-apollo';
+import { compose } from 'recompose';
 import { oc } from 'ts-optchain';
 
 import { withGetApplication, GetApplicationQuery } from '../queries@local.gql.generated';

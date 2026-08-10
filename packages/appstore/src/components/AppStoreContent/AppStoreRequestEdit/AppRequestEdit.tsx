@@ -1,7 +1,7 @@
 import * as React from 'react';
 import injectSheet from 'react-jss';
 import { CSSTransition } from 'react-transition-group';
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { flowRight as compose } from 'lodash';
 import AppStorePageCategoryTitle
   from '@src/components/AppStoreContent/AppStorePageCategoryTitle/AppStorePageCategoryTitle';

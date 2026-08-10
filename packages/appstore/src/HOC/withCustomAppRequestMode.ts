@@ -1,4 +1,4 @@
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { GET_CUSTOM_APP_REQUEST_MODE } from '@src/graphql/schemes/customAppRequestMode';
 
 export type GetCustomAppRequestModeResponse = {

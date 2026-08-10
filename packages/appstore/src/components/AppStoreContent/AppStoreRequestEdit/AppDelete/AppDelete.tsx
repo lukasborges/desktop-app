@@ -1,6 +1,6 @@
 import * as React from 'react';
 import injectSheet from 'react-jss';
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { flowRight as compose } from 'lodash';
 import { IconSymbol, Icon } from '@getstation/theme';
 import { SET_APP_MODAL_STATUS } from '@src/graphql/schemes/appModalStatus';

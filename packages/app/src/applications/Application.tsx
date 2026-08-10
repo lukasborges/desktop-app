@@ -17,7 +17,7 @@ import * as throttle from 'lodash.throttle';
 import * as path from 'path';
 import { noop, compact } from 'ramda-adjunct';
 import * as React from 'react';
-import { compose } from 'react-apollo';
+import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // @ts-ignore no declaration file

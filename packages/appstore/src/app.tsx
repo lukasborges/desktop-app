@@ -3,7 +3,7 @@ import AppStorePane from '@src/components/AppStorePane';
 import Client from '@src/graphql/Client';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from 'react-jss';
 
 import { MinimalApplication } from '../../app/src/applications/graphql/withApplications';

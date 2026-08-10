@@ -1,6 +1,6 @@
 import * as React from 'react';
 import injectSheet from 'react-jss';
-import { graphql, withApollo, WithApolloClient } from 'react-apollo';
+import { graphql, withApollo, WithApolloClient } from '@apollo/client/react/hoc';
 import { flowRight as compose } from 'lodash';
 import { Application } from '@src/graphql/queries';
 import AppStorePageHeader from '@src/components/AppStoreContent/AppStorePageHeader/AppStorePageHeader';
