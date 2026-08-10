@@ -1,4 +1,4 @@
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { IS_BURGER_OPEN } from '@src/graphql/schemes/burgerMenu';
 
 export type GetBurgerMenuStatusResponse = {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import injectSheet from 'react-jss';
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { flowRight as compose } from 'lodash';
 import { SET_SEARCH_STRING } from '@src/graphql/schemes/search';
 import { MutateSetSearchStringProps } from '@src/graphql/types/mutateSetSearchString';

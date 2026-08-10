@@ -5,8 +5,7 @@ import { webFrame, ipcRenderer } from 'electron';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from 'react-apollo';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/client';
 import './theme/css/app.global.css';
 import '../../../node_modules/font-awesome/css/font-awesome.min.css';
 import { handleError } from './services/api/helpers';
@@ -60,15 +59,13 @@ const render = (store) => {
     <Provider store={store}>
       <ActionsBusReactContext.Provider value={{ actionsBus }}>
         <ApolloProvider client={apolloClient}>
-          <ApolloHooksProvider client={apolloClient}>
-            <PlatformThemeProvider>
-              <ReduxBasedGradientProvider>
-                <ConsoleErrorBoundary>
-                  <App />
-                </ConsoleErrorBoundary>
-              </ReduxBasedGradientProvider>
-            </PlatformThemeProvider>
-          </ApolloHooksProvider>
+          <PlatformThemeProvider>
+            <ReduxBasedGradientProvider>
+              <ConsoleErrorBoundary>
+                <App />
+              </ConsoleErrorBoundary>
+            </ReduxBasedGradientProvider>
+          </PlatformThemeProvider>
         </ApolloProvider>
       </ActionsBusReactContext.Provider>
     </Provider>

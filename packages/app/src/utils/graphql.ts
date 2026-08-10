@@ -1,8 +1,6 @@
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink, Observable, Operation } from 'apollo-link';
-import { onError } from 'apollo-link-error';
-import { ExecutionResult, print } from 'graphql';
+import { ApolloClient, ApolloLink, FetchResult, InMemoryCache, Observable, Operation } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
+import { print } from 'graphql';
 import { pick } from 'ramda';
 import { observer } from '../services/lib/helpers';
 import { SerializedExecutionResult, SerializedGraphQLRequest } from '../services/services/apollo-link/interface';
@@ -13,7 +11,7 @@ import services from '../services/servicesManager';
  */
 export class ServicesLink extends ApolloLink {
   public request(operation: Operation) {
-    return new Observable((obs: ZenObservable.SubscriptionObserver<ExecutionResult>) => {
+    return new Observable<FetchResult>((obs) => {
       const req: SerializedGraphQLRequest = {
         operationName: operation.operationName,
         variables: operation.variables,
@@ -24,7 +22,7 @@ export class ServicesLink extends ApolloLink {
       };
       const sub = services.apolloLink.request(req, observer({
         onResponse: (res: SerializedExecutionResult) => {
-          obs.next(res);
+          obs.next(res as FetchResult);
         },
         onError: (e: Error) => {
           obs.error(e);

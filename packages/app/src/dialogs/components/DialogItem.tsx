@@ -2,7 +2,7 @@ import { Button, Icon, ThemeTypes as Theme } from '@getstation/theme';
 import * as React from 'react';
 // @ts-ignore : no declaration file
 import injectSheet from 'react-jss';
-import { compose } from 'react-apollo';
+import { compose } from 'recompose';
 import * as shortid from 'shortid';
 import { oc } from 'ts-optchain';
 import { getApplicationIconURL, getApplicationId } from '../../applications/get';

@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { OptionProps } from 'react-apollo/types';
 import { Application } from '@src/graphql/queries';
 
 export type ApplicationsRequestVariables = {
@@ -24,7 +23,7 @@ export type ApplicationsRequestVariables = {
   first: number,
 };
 
-export interface ApplicationsResponse extends OptionProps {
+export interface ApplicationsResponse {
   applications: {
     list: Application[],
     pageInfo?: {

@@ -1,4 +1,4 @@
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { GET_SELECTED_CUSTOM_APP } from '@src/graphql/schemes/selectedCustomApp';
 
 import { Application } from '../graphql/queries';

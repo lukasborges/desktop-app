@@ -24,9 +24,8 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "@apollo/client": "3.8.10",
     "@getstation/theme": "1.2.0",
-    "apollo-boost": "^0.4.4",
-    "apollo-link-context": "^1.0.19",
     "classnames": "^2.2.6",
     "csstips": "^0.2.3",
     "debounce-async": "^0.0.2",
@@ -41,7 +40,6 @@
     "prop-types": "^15.7.2",
     "ramda": "^0.26.1",
     "react": "^18.3.1",
-    "react-apollo": "^3.1.5",
     "react-dom": "^18.3.1",
     "react-jss": "^10.10.0",
     "react-lottie": "^1.2.3",
@@ -59,9 +57,6 @@
     "yup": "^0.28.0"
   },
   "devDependencies": {
-    "@apollo/react-common": "^3.1.3",
-    "@apollo/react-components": "^3.1.3",
-    "@apollo/react-hoc": "^3.1.3",
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
@@ -101,11 +96,6 @@
     "@types/webpack": "^4.41.33",
     "@types/webpack-env": "^1.18.1",
     "@types/yup": "^0.26.27",
-    "apollo-cache": "^1.3.4",
-    "apollo-cache-inmemory": "^1.5.1",
-    "apollo-client": "^2.6.10",
-    "apollo-link": "1.2.14",
-    "apollo-utilities": "^1.3.4",
     "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^6.0.3",

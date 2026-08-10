@@ -1,6 +1,6 @@
 import * as Immutable from 'immutable';
 import * as React from 'react';
-import { compose } from 'react-apollo';
+import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // @ts-ignore: no declaration file

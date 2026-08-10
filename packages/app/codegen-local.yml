@@ -2,6 +2,12 @@
 # for the **local** GraphQL API
 schema: ./src/graphql/schema.graphql
 overwrite: true
+config:
+  reactApolloVersion: 3
+  apolloReactCommonImportFrom: '@apollo/client'
+  apolloReactComponentsImportFrom: '@apollo/client/react/components'
+  apolloReactHocImportFrom: '@apollo/client/react/hoc'
+  apolloReactHooksImportFrom: '@apollo/client'
 generates:
   ./src/graphql/resolvers-types.generated.ts:
     config:

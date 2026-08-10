@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { isEqual, flowRight as compose } from 'lodash';
 import * as Mousetrap from 'mousetrap';
 import injectSheet from 'react-jss';

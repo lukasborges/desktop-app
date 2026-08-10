@@ -1,6 +1,6 @@
 import { createUseStyles } from 'react-jss';
 import * as React from 'react';
-import { ChildProps } from 'react-apollo';
+import { ChildProps } from '@apollo/client/react/hoc';
 import { flowRight as compose } from 'lodash';
 import withAppModal, { WithAppModalStatusProps } from '@src/HOC/withAppModalStatus';
 import withSearchString, { WithSearchStringProps } from '@src/HOC/withSearchString';

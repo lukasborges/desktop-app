@@ -1,4 +1,4 @@
-import { MutationFn } from 'react-apollo';
+import { MutationFunction } from '@apollo/client';
 
 export type MutationData = {
   data: {
@@ -13,5 +13,5 @@ type MutationVariables = {
 };
 
 export type MutateSetAppModalStatusProps = {
-  mutateSetAppModalStatus: MutationFn<MutationData, MutationVariables>,
+  mutateSetAppModalStatus: MutationFunction<MutationData, MutationVariables>,
 };

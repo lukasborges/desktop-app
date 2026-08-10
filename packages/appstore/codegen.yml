@@ -6,6 +6,12 @@ schema:
   - ./client-schema.graphqls
 overwrite: true
 documents: "./src/**/*.gql"
+config:
+  reactApolloVersion: 3
+  apolloReactCommonImportFrom: '@apollo/client'
+  apolloReactComponentsImportFrom: '@apollo/client/react/components'
+  apolloReactHocImportFrom: '@apollo/client/react/hoc'
+  apolloReactHooksImportFrom: '@apollo/client'
 generates:
   ./src/types.generated.ts:
     - typescript
@@ -19,4 +25,3 @@ generates:
       - typescript-react-apollo
     config:
       withHooks: true
-      reactApolloVersion: 3

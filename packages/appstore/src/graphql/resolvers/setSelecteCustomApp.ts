@@ -1,4 +1,5 @@
 import { Application } from '@src/graphql/queries';
+import { GET_SELECTED_CUSTOM_APP } from '@src/graphql/schemes/selectedCustomApp';
 
 export interface SetSelectedCustomApp {
   app: Application,
@@ -16,8 +17,9 @@ export default (_: any, { app }: SetSelectedCustomApp, { cache }: any) => {
     },
     __typename: 'SelectedCustomApp',
   };
-  const data = { selectedCustomApp: newSelectedCustomApp };
-
-  cache.writeData({ data });
-  return cache.data.selectedCustomApp;
+  cache.writeQuery({
+    query: GET_SELECTED_CUSTOM_APP,
+    data: { selectedCustomApp: newSelectedCustomApp },
+  });
+  return newSelectedCustomApp;
 };

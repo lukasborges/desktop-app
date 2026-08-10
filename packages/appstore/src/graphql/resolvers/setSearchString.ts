@@ -1,4 +1,5 @@
 import { SearchLocalState } from '@src/graphql/initialClientState';
+import { GET_SEARCH_STRING } from '@src/graphql/schemes/search';
 
 export interface SetSearchStringVariables {
   searchString: string,
@@ -13,7 +14,9 @@ export default (_: any, { searchString, searchStringAfterEnterPress, isEnterPres
     isEnterPressed,
     __typename: 'SearchString',
   };
-  const data = { search: newSearchData };
-  cache.writeData({ data });
-  return cache.data.search;
+  cache.writeQuery({
+    query: GET_SEARCH_STRING,
+    data: { search: newSearchData },
+  });
+  return newSearchData;
 };
