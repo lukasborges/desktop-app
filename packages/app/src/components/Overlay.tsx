@@ -3,10 +3,9 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
-// @ts-ignore: no declaration file
-import KeyHandler, { KEYDOWN } from 'react-key-handler';
 
 import ClickOutside from '../common/components/ClickOutside';
+import KeyHandler, { KEYDOWN } from '../common/components/KeyHandler';
 
 import UtilityViewClose from './UtilityViewClose';
 

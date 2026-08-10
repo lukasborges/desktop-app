@@ -4,7 +4,7 @@ import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 
-import DockApplication from './DockApplication';
+import DockApplication, { DockApplicationCloseEvent } from './DockApplication';
 
 interface Classes {
   subdockContainer: string,
@@ -16,7 +16,7 @@ interface OwnProps {
   className?: string,
   children: JSX.Element[],
   open: boolean,
-  onRequestClose: (e?: React.SyntheticEvent<HTMLElement>) => void,
+  onRequestClose: (e?: DockApplicationCloseEvent) => void,
 }
 
 interface StateFromProps {
@@ -67,7 +67,7 @@ class DockApplicationSubdockImpl extends React.PureComponent<Props, {}> {
   handleClickOutside(e: MouseEvent | TouchEvent) {
     if (!this.subdockContainer) return;
     const target = e.target as HTMLElement;
-    if (!this.subdockContainer.contains(target)) this.props.onRequestClose(e as any);
+    if (!this.subdockContainer.contains(target)) this.props.onRequestClose(e);
   }
 
   setSubdockContainerRef(subdockContainer: HTMLDivElement | null) {

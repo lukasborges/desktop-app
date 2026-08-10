@@ -1,6 +1,6 @@
 import * as React from 'react';
-// @ts-ignore: no declaration file
-import KeyHandler, { KEYDOWN, KEYUP } from 'react-key-handler';
+
+import KeyHandler, { KEYDOWN, KEYUP } from '../../common/components/KeyHandler';
 
 export interface ChildrenFunctionArg0 {
   /**

@@ -1,15 +1,17 @@
 import * as React from 'react';
-// @ts-ignore: no declaration file
-import KeyHandler, { KEYDOWN } from 'react-key-handler';
 
 import ClickOutside from '../components/ClickOutside';
+import KeyHandler, { KEYDOWN } from '../components/KeyHandler';
 
 import Portal from './Portal';
+
+export type DockApplicationCloseEvent =
+  React.SyntheticEvent<HTMLElement> | KeyboardEvent | MouseEvent | TouchEvent;
 
 interface Props {
   children: React.ReactNode,
   open: boolean,
-  onRequestClose: (e?: React.SyntheticEvent<HTMLElement>) => void,
+  onRequestClose: (e?: DockApplicationCloseEvent) => void,
   onClickOutside?: (e: MouseEvent | TouchEvent) => void,
 }
 

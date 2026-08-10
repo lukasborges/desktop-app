@@ -1,8 +1,9 @@
 import * as React from 'react';
-// @ts-ignore: no declaration file
-import KeyHandler, { KEYDOWN } from 'react-key-handler';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import KeyHandler, { KEYDOWN } from '../common/components/KeyHandler';
+
 import NativeAppDockIcon, { IconSymbol } from '../dock/components/NativeAppDockIcon';
 import { disableApplicationStoreTooltip } from '../onboarding/duck';
 import { isApplicationStoreTooltipDisabled } from '../onboarding/selectors';
