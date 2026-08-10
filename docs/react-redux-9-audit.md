@@ -110,3 +110,18 @@ store paths, and no peer override is added to hide the warning.
 actions and serialized state with the application stores rather than exposing
 its private Redux store type, so replacing that transitive dependency is not a
 prerequisite for the direct Redux 5 upgrade.
+
+## Stage 3 implementation status
+
+Stage 3 upgrades the production workspaces to React 18.3.1 and React Redux 9,
+removes the external React Redux type package, and adopts React 18 types in all
+three workspaces. The main window, subwindow, about window, App Store, and
+multi-instance configuration entry points each create one persistent root.
+
+The three Electron renderer entry points synchronously commit their initial
+tree before emitting `bx-ready-to-show`. This preserves the existing window
+visibility contract while later renders reuse the same root. StrictMode remains
+disabled because the accepted Apollo bridge still relies on legacy context and
+lifecycles. The remaining React peer warnings come from that bridge, the legacy
+Storybook toolchain, and other peripheral React-era packages tracked for later
+modernization; the React Redux 5 / Redux 5 bridge warning is removed.

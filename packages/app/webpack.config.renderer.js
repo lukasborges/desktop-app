@@ -140,6 +140,7 @@ module.exports = (config) => {
 
   config.externals.push('react');
   config.externals.push('react-dom');
+  config.externals.push('react-dom/client');
   config.externals = config.externals.filter(e => !externalsWhitelist.includes(e));
 
   return config;

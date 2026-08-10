@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import * as remote from '@electron/remote';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import '../utils/stat-cache';
@@ -12,9 +12,12 @@ import configureStore from '../store/configureStore.client';
 import ReduxBasedGradientProvider from '../theme/ReduxBasedGradientProvider';
 import { handleError } from '../services/api/helpers';
 import ConsoleErrorBoundary from '../common/containers/ConsoleErrorBoundary';
+import { renderRootAndNotify } from '../common/helpers/renderRoot';
 import { initializeAppearanceTheme } from '../theme/appearance';
 
 initializeAppearanceTheme();
+
+const root = createRoot(document.getElementById('root'));
 
 configureStore().then(store => {
   // for debug purpose, gives us a way to easily access the store
@@ -34,7 +37,7 @@ document.addEventListener('keydown', event => {
 
 const render = (store) => {
   const AboutWindowContainer = require('./Container').default; // eslint-disable-line global-require
-  ReactDOM.render(
+  renderRootAndNotify(root, (
     <Provider store={store}>
       <ConsoleErrorBoundary>
         <ReduxBasedGradientProvider>
@@ -42,10 +45,7 @@ const render = (store) => {
         </ReduxBasedGradientProvider>
       </ConsoleErrorBoundary>
     </Provider>
-    , document.getElementById('root')
-  );
-
-  ipcRenderer.send('bx-ready-to-show');
+  ), () => ipcRenderer.send('bx-ready-to-show'));
 };
 
 if (module.hot) { 
