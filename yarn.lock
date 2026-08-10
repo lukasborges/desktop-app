@@ -24942,7 +24942,6 @@ __metadata:
     re-reselect: "npm:^0.6.0"
     react: "npm:^18.3.1"
     react-addons-perf: "npm:^15.4.2"
-    react-click-outside: "github:tj/react-click-outside"
     react-dnd: "npm:^7.4.5"
     react-dnd-html5-backend: "npm:^5.0.1"
     react-dom: "npm:^18.3.1"
@@ -25907,13 +25906,6 @@ __metadata:
   peerDependencies:
     react-dom: ^15.4.2
   checksum: 10c0/f701bb91533365f0a814895a13aa1e7127b0c68eac46109e163ff84b8c98c187c85e1b336ae3b2c12d60fb0bf72f63684a7a81b2571fe62d617bad1948390eaf
-  languageName: node
-  linkType: hard
-
-"react-click-outside@github:tj/react-click-outside":
-  version: 1.1.1
-  resolution: "react-click-outside@https://github.com/tj/react-click-outside.git#commit=a833ddc5be47490307f9fcc6ed09d8c353108510"
-  checksum: 10c0/f22fe7cf5e23503237d489d234bc6e872faf860cdfa154107a6d9d66d077f8329be9ca5ac8302f12020cbcac72788f3d16cf8e06ba5242808735b45199f8798c
   languageName: node
   linkType: hard
 

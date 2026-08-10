@@ -2,12 +2,12 @@ import { ThemeTypes as Theme } from '@getstation/theme';
 import PopperJS from 'popper.js';
 import * as React from 'react';
 // @ts-ignore: no declaration file
-import ClickOutside from 'react-click-outside';
-// @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import { Manager, Popper, Reference } from 'react-popper';
 // @ts-ignore: no declaration file
 import ReactResizeDetector from 'react-resize-detector';
+
+import ClickOutside from './ClickOutside';
 
 export interface IComponentWithPopoverChildrenProps {
   toggle: (() => void) | undefined,

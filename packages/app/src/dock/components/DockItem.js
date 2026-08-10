@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ClickOutside from 'react-click-outside';
 import { Manager, Popper, Reference } from 'react-popper';
+import ClickOutside from '../../common/components/ClickOutside';
 import Subdock from '../../subdock/Container';
 import DraggableAppDockIcon from './DraggableAppDockIcon';
 
