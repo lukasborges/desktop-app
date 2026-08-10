@@ -2,7 +2,7 @@ import { ModalWrapper } from '@getstation/theme';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import DockApplication from '../common/containers/DockApplication';
+import DockApplication, { DockApplicationCloseEvent } from '../common/containers/DockApplication';
 import NativeAppDockIcon, { IconSymbol, Size } from '../dock/components/NativeAppDockIcon';
 import { SHORTCUTS } from '../keyboard-shortcuts';
 import { StationState } from '../types';
@@ -45,7 +45,7 @@ class BangContainerImpl extends React.PureComponent<Props> {
     this.hide = this.hide.bind(this);
   }
 
-  hide(e: React.SyntheticEvent<HTMLElement>) {
+  hide(e: DockApplicationCloseEvent) {
     if (e.type === 'click') {
       this.props.hideBang('click-outside');
     } else if (e.type === 'keydown') {
