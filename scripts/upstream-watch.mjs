@@ -3,7 +3,7 @@
 const API_URL = process.env.GITHUB_API_URL || 'https://api.github.com';
 const TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 const TARGET_REPOSITORY = process.env.GITHUB_REPOSITORY || 'lukasborges/platform';
-const ISSUE_TITLE = '[Upstream Radar] Platform';
+const RADAR_LABEL = 'upstream-radar';
 const STATE_PREFIX = '<!-- upstream-state:';
 const INITIAL_COMMIT_LIMIT = 10;
 const REPORT_COMMIT_LIMIT = 20;
@@ -53,6 +53,29 @@ export function parseState(body = '') {
   } catch {
     return {};
   }
+}
+
+export function collectLatestState(issues = []) {
+  const state = {};
+  const upstreamIds = new Set(UPSTREAMS.map(upstream => upstream.id));
+
+  // Issues are supplied newest first. Only single-upstream markers belong to
+  // the split radar; aggregate markers from the retired dashboard are ignored.
+  for (const issue of issues) {
+    const issueState = parseState(issue.body || '');
+    const entries = Object.entries(issueState).filter(([id, sha]) => (
+      upstreamIds.has(id) && typeof sha === 'string'
+    ));
+    if (entries.length !== 1) continue;
+
+    for (const [id, sha] of entries) {
+      if (upstreamIds.has(id) && typeof sha === 'string' && !(id in state)) {
+        state[id] = sha;
+      }
+    }
+  }
+
+  return state;
 }
 
 function stateMarker(state) {
@@ -304,12 +327,16 @@ export function renderReport(results, timestamp = new Date()) {
   ].join('\n').trim();
 }
 
-function issueBody(report, state) {
+export function radarIssueTitle(result) {
+  return `[Upstream Radar] ${result.upstream.repository} @ ${shortSha(result.head.sha)}`;
+}
+
+export function issueBody(result, report) {
   const policyUrl = `https://github.com/${TARGET_REPOSITORY}/blob/main/.github/UPSTREAM_POLICY.md`;
   return [
-    '# Upstream Radar',
+    '# Upstream change detected',
     '',
-    'Automated dashboard for changes detected in the forks monitored by Platform.',
+    `This issue tracks one detected revision of [${result.upstream.repository}](https://github.com/${result.upstream.repository}).`,
     '',
     '> The radar never changes code. Every adoption requires human review, a dedicated branch, a pull request, and cross-platform validation.',
     '',
@@ -317,41 +344,42 @@ function issueBody(report, state) {
     '',
     report,
     '',
-    '## Next action',
+    '## Triage checklist',
     '',
-    'Use the classification for triage. Before applying an item, read the complete upstream diff and check every invariant in the integration policy.',
+    '- [ ] Read the complete upstream diff and surrounding commits.',
+    '- [ ] Decide what to adopt, reimplement, reject, or mark as already present.',
+    '- [ ] Create a dedicated branch and pull request for every selected change.',
+    '- [ ] Complete the validation checklist in the integration policy.',
+    '- [ ] Record the outcome here and close this issue.',
     '',
-    stateMarker(state),
+    stateMarker({ [result.upstream.id]: result.head.sha }),
   ].join('\n');
 }
 
-async function findRadarIssue() {
-  const issues = await github(`/repos/${TARGET_REPOSITORY}/issues?state=all&per_page=100&sort=updated&direction=desc`);
-  return issues.find(issue => !issue.pull_request && issue.title === ISSUE_TITLE) || null;
+async function findRadarIssues() {
+  const issues = [];
+  let page = 1;
+
+  while (true) {
+    const batch = await github(
+      `/repos/${TARGET_REPOSITORY}/issues?state=all&labels=${encodeURIComponent(RADAR_LABEL)}&per_page=100&sort=created&direction=desc&page=${page}`,
+    );
+    issues.push(...batch.filter(issue => !issue.pull_request));
+    if (batch.length < 100) return issues;
+    page += 1;
+  }
 }
 
-async function writeIssue(issue, report, state) {
-  const body = issueBody(report, state);
-
-  if (!issue) {
-    return github(`/repos/${TARGET_REPOSITORY}/issues`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: ISSUE_TITLE, body, labels: [] }),
-    });
-  }
-
-  await github(`/repos/${TARGET_REPOSITORY}/issues/${issue.number}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ body, state: 'open' }),
-  });
-  await github(`/repos/${TARGET_REPOSITORY}/issues/${issue.number}/comments`, {
+async function writeIssue(result, report) {
+  return github(`/repos/${TARGET_REPOSITORY}/issues`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ body: report }),
+    body: JSON.stringify({
+      title: radarIssueTitle(result),
+      body: issueBody(result, report),
+      labels: [RADAR_LABEL],
+    }),
   });
-  return issue;
 }
 
 async function run() {
@@ -362,15 +390,18 @@ async function run() {
     throw new Error('GH_TOKEN or GITHUB_TOKEN is required unless --dry-run is used.');
   }
 
-  const issue = dryRun ? null : await findRadarIssue();
-  const previousState = explicitState || parseState(issue?.body || '');
+  const radarIssues = dryRun ? [] : await findRadarIssues();
+  const previousState = {
+    ...collectLatestState(radarIssues),
+    ...(explicitState || {}),
+  };
   const heads = await Promise.all(UPSTREAMS.map(async upstream => ({
     upstream,
     head: await getUpstreamHead(upstream),
   })));
   const changedHeads = heads.filter(({ upstream, head }) => previousState[upstream.id] !== head.sha);
 
-  if (issue && changedHeads.length === 0) {
+  if (changedHeads.length === 0) {
     console.log('Upstream Radar: no new commits since the previous run.');
     return;
   }
@@ -382,17 +413,20 @@ async function run() {
       : await getInitialChanges(upstream, head.branch);
     return { upstream, head, changes };
   }));
-  const nextState = Object.fromEntries(heads.map(({ upstream, head }) => [upstream.id, head.sha]));
-  const report = renderReport(results);
-
   if (dryRun) {
-    console.log(report);
-    console.log(`\n${stateMarker(nextState)}`);
+    for (const result of results) {
+      const report = renderReport([result]);
+      console.log(`${radarIssueTitle(result)}\n\n${report}\n\n${stateMarker({ [result.upstream.id]: result.head.sha })}`);
+    }
     return;
   }
 
-  const savedIssue = await writeIssue(issue, report, nextState);
-  console.log(`Upstream Radar updated: ${savedIssue.html_url}`);
+  const savedIssues = await Promise.all(results.map(result => (
+    writeIssue(result, renderReport([result]))
+  )));
+  for (const savedIssue of savedIssues) {
+    console.log(`Upstream Radar issue created: ${savedIssue.html_url}`);
+  }
 }
 
 const isMainModule = process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href;
