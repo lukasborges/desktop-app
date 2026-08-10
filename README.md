@@ -122,7 +122,6 @@ To inspect the main process, connect Chrome by visiting `chrome://inspect` and s
 - `OVERRIDE_USER_DATA_PATH` overrides the `userData` path (example: `OVERRIDE_USER_DATA_PATH="Platform Canary" yarn run dev`)
 - `STATION_CHECK_INACTIVE_TAB_EVERY_MS` override the interval period between each check for inactive tabs
 - `STATION_QUICK_TRANSITIONS` all transitions are quick (used to test changing colors)
-- `STATION_REACT_PERF` add the react-addons-perf for react perf debugging
 - `STATION_NO_CHECK_FOR_UPDATE` disables periodic update checks; manual checks still work
 - `DEBUG=service:*` prints service framework diagnostics in every process
 
