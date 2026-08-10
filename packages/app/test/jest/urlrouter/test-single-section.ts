@@ -1,3 +1,4 @@
+import * as Immutable from 'immutable';
 import { NEW_TAB } from '../../../src/urlrouter/constants';
 import URLRouter from '../../../src/urlrouter/URLRouter';
 import { URLRouterAction } from '../../../src/urlrouter/types';
@@ -57,5 +58,41 @@ describe('URLRouter single-section navigation', () => {
 
     expect(action).toBe(URLRouterAction.PUSH_AND_NAV_TO_TAB);
     expect(destination).toEqual({ tabId: 'github-S1PwoQsDG/Bkq6B5OpM' });
+  });
+
+  it('lists matching application instances in dock order', async () => {
+    const state = Immutable.fromJS({
+      applications: {
+        'teams-second': {
+          applicationId: 'teams-second',
+          manifestURL: 'teams-manifest',
+        },
+        'teams-first': {
+          applicationId: 'teams-first',
+          manifestURL: 'teams-manifest',
+        },
+      },
+      dock: ['teams-first', 'teams-second'],
+      tabs: {},
+    });
+    const manifestProvider = {
+      getFirstValue: async () => ({
+        manifest: {
+          name: 'Microsoft Teams',
+          scope: 'https://teams.microsoft.com',
+        },
+      }),
+    } as any;
+    const router = new URLRouter(() => state as any, manifestProvider);
+
+    const [action, destination] = await router.routeURL(
+      'https://teams.microsoft.com/l/meetup-join/example',
+    );
+
+    expect(action).toBe(URLRouterAction.CHOOSE_APPLICATION);
+    expect((destination as any).applications).toEqual([
+      expect.objectContaining({ applicationId: 'teams-first', description: 'Instance 1' }),
+      expect.objectContaining({ applicationId: 'teams-second', description: 'Instance 2' }),
+    ]);
   });
 });

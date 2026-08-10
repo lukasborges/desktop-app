@@ -94,3 +94,19 @@ Stage 3 must:
    App Store hot replacement, in addition to the broader checks listed in #2.
 
 No separate React Redux compatibility rewrite is required before Stage 2.
+
+## Stage 2 bridge status
+
+Stage 2 upgrades the direct desktop and App Store dependency to Redux 5.0.1
+and Redux Thunk 3.1.0 while React Redux remains at 5.1.2. Yarn consequently
+reports the expected React Redux peer-range warning because that retired
+release only declares support through Redux 4. The bridge is temporary and is
+removed when React Redux 9 lands in Stage 3. Production builds, persistence
+and saga tests, real-store SDK coverage, and Linux packaging validate the
+bridge behavior. The shared-redux middleware remains in both built desktop
+store paths, and no peer override is added to hide the warning.
+
+`shared-redux` also keeps its private Redux 4 dependency. It exchanges plain
+actions and serialized state with the application stores rather than exposing
+its private Redux store type, so replacing that transitive dependency is not a
+prerequisite for the direct Redux 5 upgrade.
