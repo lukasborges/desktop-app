@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
+
 import DockApplication from './DockApplication';
 
 interface Classes {
@@ -63,10 +64,10 @@ class DockApplicationSubdockImpl extends React.PureComponent<Props, {}> {
     let's do some logic here to check that the click outside
     is definitely outside DockApplicationSubdock before calling onRequestClose
   **/
-  handleClickOutside(e: React.SyntheticEvent<HTMLElement>) {
+  handleClickOutside(e: MouseEvent | TouchEvent) {
     if (!this.subdockContainer) return;
     const target = e.target as HTMLElement;
-    if (!this.subdockContainer.contains(target)) this.props.onRequestClose(e);
+    if (!this.subdockContainer.contains(target)) this.props.onRequestClose(e as any);
   }
 
   setSubdockContainerRef(subdockContainer: HTMLDivElement | null) {

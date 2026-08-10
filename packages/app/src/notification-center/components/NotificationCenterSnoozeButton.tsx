@@ -1,10 +1,11 @@
 import { Switcher, ButtonIcon, IconSymbol, Size, Style } from '@getstation/theme';
 import * as React from 'react';
 // @ts-ignore: no declaration file
-import ClickOutside from 'react-click-outside';
-// @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import { Manager, Popper, Reference } from 'react-popper';
+
+import ClickOutside from '../../common/components/ClickOutside';
+
 import { INFINITE, SYNC_WITH_OS } from '../constants';
 import NotificationCenterSnoozePanel from './NotiticationCenterSnoozePanel';
 
