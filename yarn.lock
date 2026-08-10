@@ -24949,7 +24949,6 @@ __metadata:
     react-image: "npm:^1.3.1"
     react-immutable-proptypes: "npm:^2.1.0"
     react-jss: "npm:^8.4.0"
-    react-key-handler: "npm:^1.0.1"
     react-lottie: "npm:^1.2.3"
     react-merge-refs: "npm:^1.0.0"
     react-popper: "npm:^1.3.4"
@@ -26361,18 +26360,6 @@ __metadata:
   peerDependencies:
     react: ^0.14.0 || ^15.0.0-0 || ^16.0.0-0
   checksum: 10c0/75366f2ccdcbbeb14583ebdc83b8824c8a2f927dfbddae5a7a41b0047befe0296e202511833d4be5aafca4f2f1bc4aaf123e1750cfba656fac05e006efe6c61b
-  languageName: node
-  linkType: hard
-
-"react-key-handler@npm:^1.0.1":
-  version: 1.1.0
-  resolution: "react-key-handler@npm:1.1.0"
-  dependencies:
-    exenv: "npm:^1.2.0"
-    prop-types: "npm:^15.6.2"
-  peerDependencies:
-    react: ^0.14.0 || ^15.0.0-0 || ^16.0.0-0
-  checksum: 10c0/9bbe50e759768e7665c24548a5480d0ab0290b0d841fd7171efa54113764fd3d44051692bbfad49ccc8c6f4304a000de3754d59ba3f622da2e834037127090c2
   languageName: node
   linkType: hard
 
