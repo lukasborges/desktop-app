@@ -2,11 +2,12 @@ import { GradientType, withGradient } from '@getstation/theme';
 import * as classNames from 'classnames';
 import * as React from 'react';
 // @ts-ignore: no declaration file
-import ClickOutside from 'react-click-outside';
-// @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 // @ts-ignore: no declaration file
 import KeyHandler, { KEYDOWN } from 'react-key-handler';
+
+import ClickOutside from '../common/components/ClickOutside';
+
 import UtilityViewClose from './UtilityViewClose';
 
 const noop = () => {};
