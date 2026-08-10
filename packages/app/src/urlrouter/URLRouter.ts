@@ -23,6 +23,7 @@ import {
   getApplicationCustomURLsWithApplicationId,
 } from '../applications/selectors';
 import { ApplicationImmutable } from '../applications/types';
+import { getDock } from '../dock/selectors';
 import { handleError } from '../services/api/helpers';
 import { getApplicationIdByTabId, getTabIdMatchingURL } from '../tabs/selectors';
 import { StationState, StationStore } from '../types';
@@ -190,7 +191,20 @@ export default class URLRouter {
    * applications remain first for callers that intentionally need one result.
    */
   async findApplicationsInInstalledScopes(url: string): Promise<ApplicationImmutable[]> {
-    const allApps: ApplicationImmutable[] = getApplications(this.state).toArray();
+    const applications = getApplications(this.state);
+    const dock = getDock(this.state);
+    const allApps: ApplicationImmutable[] = dock
+      ? dock
+        .map((applicationId: string) => applications.get(applicationId))
+        .filter(Boolean)
+        .toList()
+        .concat(
+          applications
+            .filter(application => !dock.includes(getApplicationId(application)))
+            .toList()
+        )
+        .toArray()
+      : applications.toArray();
     const appsWithCustomUrls: ApplicationImmutable[] = allApps.filter(app => !!getApplicationCustomURL(app));
     const appsWithoutCustomUrls: ApplicationImmutable[] = allApps.filter(app => !getApplicationCustomURL(app));
 

@@ -1,14 +1,14 @@
 import * as remote from '@electron/remote';
 import log from 'electron-log';
 import * as EventEmitter from 'events';
-import { applyMiddleware, compose, createStore } from 'redux';
+import { applyMiddleware, compose, legacy_createStore } from 'redux';
 // @ts-ignore: no declaration file
 import { observe } from 'redux-observers';
 import { createPersistor } from 'redux-persist';
 // @ts-ignore: no declaration file
 import { autoRehydrate } from 'redux-persist-immutable';
 import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 // @ts-ignore: no declaration file
 import { server } from 'shared-redux';
 import { Duplex } from 'stream';
@@ -122,7 +122,7 @@ export function configureStore(bxApp: BrowserXAppWorker) {
     applyMiddleware(thunk, sagaMiddleware, forwardToClients)
   );
 
-  const store: StationStoreWorker = createStore(rootReducer, undefined, enhancer as any);
+  const store: StationStoreWorker = legacy_createStore(rootReducer, undefined, enhancer as any);
 
   if (!isPackaged && module.hot) {
     module.hot.accept(() =>
