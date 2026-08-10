@@ -291,7 +291,6 @@
     "node-gyp": "^9.4.0",
     "npm-run": "^4.1.2",
     "raw-loader": "^4.0.2 ",
-    "react-addons-perf": "^15.4.2",
     "redux-logger": "^2.7.4",
     "redux-saga-test-plan": "^3.7.0",
     "remote-redux-devtools": "0.5.0",
