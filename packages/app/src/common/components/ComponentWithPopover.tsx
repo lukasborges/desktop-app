@@ -4,10 +4,9 @@ import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import { Manager, Popper, Reference } from 'react-popper';
-// @ts-ignore: no declaration file
-import ReactResizeDetector from 'react-resize-detector';
 
 import ClickOutside from './ClickOutside';
+import ParentResizeObserver from './ParentResizeObserver';
 
 export interface IComponentWithPopoverChildrenProps {
   toggle: (() => void) | undefined,
@@ -15,7 +14,7 @@ export interface IComponentWithPopoverChildrenProps {
 }
 
 export interface OwnProps {
-  children: React.SFC<IComponentWithPopoverChildrenProps> | React.ReactNode,
+  children: React.FunctionComponent<IComponentWithPopoverChildrenProps> | React.ReactNode,
   modifiers?: PopperJS.Modifiers,
   placement?: PopperJS.Placement,
   overlay?: boolean,
@@ -125,7 +124,7 @@ export default class ComponentWithPopover extends React.PureComponent<Props, Sta
                 data-placement={placement}
               >
                 {secondChild}
-                <ReactResizeDetector handleWidth={true} handleHeight={true} onResize={scheduleUpdate} />
+                <ParentResizeObserver onResize={scheduleUpdate} />
               </div>}
           </Popper>
           }
