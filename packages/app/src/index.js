@@ -3,7 +3,7 @@ import './utils/stat-cache';
 import './dotenv';
 import { webFrame, ipcRenderer } from 'electron';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
@@ -14,6 +14,7 @@ import configureStore from './store/configureStore.client';
 import ReduxBasedGradientProvider from './theme/ReduxBasedGradientProvider';
 import { getGQlClient } from './utils/graphql';
 import ConsoleErrorBoundary from './common/containers/ConsoleErrorBoundary';
+import { renderRootAndNotify } from './common/helpers/renderRoot';
 import { initializeAppearanceTheme } from './theme/appearance';
 import PlatformThemeProvider from './theme/PlatformThemeProvider';
 
@@ -39,6 +40,7 @@ const apolloClient = getGQlClient();
 
 const actionsEmitter = createActionsEmitter();
 const actionsBus = createActionsBus(actionsEmitter);
+const root = createRoot(document.getElementById('root'));
 
 configureStore(actionsEmitter)
   .then(store => {
@@ -54,7 +56,7 @@ configureStore(actionsEmitter)
 const render = (store) => {
   const App = require('./containers/App').default; // eslint-disable-line global-require
 
-  ReactDOM.render(
+  renderRootAndNotify(root, (
     <Provider store={store}>
       <ActionsBusReactContext.Provider value={{ actionsBus }}>
         <ApolloProvider client={apolloClient}>
@@ -69,11 +71,8 @@ const render = (store) => {
           </ApolloHooksProvider>
         </ApolloProvider>
       </ActionsBusReactContext.Provider>
-    </Provider>,
-    document.getElementById('root')
-  );
-
-  ipcRenderer.send('bx-ready-to-show');
+    </Provider>
+  ), () => ipcRenderer.send('bx-ready-to-show'));
 };
 
 if (module.hot) {
