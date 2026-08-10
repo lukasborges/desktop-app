@@ -1,4 +1,4 @@
-import { graphql } from 'react-apollo';
+import { graphql } from '@apollo/client/react/hoc';
 import { GET_ACTIVE_SCREEN_NAME } from '@src/graphql/schemes/activeScreenName';
 
 export type GetActiveScreenNameResponse = {

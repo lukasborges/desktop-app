@@ -1,4 +1,4 @@
-import { MutationFn } from 'react-apollo';
+import { MutationFunction } from '@apollo/client';
 import { Application } from '@src/graphql/queries';
 
 export type MutationData = {
@@ -14,5 +14,5 @@ type MutationVariables = {
 };
 
 export type MutateSetSelectedCustomAppProps = {
-  mutateSetSelectedCustomApp: MutationFn<MutationData, MutationVariables>,
+  mutateSetSelectedCustomApp: MutationFunction<MutationData, MutationVariables>,
 };

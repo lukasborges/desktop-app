@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { findIndex, prop, propEq, tail } from 'ramda';
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { compose } from 'react-apollo';
+import { compose } from 'recompose';
 import injectSheet from 'react-jss';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

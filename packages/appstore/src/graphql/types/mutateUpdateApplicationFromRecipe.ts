@@ -1,4 +1,4 @@
-import { MutationFn } from 'react-apollo';
+import { MutationFunction } from '@apollo/client';
 import { Application } from '@src/graphql/queries';
 import { ApplicationRecipe } from '@src/components/AppStoreContent/AppStoreRequestEdit/AppRequestEdit';
 
@@ -14,5 +14,5 @@ type MutationVariables = {
 };
 
 export type MutateUpdateApplicationFromRecipeProps = {
-  mutateUpdateApplicationFromRecipe: MutationFn<MutationData, MutationVariables>,
+  mutateUpdateApplicationFromRecipe: MutationFunction<MutationData, MutationVariables>,
 };

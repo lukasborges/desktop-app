@@ -1,4 +1,4 @@
-import { MutationFn } from 'react-apollo';
+import { MutationFunction } from '@apollo/client';
 
 export type MutationData = {
   data: {
@@ -11,5 +11,5 @@ type MutationVariables = {
 };
 
 export type MutateDeleteApplicationProps = {
-  mutateDeleteApplication: MutationFn<MutationData, MutationVariables>,
+  mutateDeleteApplication: MutationFunction<MutationData, MutationVariables>,
 };

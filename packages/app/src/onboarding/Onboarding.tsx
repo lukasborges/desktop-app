@@ -1,5 +1,5 @@
 import { GradientType, InjectedProps as withGradientProps, withGradient } from '@getstation/theme';
-import { withApollo, WithApolloClient } from 'react-apollo';
+import { withApollo, WithApolloClient } from '@apollo/client/react/hoc';
 import * as remote from '@electron/remote';
 import * as Immutable from 'immutable';
 // @ts-ignore: no declaration file

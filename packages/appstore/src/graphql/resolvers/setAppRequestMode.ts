@@ -1,3 +1,5 @@
+import { GET_CUSTOM_APP_REQUEST_MODE } from '@src/graphql/schemes/customAppRequestMode';
+
 export interface SetCustomAppRequestMode {
   appRequestIsOpen: boolean,
   currentMode: string,
@@ -9,7 +11,9 @@ export default (_: any, { appRequestIsOpen, currentMode }: SetCustomAppRequestMo
     currentMode: currentMode,
     __typename: 'AppRequestMode',
   };
-  const data = { appRequestMode: newCustomAppRequestMode };
-  cache.writeData({ data });
-  return cache.data.appRequestMode;
+  cache.writeQuery({
+    query: GET_CUSTOM_APP_REQUEST_MODE,
+    data: { appRequestMode: newCustomAppRequestMode },
+  });
+  return newCustomAppRequestMode;
 };

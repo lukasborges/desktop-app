@@ -1,3 +1,5 @@
+import { GET_APP_MODAL_STATUS } from '@src/graphql/schemes/appModalStatus';
+
 export interface SetAppModalStatus {
   isAppModalOpen: boolean,
 }
@@ -7,7 +9,9 @@ export default (_: any, { isAppModalOpen }: SetAppModalStatus, { cache }: any) =
     isAppModalOpen: isAppModalOpen,
     __typename: 'AppModalStatus',
   };
-  const data = { appModalStatus: newAppModalStatus };
-  cache.writeData({ data });
-  return cache.data.appModalStatus;
+  cache.writeQuery({
+    query: GET_APP_MODAL_STATUS,
+    data: { appModalStatus: newAppModalStatus },
+  });
+  return newAppModalStatus;
 };

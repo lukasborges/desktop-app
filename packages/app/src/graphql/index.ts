@@ -1,5 +1,5 @@
 import { ReactiveSchemaLink } from '@getstation/apollo-link-reactive-schema';
-import { concat } from 'apollo-link';
+import { concat } from '@apollo/client';
 import { PubSub } from 'graphql-subscriptions';
 import { makeExecutableSchema } from 'graphql-tools';
 import { IManifestProvider } from '../applications/manifest-provider/types';

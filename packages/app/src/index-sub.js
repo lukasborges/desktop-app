@@ -6,8 +6,7 @@ import * as remote from '@electron/remote';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from 'react-apollo';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import { ApolloProvider } from '@apollo/client';
 import './theme/css/app.global.css';
 import '../../../node_modules/font-awesome/css/font-awesome.min.css';
 import { handleError } from './services/api/helpers';
@@ -59,11 +58,9 @@ const render = (store) => {
       <ConsoleErrorBoundary>
         <ActionsBusReactContext.Provider value={{ actionsBus }}>
           <ApolloProvider client={client}>
-            <ApolloHooksProvider client={client}>
-              <PlatformThemeProvider>
-                <AppSub subData={currentWindow.subData} />
-              </PlatformThemeProvider>
-            </ApolloHooksProvider>
+            <PlatformThemeProvider>
+              <AppSub subData={currentWindow.subData} />
+            </PlatformThemeProvider>
           </ApolloProvider>
         </ActionsBusReactContext.Provider>
       </ConsoleErrorBoundary>

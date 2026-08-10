@@ -1,4 +1,4 @@
-import { ApolloLink, ExecutionResult, NextLink, Observable as ZenObservable, Operation } from 'apollo-link';
+import { ApolloLink, FetchResult as ExecutionResult, NextLink, Observable as ZenObservable, Operation } from '@apollo/client';
 import log from 'electron-log';
 import { equals, pick } from 'ramda';
 import { from } from 'rxjs';
