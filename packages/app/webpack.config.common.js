@@ -62,15 +62,6 @@ const mutateAddRules = config => {
 };
 
 /**
- * minimizer should keep classnames and fnames
- * @param config {webpack.Configuration}
- */
-const mutateAddExternals = config => {
-  // Used by window-open overload
-  config.externals.push('react-addons-perf');
-};
-
-/**
  * alias some missing imports
  * @param config {webpack.Configuration}
  */
@@ -89,7 +80,6 @@ const mutateWebpackConfig = config => {
   mutateFixTsLoader(config);
   mutateFixTerser(config);
   mutateAddRules(config);
-  mutateAddExternals(config);
   mutateDevtool(config);
   mutateAlias(config);
 };

@@ -26,14 +26,6 @@ initializeAppearanceTheme();
 // prevent app pinch zomming
 webFrame.setVisualZoomLevelLimits(1, 1);
 
-if (process.env.STATION_REACT_PERF) {
-  const Perf = require('react-addons-perf'); // eslint-disable-line global-require
-  window.Perf = Perf;
-  // use like this:
-  // Perf.start() and then Perf.stop()
-  // Perf.printWasted()
-}
-
 const currentWindow = remote.getCurrentWindow();
 
 const client = getGQlClient();
