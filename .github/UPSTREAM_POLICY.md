@@ -8,8 +8,9 @@ Platform monitors these active Station forks for fixes and useful features:
   development-tooling modernization. Its large dependency changes require selective
   reimplementation and must never be adopted as a single upgrade commit.
 
-The scheduled Upstream Radar only reports changes. It must never merge, cherry-pick,
-push a branch, or modify `main` automatically.
+The scheduled Upstream Radar opens one issue for each upstream revision it detects.
+Each issue is an independent, closeable triage item. The radar must never merge,
+cherry-pick, push a branch, or modify `main` automatically.
 
 ## Platform invariants
 
@@ -35,6 +36,8 @@ of these changes may only be reimplemented selectively.
    overlap Platform behavior.
 5. Work on `sync/<source>-<sha>`, never directly on `main`.
 6. Open a pull request describing what was adopted, adapted, or intentionally left out.
+7. Record the decision in the radar issue and close it when every listed commit has
+   been adopted, rejected, superseded, or moved to a dedicated tracking issue.
 
 ## Validation checklist
 

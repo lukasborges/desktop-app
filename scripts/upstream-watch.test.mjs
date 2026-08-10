@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { classifyChange, parseState, renderReport, UPSTREAMS } from './upstream-watch.mjs';
+import {
+  classifyChange,
+  collectLatestState,
+  issueBody,
+  parseState,
+  radarIssueTitle,
+  renderReport,
+  UPSTREAMS,
+} from './upstream-watch.mjs';
 
 test('reads the persisted state from the issue marker', () => {
   assert.deepEqual(
@@ -10,6 +18,18 @@ test('reads the persisted state from the issue marker', () => {
   );
   assert.deepEqual(parseState('body without state'), {});
   assert.deepEqual(parseState('<!-- upstream-state:not-json -->'), {});
+});
+
+test('collects the newest split state per upstream and ignores the retired aggregate marker', () => {
+  assert.deepEqual(collectLatestState([
+    { body: '<!-- upstream-state:{"ingenium":"new"} -->' },
+    { body: '<!-- upstream-state:{"mathijs":"current"} -->' },
+    { body: '<!-- upstream-state:{"ingenium":"old"} -->' },
+    { body: '<!-- upstream-state:{"ingenium":"legacy","mathijs":"legacy","oddball":"legacy"} -->' },
+  ]), {
+    ingenium: 'new',
+    mathijs: 'current',
+  });
 });
 
 test('monitors the selected active forks in priority order', () => {
@@ -46,7 +66,7 @@ test('classifies isolated documentation changes as low risk', () => {
 });
 
 test('renders repository, commit, risk, and recommendation', () => {
-  const report = renderReport([{
+  const result = {
     upstream: UPSTREAMS[0],
     head: { branch: 'main', sha: '1234567890abcdef' },
     changes: {
@@ -60,11 +80,15 @@ test('renders repository, commit, risk, and recommendation', () => {
       totalCommits: 1,
       warning: null,
     },
-  }], new Date('2026-07-20T12:00:00Z'));
+  };
+  const report = renderReport([result], new Date('2026-07-20T12:00:00Z'));
 
   assert.match(report, /agenciaingenium\/desktop-app/);
   assert.match(report, /1234567/);
   assert.match(report, /Risk/);
   assert.match(report, /Recommendation/);
   assert.match(report, /persistence/);
+  assert.equal(radarIssueTitle(result), '[Upstream Radar] agenciaingenium/desktop-app @ 1234567');
+  assert.match(issueBody(result, report), /Triage checklist/);
+  assert.match(issueBody(result, report), /"ingenium":"1234567890abcdef"/);
 });
