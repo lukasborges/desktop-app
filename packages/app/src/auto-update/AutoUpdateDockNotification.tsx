@@ -3,10 +3,10 @@ import * as Immutable from 'immutable';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import withUI from 'redux-ui';
 
 import DockApplicationSubdock from '../common/containers/DockApplicationSubdock';
 import NativeAppDockIcon from '../dock/components/NativeAppDockIcon';
+import connectUI from '../ui/connectUI';
 
 import AutoUpdateSubdock from './components/AutoUpdateSubdock';
 import { openReleaseNotes, setReleaseNotesSubdockVisibility, toggleReleaseNotesSubdockVisibility } from './duck';
@@ -26,12 +26,6 @@ export interface Props {
   onSetReleaseNotesSubdockVisibility: (visible: boolean) => any
 }
 
-@withUI({
-  key: 'autoUpdate',
-  state: {
-    visible: false,
-  },
-})
 class AutoUpdateDockNotificationImpl extends React.PureComponent<Props, {}> {
   constructor(props: Props) {
     super(props);
@@ -72,6 +66,13 @@ class AutoUpdateDockNotificationImpl extends React.PureComponent<Props, {}> {
   }
 }
 
+const AutoUpdateDockNotification = connectUI({
+  key: 'autoUpdate',
+  state: {
+    visible: false,
+  },
+})(AutoUpdateDockNotificationImpl);
+
 export default connect(
   (state: Immutable.Map<string, any>) => ({
     isUpdateAvailable: getIsUpdateAvailable(state),
@@ -83,4 +84,4 @@ export default connect(
     onToggleReleaseNotesSubdockVisibility: toggleReleaseNotesSubdockVisibility,
     onSetReleaseNotesSubdockVisibility: (visible: boolean) => setReleaseNotesSubdockVisibility(visible),
   }, dispatch)
-)(AutoUpdateDockNotificationImpl);
+)(AutoUpdateDockNotification);
