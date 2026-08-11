@@ -87,19 +87,6 @@ export function configureStore(bxApp: BrowserXAppWorker) {
     },
   });
 
-  let composeEnhancers = compose;
-
-  if (!isPackaged) {
-    // const { composeWithDevTools } = require('remote-redux-devtools');
-    // composeEnhancers = composeWithDevTools({
-    //   trace: true,
-    //   realtime: true,
-    //   name: 'main',
-    //   port: 8000,
-    // });
-    composeEnhancers = compose;
-  }
-
   const eventEmitter = new EventEmitter();
   const readyPromise = new Promise<void>(resolve => eventEmitter.once('ready', resolve));
 
@@ -117,7 +104,7 @@ export function configureStore(bxApp: BrowserXAppWorker) {
     }
   );
 
-  const enhancer = composeEnhancers(
+  const enhancer = compose(
     autoRehydrate(),
     applyMiddleware(thunk, sagaMiddleware, forwardToClients)
   );
