@@ -1,5 +1,5 @@
 import { ThemeTypes as Theme } from '@getstation/theme';
-import PopperJS from 'popper.js';
+import { Options as PopperOptions, Placement } from '@popperjs/core';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
@@ -15,8 +15,8 @@ export interface IComponentWithPopoverChildrenProps {
 
 export interface OwnProps {
   children: React.FunctionComponent<IComponentWithPopoverChildrenProps> | React.ReactNode,
-  modifiers?: PopperJS.Modifiers,
-  placement?: PopperJS.Placement,
+  modifiers?: PopperOptions['modifiers'],
+  placement?: Placement,
   overlay?: boolean,
 }
 
@@ -47,7 +47,7 @@ const styles = (theme: Theme) => ({
 export default class ComponentWithPopover extends React.PureComponent<Props, State> {
 
   static defaultProps = {
-    modifiers: {},
+    modifiers: [],
     overlay: false,
   };
 
@@ -109,22 +109,22 @@ export default class ComponentWithPopover extends React.PureComponent<Props, Sta
           {showPopper &&
           <Popper
             placement={placementProps}
-            modifiers={{
-              computeStyle: {
-                gpuAcceleration: false,
-                ...modifiers!.gpuAcceleration,
+            modifiers={[
+              {
+                name: 'computeStyles',
+                options: { gpuAcceleration: false },
               },
-              ...modifiers,
-            }}
+              ...modifiers!,
+            ]}
           >
-            {({ ref, style, placement, scheduleUpdate }) =>
+            {({ ref, style, placement, update }) =>
               <div
                 ref={ref}
                 style={style}
                 data-placement={placement}
               >
                 {secondChild}
-                <ParentResizeObserver onResize={scheduleUpdate} />
+                <ParentResizeObserver onResize={update} />
               </div>}
           </Popper>
           }

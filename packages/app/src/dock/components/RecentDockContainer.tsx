@@ -1,11 +1,11 @@
+import { Options as PopperOptions } from '@popperjs/core';
 import * as React from 'react';
+import { Manager, Reference, Popper } from 'react-popper';
+
 import {
   SearchPaneItemSelectedVia,
   cyclingStep, SearchPaneClosedVia,
 } from '../../bang/duck';
-import { Manager, Reference, Popper } from 'react-popper';
-import * as PopperJS from 'popper.js';
-
 import { ActivityEntry } from '../../activity/queries@local.gql.generated';
 
 import RecentDockIcon from './RecentDockIcon';
@@ -33,11 +33,11 @@ interface State {
 
 class RecentDockContainer extends React.PureComponent<Props, State> {
 
-  private static popperModifiers: PopperJS.Modifiers = {
-    preventOverflow: { enabled: true, boundariesElement: 'viewport' },
-    offset: { offset: '-52, 5' },
-    computeStyle: { gpuAcceleration: false },
-  };
+  private static popperModifiers: PopperOptions['modifiers'] = [
+    { name: 'preventOverflow', options: { boundary: 'viewport' } },
+    { name: 'offset', options: { offset: [-52, 5] } },
+    { name: 'computeStyles', options: { gpuAcceleration: false } },
+  ];
 
   timeoutSubdock: NodeJS.Timer | null = null;
 
