@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import * as Immutable from 'immutable';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { compose, bindActionCreators } from 'redux';
 import { getThemeColors } from '../theme/selectors';
 import { ImmutableList, ObjectToImmutable } from '../types';
@@ -81,25 +80,18 @@ class DownloadToasterImpl extends React.PureComponent<Props, {}> {
     return (
       <div className={classes!.container}>
         {this.clearAllButton(downloads)}
-        <TransitionGroup>
-          { downloads.map((dl: DownloadItem) => (
-            <CSSTransition
-              key={dl.get('downloadId')}
-              classNames="rapidfade"
-              timeout={{ enter: 500, exit: 300 }}
-            >
-              <DownloadToast
-                applicationId={dl.get('applicationId')}
-                failed={dl.get('state') === 'interrupted' || dl.get('state') === 'cancelled'}
-                filename={dl.get('filename')}
-                completionPercent={dl.get('completionPercent')}
-                onClickOpen={() => this.props.onOpenDownloadedFile(dl.get('downloadId'))}
-                onClickHide={() => this.handleClear([dl])}
-                themeColor={themeColor}
-              />
-            </CSSTransition>
-          )).toArray()}
-        </TransitionGroup>
+        { downloads.map((dl: DownloadItem) => (
+          <DownloadToast
+            key={dl.get('downloadId')}
+            applicationId={dl.get('applicationId')}
+            failed={dl.get('state') === 'interrupted' || dl.get('state') === 'cancelled'}
+            filename={dl.get('filename')}
+            completionPercent={dl.get('completionPercent')}
+            onClickOpen={() => this.props.onOpenDownloadedFile(dl.get('downloadId'))}
+            onClickHide={() => this.handleClear([dl])}
+            themeColor={themeColor}
+          />
+        )).toArray()}
       </div>
     );
   }
