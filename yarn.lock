@@ -24942,9 +24942,6 @@ __metadata:
     umzug: "npm:^3.2.1"
     umzug-cli: "npm:^3.1.1"
     unused-filename: "npm:^1.0.0"
-    use-events: "npm:^1.3.0"
-    use-key-hook: "npm:^1.5.0"
-    use-timeout: "npm:^1.1.0"
     utility-types: "npm:^3.7.0"
     uuid: "npm:^3.3.3"
     webpack: "npm:^4.46.0"
@@ -27387,7 +27384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resize-observer-polyfill@npm:1.5.1, resize-observer-polyfill@npm:^1.5.1":
+"resize-observer-polyfill@npm:^1.5.1":
   version: 1.5.1
   resolution: "resize-observer-polyfill@npm:1.5.1"
   checksum: 10c0/5e882475067f0b97dc07e0f37c3e335ac5bc3520d463f777cec7e894bb273eddbfecb857ae668e6fb6881fd6f6bb7148246967172139302da50fa12ea3a15d95
@@ -31495,28 +31492,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-events@npm:^1.3.0":
-  version: 1.4.2
-  resolution: "use-events@npm:1.4.2"
-  dependencies:
-    resize-observer-polyfill: "npm:1.5.1"
-  peerDependencies:
-    react: ">=16.8.1"
-  checksum: 10c0/f45c5813f2cd9cb0f900f9e38bed2a03d2fe260305d1552a31092e31f6574cc73185f3558301e0f96244151703f12e9afab73653dc772757aa63078362558ab4
-  languageName: node
-  linkType: hard
-
-"use-key-hook@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "use-key-hook@npm:1.5.0"
-  dependencies:
-    invariant: "npm:^2.2.4"
-  peerDependencies:
-    react: ^16.7.0-alpha.2
-  checksum: 10c0/13c4bacb5e04dfc43edc5a6616305384ecd17fb82467799e53c052160761e189acb51bad834bbd6312cdbf3240b6591430b1cbc10d4c160e09ffc7cf91455e41
-  languageName: node
-  linkType: hard
-
 "use-sidecar@npm:^1.1.2":
   version: 1.1.2
   resolution: "use-sidecar@npm:1.1.2"
@@ -31539,16 +31514,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/35e1179f872a53227bdf8a827f7911da4c37c0f4091c29b76b1e32473d1670ebe7bcd880b808b7549ba9a5605c233350f800ffab963ee4a4ee346ee983b6019b
-  languageName: node
-  linkType: hard
-
-"use-timeout@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "use-timeout@npm:1.1.0"
-  peerDependencies:
-    react: ">=16.8.0-alpha.1"
-    react-dom: ">=16.8.0-alpha.1"
-  checksum: 10c0/4a309d1e1b689c97f8c44e83a33d52b95a760847598ea6da873a6003287bb639ae7fea4e06dcbcac1b323bf09d147792a71e73109f3f4ecfec05e86d7a285c17
   languageName: node
   linkType: hard
 
