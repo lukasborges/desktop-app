@@ -37,9 +37,7 @@ const externalsWhitelist = [
   'scrollmonitor-react',
   'prop-types',
   'classnames',
-  'scroll-into-view-if-needed',
-  'use-events',
-  'use-key-hook'*/
+  'scroll-into-view-if-needed'*/
 ];
 
 /**
