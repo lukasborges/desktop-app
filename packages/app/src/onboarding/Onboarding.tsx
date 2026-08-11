@@ -7,7 +7,6 @@ import { validate as validateEmail } from 'isemail';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
-import ui from 'redux-ui';
 import {
   MinimalApplication,
   Props as WithMyApplicationsProps,
@@ -25,6 +24,7 @@ import {
 
 import { OnboardingType } from '../ui/types';
 import { manifestToMinimalApplication, search } from '../../manifests';
+import connectUI from '../ui/connectUI';
 
 export interface DispatchFromProps {
   onClickLogin: typeof startOnboarding,
@@ -248,7 +248,7 @@ const Onboarding = compose(
       dispatch
     )
   ),
-  ui({
+  connectUI({
     key: 'onboarding',
     state: {
       onboardingType: OnboardingType.Undefined,
