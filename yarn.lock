@@ -22956,6 +22956,7 @@ __metadata:
     umzug: "npm:^3.2.1"
     umzug-cli: "npm:^3.1.1"
     unused-filename: "npm:^1.0.0"
+    url-loader: "npm:^4.1.1"
     utility-types: "npm:^3.7.0"
     uuid: "npm:^3.3.3"
     webpack: "npm:^4.46.0"
@@ -28766,7 +28767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"url-loader@npm:^4.0.0":
+"url-loader@npm:^4.0.0, url-loader@npm:^4.1.1":
   version: 4.1.1
   resolution: "url-loader@npm:4.1.1"
   dependencies:
