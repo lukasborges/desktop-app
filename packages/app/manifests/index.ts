@@ -5,6 +5,7 @@ import { BxAppManifest } from '../src/applications/manifest-provider/bxAppManife
 import { ApplicationItem } from '../src/urlrouter/types';
 
 import { getPrivateApplicationById, getPrivateManifests } from './private';
+import { resolveWebpackAsset } from './webpackAsset';
 
 const reqIcon = require.context('!url-loader!./icons', true, /\.(ico|png|svg|webp)$/);
 const reqManifest = require.context('./definitions', true, /\.json$/);
@@ -76,7 +77,7 @@ export function getApplicationById(id: string): Manifest {
     .map(extension => `./${id}.${extension}`)
     .find(candidate => reqIcon.keys().includes(candidate));
   if (!iconName) throw new Error(`Missing catalog icon for manifest ${id}`);
-  const iconData: string = reqIcon(iconName);
+  const iconData = resolveWebpackAsset(reqIcon(iconName));
   const manifest: BxAppManifest = reqManifest(`./${id}.json`);
 
   delete manifest.icons;
