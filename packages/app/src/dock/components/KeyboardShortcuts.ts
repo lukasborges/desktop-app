@@ -83,8 +83,7 @@ export default class KeyboardShortcuts extends React.PureComponent<Props, State>
     Mousetrap.prototype.handleKey = createHandleKey(() => this.props.keyAboveTab);
   }
 
-  // tslint:disable-next-line:function-name
-  UNSAFE_componentWillUnmount() {
+  componentWillUnmount() {
     this.unwatchCtrl();
     this.unwatchMod();
     this.unwatchAlt();
@@ -293,7 +292,7 @@ export default class KeyboardShortcuts extends React.PureComponent<Props, State>
   }
 
   unwatchCtrlBacktick() {
-    Mousetrap.unbind('ctrl+`');
+    Mousetrap.unbind('ctrl+KeyAboveTab');
   }
 
   render() {
