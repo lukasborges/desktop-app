@@ -44,18 +44,6 @@ export default async function configureStore(actionsEmitter?: ActionsEmitter): P
     initialState = await getInitialStateClient();
   }
 
-  let composeEnhancers = compose;
-  if (!isPackaged) {
-    // const { composeWithDevTools } = require('remote-redux-devtools'); // eslint-disable-line global-require
-    // composeEnhancers = composeWithDevTools({
-    //   realtime: true,
-    //   trace: true,
-    //   name: `renderer webContentsId=${remote.getCurrentWebContents().id}`,
-    //   port: 8000,
-    // });
-    composeEnhancers = compose;
-  }
-
   const middlewares = compact([
     forwardToServer,
     actionsEmitter ? createActionsBusMiddleware(actionsEmitter) : null,
@@ -80,7 +68,7 @@ export default async function configureStore(actionsEmitter?: ActionsEmitter): P
   // Scroll down to the Console section and tick "Enable custom formatters".
   installDevTools(Immutable);
 
-  const enhancer = composeEnhancers(
+  const enhancer = compose(
     applyMiddleware(...middlewares),
   );
 
