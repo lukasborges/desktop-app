@@ -1,6 +1,6 @@
 // @ts-ignore: no declaration file
 import { combineReducers } from 'redux-immutable';
-import { reducer as reduxUI } from 'redux-ui';
+import reduxUI from 'redux-ui/transpiled/action-reducer';
 import app from '../app/duck';
 import applicationSettings from '../application-settings/duck';
 import applications from '../applications/duck';
