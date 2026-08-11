@@ -3,7 +3,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { oc } from 'ts-optchain';
-import { pure } from 'recompose';
 import Maybe from 'graphql/tsutils/Maybe';
 
 import {
@@ -74,8 +73,7 @@ class SubdockContainerImpl extends React.PureComponent<Props, {}> {
   }
 }
 
-const SubdockContainer = compose(
-  pure,
+const SubdockContainer = React.memo(compose(
   connect(
     (state: StationState, ownProps: Props) => {
       const { applicationId } = ownProps;
@@ -106,6 +104,6 @@ const SubdockContainer = compose(
     }),
   }),
   withGradient(GradientType.withDarkOverlay),
-)(SubdockContainerImpl);
+)(SubdockContainerImpl));
 
 export default SubdockContainer as React.ComponentType<OuterProps>;

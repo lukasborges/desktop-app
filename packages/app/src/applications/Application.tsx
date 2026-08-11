@@ -17,9 +17,8 @@ import * as throttle from 'lodash.throttle';
 import * as path from 'path';
 import { noop, compact } from 'ramda-adjunct';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 // @ts-ignore no declaration file
 import { updateUI } from 'redux-ui/transpiled/action-reducer';
 import { filter, map } from 'rxjs/operators';
