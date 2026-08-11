@@ -54,12 +54,11 @@ class DockItem extends React.PureComponent {
       iconRef,
     } = this.props;
 
-    const popperModifiers = {
-      keepTogether: { enabled: false },
-      preventOverflow: { enabled: true, boundariesElement: 'viewport' },
-      offset: { offset: '-10, 10' },
-      computeStyle: { gpuAcceleration: false }
-    };
+    const popperModifiers = [
+      { name: 'preventOverflow', options: { boundary: 'viewport', tether: false } },
+      { name: 'offset', options: { offset: [-10, 10] } },
+      { name: 'computeStyles', options: { gpuAcceleration: false } },
+    ];
 
     return (
       <div className="l-dock__scroll__item">
@@ -89,8 +88,8 @@ class DockItem extends React.PureComponent {
           </Reference>
           {showSubdock && (
             <Popper placement="right-start" modifiers={popperModifiers}>
-              {({ ref, style, placement, scheduleUpdate }) => {
-                // we have to call scheduleUpdate when subdock is fully loaded to recompute popper position
+              {({ ref, style, placement, update }) => {
+                // Recompute the Popper position when the subdock has fully loaded.
                 return (
                   <div ref={ref} style={style} data-placement={placement}>
                     <ClickOutside onClickOutside={onClickOutsideSubdock}>
@@ -98,7 +97,7 @@ class DockItem extends React.PureComponent {
                         applicationId={applicationId}
                         onOverStateChange={onSubdockOverStateChange}
                         handleHideSubdock={handleHideSubdock}
-                        onLoaded={scheduleUpdate}
+                        onLoaded={update}
                       />
                     </ClickOutside>
                   </div>
