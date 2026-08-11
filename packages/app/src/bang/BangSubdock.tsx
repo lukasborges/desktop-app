@@ -1,8 +1,7 @@
 import * as Immutable from 'immutable';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 // @ts-ignore: no declaration file
 import { updateUI } from 'redux-ui/transpiled/action-reducer';
 // @ts-ignore: no declaration file
