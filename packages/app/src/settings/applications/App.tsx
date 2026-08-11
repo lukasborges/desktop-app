@@ -2,12 +2,10 @@ import { Hint, ThemeTypes as Theme, Tooltip } from '@getstation/theme';
 import * as classNames from 'classnames';
 import { Iterable, List } from 'immutable';
 import * as React from 'react';
-import { compose } from 'recompose';
 // @ts-ignore no declaration file
 import injectSheet from 'react-jss';
 import { connect } from 'react-redux';
-import { pure } from 'recompose';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { oc } from 'ts-optchain';
 
 import { uninstallAllInstances } from '../../abstract-application/duck';
@@ -367,10 +365,8 @@ class AppImpl extends React.PureComponent<Props, State> {
   }
 }
 
-const App = compose(
-  // React Apollo HOC are not pure
-  // let's wrap this in a pure component so that we get a performance boost
-  pure,
+// Apollo HOCs are not pure, so retain the outer shallow-prop memoization.
+const App = React.memo(compose(
   withGetAbstractApplication({
     options: ({ manifestURL }: Props) => ({
       variables: { manifestURL },
@@ -448,6 +444,6 @@ const App = compose(
       );
     },
   ),
-)(AppImpl);
+)(AppImpl));
 
 export default App;
