@@ -45,7 +45,7 @@ export default class AboutWindowFooter extends React.PureComponent<Props, {}> {
         >
           About Station
         </a>
-        <a className={classes!.link} href="https://getstation.com/" target="_blank">
+        <a className={classes!.link} href="https://github.com/getstation/desktop-app" target="_blank">
           Support
         </a>
       </footer>

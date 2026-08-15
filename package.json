@@ -2,9 +2,9 @@
   "name": "station-project",
   "private": true,
   "productName": "Station",
-  "version": "3.3.0-b1",
+  "version": "4.0.0-b1",
   "description": "Station",
-  "homepage": "https://getstation.com",
+  "homepage": "https://github.com/getstation/desktop-app",
   "author": {
     "name": "Joël Charles",
     "email": "joel.charles91@gmail.com",
@@ -30,12 +30,20 @@
   "devDependencies": {
     "rimraf": "^5.0.10"
   },
+  "resolutions": {
+    "node-gyp": "12.4.0",
+    "react-draggable": "4.4.6",
+    "@electron/rebuild": "^4.2.0",
+    "@electron/node-gyp": "npm:node-gyp@12.4.0"
+  },
   "devEngines": {
-    "node": ">=18.0.0",
-    "yarn": ">=4.1.0"
+    "runtime": {
+      "name": "node",
+      "version": ">=24.0.0"
+    }
   },
   "volta": {
-    "node": "18.14.0",
+    "node": "24.19.0",
     "yarn": "4.1.0"
   },
   "packageManager": "yarn@4.1.0"

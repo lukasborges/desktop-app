@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "18"
+          node-version: "24"
           cache: "yarn"
       # See https://github.com/nodejs/node-gyp/blob/main/docs/Force-npm-to-use-global-node-gyp.md
       # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
@@ -24,11 +24,16 @@ jobs:
       #     npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
       - name: Install dependencies
         run: yarn install --immutable
+      # Since Electron 42 the `electron` package no longer downloads its binary in a
+      # `postinstall` script; it does so lazily on first use. Prefetch it explicitly so a
+      # download failure is reported here instead of mid-build.
+      - name: Download Electron binary
+        run: yarn workspace station-desktop-app exec install-electron
       - name: Build and Release
         run: yarn release
 
   MacOs:
-    runs-on: macos-13
+    runs-on: macos-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -42,21 +47,17 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "18"
+          node-version: "24"
           cache: "yarn"
-      - name: Configure Node
-        run: |
-          # npm v9 doesn't allow custom config parameters (i.e. node_gyp) anymode, so we have to downgrade it to v8
-          npm install -g npm@8  
-          npm install -g node-gyp@latest
-          npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Download Electron binary
+        run: yarn workspace station-desktop-app exec install-electron
       - name: Build and Release
         run: yarn release
 
   Windows:
-    runs-on: windows-2019
+    runs-on: windows-2025
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -67,15 +68,10 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@master
         with:
-          node-version: "18"
-      - name: Configure Node
-        shell: powershell
-        run: |
-          # npm v9 doesn't allow custom config parameters (i.e. node_gyp) anymode, so we have to downgrade it to v8
-          npm install -g npm@8  
-          npm install -g node-gyp@latest
-          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+          node-version: "24"
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Download Electron binary
+        run: yarn workspace station-desktop-app exec install-electron
       - name: Build and Release
         run: yarn release
