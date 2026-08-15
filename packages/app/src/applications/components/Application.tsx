@@ -28,7 +28,7 @@ const ApplicationActionButtonIconMap = {
   [ApplicationActionType.Remove]: IconSymbol.CROSS,
 };
 
-const styles = (theme: ThemeTypes) => createStyles({
+const styles = (_theme: ThemeTypes) => createStyles({
   container: {
     flex: 0,
     display: 'inline-flex',

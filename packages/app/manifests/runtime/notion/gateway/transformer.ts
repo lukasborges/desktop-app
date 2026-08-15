@@ -27,7 +27,7 @@ export const publicPageToWorkspace = ({ spaceName, spaceId, spaceDomain, icon }:
 });
 
 export const pagesInfos = (value: any): PageInfo[] =>
-  value.results.map(p => ({
+  value.results.map((p: any) => ({
     id: p.value.id,
     label: getLabel(p.value),
   }));

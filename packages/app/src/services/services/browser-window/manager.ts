@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, WebContents, HandlerDetails } from 'electron';
+import { app, BrowserWindow, shell, webContents, HandlerDetails } from 'electron';
 
 import { RPC } from '../../lib/types';
 import { BrowserWindowManagerService, BrowserWindowServiceConstructorOptions, BrowserWindowManagerProviderService } from './interface';
@@ -57,7 +57,10 @@ export class BrowserWindowManagerServiceImpl extends BrowserWindowManagerService
   }
 
   async fromWebContentsId(webContentsId: number) {
-    const wc = WebContents.fromId(webContentsId);
+    const wc = webContents.fromId(webContentsId);
+    if (!wc) {
+      throw new Error(`WebContents ${webContentsId} is not defined`);
+    }
     const bw = BrowserWindow.fromWebContents(wc);
     return this.getServiceFromBrowserWindow(bw);
   }
@@ -87,7 +90,7 @@ export class BrowserWindowManagerServiceImpl extends BrowserWindowManagerService
     }
   }
 
-  private getServiceFromBrowserWindow(bw?: Electron.BrowserWindow): BrowserWindowServiceImpl {
+  private getServiceFromBrowserWindow(bw?: Electron.BrowserWindow | null): BrowserWindowServiceImpl {
     if (!bw) {
       throw new Error('BrowserWindow is not defined');
     }

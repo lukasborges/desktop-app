@@ -39,7 +39,7 @@ class RecentDockContainer extends React.PureComponent<Props, State> {
     { name: 'computeStyles', options: { gpuAcceleration: false } },
   ];
 
-  timeoutSubdock: NodeJS.Timer | null = null;
+  timeoutSubdock: ReturnType<typeof setTimeout> | null = null;
 
   onOverStateChange = (isHover: boolean) => {
     if (this.timeoutSubdock !== null) {

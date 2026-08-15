@@ -11,6 +11,7 @@ export interface OwnProps {
   className?: string,
   onMouseEnter?: React.MouseEventHandler<any>,
   onMouseLeave?: React.MouseEventHandler<any>,
+  children?: React.ReactNode,
 }
 
 export interface StateToProps {

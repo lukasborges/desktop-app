@@ -61,7 +61,10 @@ const styles = (theme: Theme) => ({
     ...theme.mixins.size(33),
     flexShrink: 0,
     marginTop: 2,
-    backgroundImage: (props: Props) => `url(${getApplicationIconURL(getDialogApplication(props.dialog))})`,
+    backgroundImage: (props: Props) => {
+      const application = getDialogApplication(props.dialog);
+      return application ? `url(${getApplicationIconURL(application)})` : 'none';
+    },
     backgroundSize: 'cover',
     borderRadius: 100,
   },
@@ -118,7 +121,7 @@ class DialogItemImpl extends React.PureComponent<Props, {}> {
 
         <div className={classes!.buttonWrapper}>
           {
-            getDialogActions(dialog).map((action) => {
+            (getDialogActions(dialog) as DialogItemAction[]).map((action) => {
               const { icon, text, style } = action;
 
               const onClick = (_: any) => onClickDialog(dialog.toJS(), action);
@@ -152,14 +155,14 @@ class DialogItemImpl extends React.PureComponent<Props, {}> {
 }
 
 export default compose(
-  withGetApplication({
+  (withGetApplication as any)({
     options: (props: Props) => ({
       variables: {
-        applicationId: getApplicationId(getDialogApplication(props.dialog)),
+        applicationId: getApplicationId(getDialogApplication(props.dialog)!),
       },
     }),
-    props: ({ data }) => ({
-      applicationName: oc(data).application.name(),
+    props: ({ data }: any) => ({
+      applicationName: oc(data).application.name,
     }),
-  }),
-)(DialogItemImpl);
+  }) as any,
+)(DialogItemImpl as React.ComponentType<any>) as React.ComponentType<StateProps>;

@@ -90,13 +90,13 @@ const connector = compose(
       dispatch
     ),
   ),
-  withGetApplication({
+  (withGetApplication as any)({
     options: (props: InputProps & StateProps & DispatchProps) => ({ variables: { applicationId: props.applicationId } }),
-    props: ({ data }) => ({
+    props: ({ data }: any) => ({
       loading: !data,
-      applicationName: oc(data).application.manifestData.name(),
+      applicationName: oc(data).application.manifestData.name,
     }),
   }),
 );
 
-export default connector(ConfirmResetApplicationImpl);
+export default connector(ConfirmResetApplicationImpl as any) as React.ComponentType<InputProps>;

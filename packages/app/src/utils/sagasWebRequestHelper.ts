@@ -16,21 +16,21 @@ type webRequestEventsMethodsWithoutCallback =
 type webRequestEventsMethods = webRequestEventsMethodsWithCallback | webRequestEventsMethodsWithoutCallback;
 
 export function createWebRequestChannel(session: Electron.Session, event: 'onBeforeRequest'):
-  Channel<Electron.OnBeforeRequestDetails>;
+  Channel<Electron.OnBeforeRequestListenerDetails>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onBeforeSendHeaders'):
   Channel<Function>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onSendHeaders'):
-  Channel<Electron.OnSendHeadersDetails>;
+  Channel<Electron.OnSendHeadersListenerDetails>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onHeadersReceived'):
   Channel<Function>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onResponseStarted'):
-  Channel<Electron.OnResponseStartedDetails>;
+  Channel<Electron.OnResponseStartedListenerDetails>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onBeforeRedirect'):
-  Channel<Electron.OnBeforeRedirectDetails>;
+  Channel<Electron.OnBeforeRedirectListenerDetails>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onCompleted'):
-  Channel<Electron.OnCompletedDetails>;
+  Channel<Electron.OnCompletedListenerDetails>;
 export function createWebRequestChannel(session: Electron.Session, event: 'onErrorOccurred'):
-  Channel<Electron.OnErrorOccurredDetails>;
+  Channel<Electron.OnErrorOccurredListenerDetails>;
 export function createWebRequestChannel(session: Electron.Session, event: webRequestEventsMethods) {
   return eventChannel((emitter: Function) => {
     // attach EventEmitter to given method

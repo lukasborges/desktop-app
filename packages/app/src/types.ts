@@ -169,7 +169,11 @@ export interface ImmutableList<T extends any[]> extends Immutable.List<T[number]
   delete: FnRemove<T, this>;
 }
 
-export interface ImmutableMap<T> extends Omit<Immutable.Map<any, any>, keyof ImmutableMap<T>> {
+type ImmutableMapBase = Omit<Immutable.Map<any, any>,
+  'get' | 'set' | 'getIn' | 'setIn' | 'mergeIn' | 'toJS' | 'sortBy' | 'toList' |
+  'filter' | 'every' | 'map' | 'remove' | 'delete'>;
+
+export interface ImmutableMap<T> extends ImmutableMapBase {
   get: FnGet<T>;
   set: FnSet<T, this>;
   getIn: FnGetIn<T>;

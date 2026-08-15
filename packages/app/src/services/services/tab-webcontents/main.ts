@@ -95,8 +95,8 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
   async findInPage(webContentsId: number, searchString: string, options?: Electron.FindInPageOptions) {
     const wc = await getWebContentsFromIdOrThrow(webContentsId);
 
-    return new Promise<Electron.Result>(resolve => {
-      if (wc.isDestroyed()) return resolve();
+    return new Promise<Electron.Result | null>(resolve => {
+      if (wc.isDestroyed()) return resolve(null);
 
       wc.once('found-in-page', (_e: any, result: Electron.Result) => {
         // We have a weird behaviour that we haven't successfully reproduced in fiddle yet.
@@ -152,7 +152,7 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
     const shared = this.onNewWebviews().pipe(share());
     return new ServiceSubscription([
       this.askAutoLogin.subscribe(async (webContentsId: number) => {
-        const wc = await getWebContentsFromIdOrThrow(webContentsId);
+        await getWebContentsFromIdOrThrow(webContentsId);
 
         // vk: 18.01.2024 FIXME: TypeError: Cannot destructure property 'account' of '(intermediate value)' as it is null.
         // const { account, canAutoSubmit } = await provider.getCredentials(wc.id);

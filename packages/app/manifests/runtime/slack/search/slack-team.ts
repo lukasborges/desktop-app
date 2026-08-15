@@ -6,7 +6,7 @@ import { SDK, search } from '@getstation/sdk';
 // @ts-ignore
 import * as slack from '@getstation/slack';
 import * as Fuse from 'fuse.js';
-import * as join from 'join-array';
+import join = require('join-array');
 import { Observable, Subject } from 'rxjs';
 import * as WS from 'ws';
 import { flatten } from '../../helpers';
@@ -127,15 +127,15 @@ class SlackTeam {
     // @see https://api.slack.com/types/group ('Consider a group object the same thing as a private channel object')
     if (channel.is_mpim) {
       const members = channel.members
-        .filter(memberId => memberId !== this.selfUser.id)
-        .map(memberId => this.data.get(memberId))
-        .filter(member => Boolean(member));
+        .filter((memberId: string) => memberId !== this.selfUser.id)
+        .map((memberId: string) => this.data.get(memberId))
+        .filter((member: search.SearchResultItem | undefined): member is search.SearchResultItem => Boolean(member));
 
       // If you have groups that contains deactivated /deleted members we don't push the group
       if (members.length !== channel.members.length - 1) return; // @exp: -1 => remove self user
 
       const label = join({
-        array: members.map(member => member.meta.first_name),
+        array: members.map((member: any) => member.meta.first_name),
         separator: ', ',
         last: ' and ',
         max: 2,
@@ -148,7 +148,7 @@ class SlackTeam {
           category: `Slack: ${this.teamName}`,
           label,
           context: `Slack > ${this.teamName}`,
-          additionalSearchString: flatten(members.map(member => SlackTeam.getAdditionnalSearchString(member))),
+          additionalSearchString: flatten(members.map((member: any) => SlackTeam.getAdditionnalSearchString(member))),
           onSelect: this.onSelectRecord(channel.id),
           imgUrl: 'https://a.slack-edge.com/436da/marketing/img/meta/ios-144.png',
           manifestURL: this.sdk.search.id,

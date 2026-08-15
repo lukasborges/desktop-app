@@ -85,7 +85,7 @@ class NotificationGroup extends React.PureComponent<Props> {
                 toggleVisibility={this.props.toggleVisibility}
               />
             </CSSTransition>
-          )
+          ).toArray()
           }
         </TransitionGroup>
       </div>
@@ -93,15 +93,15 @@ class NotificationGroup extends React.PureComponent<Props> {
   }
 }
 
-const connector = withGetApplication<OwnProps, InjectedProps>({
-  options: (props) => ({ variables: { applicationId: props.applicationId! } }),
-  props: ({ data, ownProps }) => {
+const connector = (withGetApplication as any)({
+  options: (props: OwnProps) => ({ variables: { applicationId: props.applicationId! } }),
+  props: ({ data, ownProps }: any) => {
     const application = oc(data).application;
     const manifest = application.manifestData;
 
     return {
       loading: !data || data.loading,
-      applicationName: manifest.name(),
+      applicationName: manifest.name,
       icon: manifest.interpretedIconURL() || ownProps.icon,
       badge: application.iconURL(),
       label: manifest.bx_multi_instance_config.instance_wording(),
@@ -110,7 +110,7 @@ const connector = withGetApplication<OwnProps, InjectedProps>({
   },
 });
 
-const ConnectedNotificationGroup = connector(NotificationGroup);
+const ConnectedNotificationGroup = connector(NotificationGroup as any) as React.ComponentType<OwnProps>;
 
 const NotificationGroupManager = (props: Props) => {
   if (props.applicationId) {

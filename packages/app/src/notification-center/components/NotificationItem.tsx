@@ -93,7 +93,7 @@ class NotificationItem extends React.PureComponent<Props, {}> {
             className={classes!.markAsReadIcon}
             symbolId={IconSymbol.CHECKMARK}
             onClick={this.handleClickMarkAsRead}
-            size="24px"
+            size={24}
             color={'var(--app-text-secondary)'}
           />
         </span>

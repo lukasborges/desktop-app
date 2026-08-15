@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "allowJs": false,
+    "allowJs": true,
+    "checkJs": false,
     "experimentalDecorators": true,
     "removeComments": false,
     "preserveConstEnums": true,
@@ -16,10 +17,11 @@
     "noEmitHelpers": true,
     "module": "commonjs",
     "target": "es2016",
+    "downlevelIteration": true,
     "jsx": "react",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "lib": ["es2017", "dom"]
+    "lib": ["es2021", "dom"]
   },
   "include": [
     "src/**/*.js",

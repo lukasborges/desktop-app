@@ -1,5 +1,6 @@
 import { GradientType, ThemeTypes, withGradient } from '@getstation/theme';
 import * as React from 'react';
+import * as Mousetrap from 'mousetrap';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
 import {
@@ -123,7 +124,7 @@ class RecentSubdock extends React.PureComponent<Props> {
   cyclingStep = (index: number | null, direction: SearchPaneItemsListCycleDirection, via: SearchPaneItemsListCycleVia) => {
     if (index === null) return;
     const items = this.props.recentApplications;
-    return this.props.cyclingStep(items[index], index, direction, 'subdock', via);
+    return this.props.cyclingStep(items[index] as any, index, direction, 'subdock', via);
   }
 
   componentDidMount() {

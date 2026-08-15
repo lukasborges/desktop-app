@@ -39,7 +39,7 @@ export const tabAsActivityEntry = (
     sectionKind: isApplicationHome ? 'apps' : 'app-specific',
     type: isApplicationHome ? 'station-app' : 'tab',
     category: isApplicationHome ? SectionKinds.getCategory('apps') : appLabel,
-    imgUrl: shouldUseFavicon ? getFavicon(tab) : interpretedIconUrl(manifest),
+    imgUrl: (shouldUseFavicon ? getFavicon(tab) : interpretedIconUrl(manifest)) || '',
     themeColor: manifest.theme_color,
     label: isApplicationHome ? manifest.name || '' : title,
     context: label(state, manifest, application),
@@ -56,7 +56,7 @@ export const favoriteAsActivityEntry = (
   state: StationState
 ): ActivityEntry => {
   const favoriteId = favorite.get('favoriteId');
-  const tab: StationTabImmutable = getFavorite(state, favoriteId) as StationTabImmutable;
+  const tab: StationTabImmutable = getFavorite(state, favoriteId) as unknown as StationTabImmutable;
 
   return {
     resourceId: favoriteId,

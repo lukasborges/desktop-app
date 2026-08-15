@@ -1,11 +1,11 @@
 import log from 'electron-log';
 import ms = require('ms');
+import { SagaIterator } from 'redux-saga';
 import { all, call, fork, put, select } from 'redux-saga/effects';
 // @ts-ignore - no typing for redux-ui
 import { updateUI } from 'redux-ui/transpiled/action-reducer';
 
 import { READY } from '../app/duck';
-import { BrowserXAppWorker } from '../app-worker';
 import services from '../services/servicesManager';
 import { dispatchUrlSaga } from '../urlrouter/sagas';
 import { consumeLockFileIfExists, createLockFile, FILE } from '../utils/AppData';
@@ -27,11 +27,11 @@ import { getReleaseName, isDownloadingUpdate, isUpdateAvailable } from './select
 const POLL_UPDATE_INTERVAL = ms('30mins');
 const RELEASES_URL = 'https://github.com/lukasborges/platform/releases';
 
-function* onQuitAndInstall() {
+function* onQuitAndInstall(): SagaIterator {
   services.electronApp.quit();
 }
 
-function* initAppUpdater() {
+function* initAppUpdater(): SagaIterator {
   const updateDownloadedChannel = serviceAddObserverChannel(services.autoUpdater, 'onUpdateDownloaded', 'au-update-downloaded');
   const checkingForUpdateChannel = serviceAddObserverChannel(services.autoUpdater, 'onCheckingForUpdate', 'au-checking-update');
   const updateNotAvailableChannel = serviceAddObserverChannel(services.autoUpdater, 'onUpdateNotAvailable', 'au-update-not-available');
@@ -76,7 +76,7 @@ function* initAppUpdater() {
   }
 }
 
-function* checkForUpdates() {
+function* checkForUpdates(): SagaIterator {
   const downloading = yield select(isDownloadingUpdate);
   const updateAvailable = yield select(isUpdateAvailable);
 
@@ -88,21 +88,21 @@ function* checkForUpdates() {
   yield callService('autoUpdater', 'checkForUpdates');
 }
 
-function* doOpenReleaseNotes() {
+function* doOpenReleaseNotes(): SagaIterator {
   const releaseName = yield select(getReleaseName);
   const normalizedReleaseName = releaseName && releaseName.replace(/^v/, '');
   const url = normalizedReleaseName
     ? `${RELEASES_URL}/tag/v${encodeURIComponent(normalizedReleaseName)}`
     : RELEASES_URL;
 
-  yield call(dispatchUrlSaga, { url });
+  yield (call as any)(dispatchUrlSaga, { url });
 }
 
-function* consumeUpdateLockFile() {
+function* consumeUpdateLockFile(): SagaIterator {
   yield call(createLockFile, FILE.SHOW_RELEASE_NOTES);
 }
 
-export default function* main() {
+export default function* main(): SagaIterator {
   yield all([
     takeEveryWitness(READY, initAppUpdater),
     takeEveryWitness(QUIT_AND_INSTALL, onQuitAndInstall),

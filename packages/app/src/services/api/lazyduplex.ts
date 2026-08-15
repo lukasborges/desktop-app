@@ -15,7 +15,7 @@ export class LazyDuplex extends Duplex {
   }
 
   // tslint:disable-next-line
-  _write(chunk: Buffer, _encoding: any, callback: Function) {
+  _write(chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void) {
     this.duplex!.write(chunk, _encoding, callback);
   }
 

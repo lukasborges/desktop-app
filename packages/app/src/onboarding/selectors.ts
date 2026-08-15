@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { StationState } from '../types';
 
 export const isDone = (state: StationState): boolean =>
-  Boolean(state.getIn(['onboarding', 'done'], false));
+  Boolean((state as any).getIn(['onboarding', 'done'], false));
 
 export const isApplicationStoreTooltipDisabled = (state: StationState): boolean =>
   state.getIn(['onboarding', 'appStoreTooltipDisabled'], false);

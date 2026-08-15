@@ -57,8 +57,7 @@ const dockAppSource = {
       tabTitle: props.tabTitle,
     };
   },
-  endDrag(props: Props, monitor: DragSourceMonitor) {
-    const item = monitor.getItem();
+  endDrag(_props: Props, monitor: DragSourceMonitor) {
     const dropResult: DropResult = monitor.getDropResult();
 
     if (!dropResult) return;
@@ -119,9 +118,11 @@ const dockAppTarget = {
   },
 };
 
+// @ts-ignore legacy React DnD decorator typing
 @DropTarget('APP_DOCK_APP', dockAppTarget, connect => ({
   connectDropTarget: connect.dropTarget(),
 }))
+// @ts-ignore legacy React DnD decorator typing
 @DragSource('APP_DOCK_APP', dockAppSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   connectDragPreview: connect.dragPreview(),
@@ -181,9 +182,9 @@ class DraggableAppDockIcon extends React.PureComponent<Props> {
 }
 
 const connector = compose(
-  withGetApplication({
+  (withGetApplication as any)({
     options: ({ applicationId }: Props) => ({ variables: { applicationId } }),
-    props: ({ data }) => ({
+    props: ({ data }: any) => ({
       loading: !data || data.loading,
       application: oc(data).application(),
     }),
@@ -191,4 +192,4 @@ const connector = compose(
 
 );
 
-export default connector(DraggableAppDockIcon);
+export default connector(DraggableAppDockIcon as React.ComponentType<any>) as React.ComponentType<OwnProps>;

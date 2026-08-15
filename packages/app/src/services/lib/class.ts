@@ -138,8 +138,8 @@ export class ServicePeerHandler extends EventEmitter {
       peer.setRequestHandler(methodIdentifier, (params: any[]) => {
         d('request handler called', methodName);
         try {
-          const fn = Reflect.apply(Reflect.get(srvc, methodName), srvc, unserialize(this, params));
-          return fn.then(se);
+          const result = Reflect.apply(Reflect.get(srvc, methodName), srvc, unserialize(this, params));
+          return Promise.resolve(result).then(se);
         } catch (e) {
           console.error(e);
           throw e;

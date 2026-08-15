@@ -67,13 +67,14 @@ class SubdockContainerImpl extends React.PureComponent<Props, {}> {
     return (
       <Subdock
         {...this.props}
+        notificationsEnabled={Boolean(this.props.notificationsEnabled)}
         hasCustomIcon={Boolean(this.props.application && this.props.application.customIconURL)}
       />
     );
   }
 }
 
-const SubdockContainer = React.memo(compose(
+const SubdockContainer = React.memo((compose(
   connect(
     (state: StationState, ownProps: Props) => {
       const { applicationId } = ownProps;
@@ -96,14 +97,14 @@ const SubdockContainer = React.memo(compose(
       }, dispatch);
     }
   ),
-  withGetApplicationForSubdock<OuterProps, Partial<Props>>({
-    options: (props) => ({ variables: { applicationId: props.applicationId } }),
-    props: ({ data }) => ({
+  (withGetApplicationForSubdock as any)({
+    options: (props: OuterProps) => ({ variables: { applicationId: props.applicationId } }),
+    props: ({ data }: any) => ({
       loading: !data || data.loading,
       application: oc(data).application(),
     }),
   }),
   withGradient(GradientType.withDarkOverlay),
-)(SubdockContainerImpl));
+)(SubdockContainerImpl as any)) as React.ComponentType<OuterProps>);
 
 export default SubdockContainer as React.ComponentType<OuterProps>;

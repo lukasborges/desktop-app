@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
-import * as Immutable from 'immutable';
 import { compose, bindActionCreators } from 'redux';
 import { getThemeColors } from '../theme/selectors';
 import { ImmutableList, ObjectToImmutable } from '../types';
@@ -10,6 +9,7 @@ import DownloadToast from './components/DownloadToast';
 import { openDownloadedFile, removeToastForDownload } from './duck';
 import { getFormatedDownloadsToShow } from './selectors';
 import { Style, ButtonIcon, IconSymbol } from '@getstation/theme';
+import { StationState } from '../types';
 
 type DownloadItem = ObjectToImmutable<{
   downloadId: string,
@@ -99,7 +99,7 @@ class DownloadToasterImpl extends React.PureComponent<Props, {}> {
 
 const connector = compose(
   connect(
-    (state: Immutable.Map<string, any>) => ({
+    (state: StationState) => ({
       downloads: getFormatedDownloadsToShow(state),
       themeColor: getThemeColors(state)[3],
     }),

@@ -1,6 +1,6 @@
 import * as cls from 'continuation-local-storage';
 import * as path from 'path';
-import * as Sequelize from 'sequelize';
+import { Sequelize, Transaction } from 'sequelize';
 import * as tmp from 'tmp';
 import operatorsAliases from './operatorsAliases';
 
@@ -12,7 +12,7 @@ export const createEngine = () => {
   });
 
   const ns = cls.createNamespace('station');
-  Sequelize.useCLS(ns);
+  Sequelize.useCLS(ns as any);
   // http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
   const e = new Sequelize({
     database: 'station',
@@ -24,7 +24,7 @@ export const createEngine = () => {
     },
     operatorsAliases,
     logging: () => {},
-    transactionType: Sequelize.Transaction.TYPES.IMMEDIATE,
+    transactionType: Transaction.TYPES.IMMEDIATE,
     storage: path.join(tmpDir.name, 'station_test.db'),
   });
 

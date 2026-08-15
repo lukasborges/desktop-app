@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import * as Immutable from 'immutable';
 import { getSnoozeDuration } from '../../notification-center/selectors';
+import { StationState } from '../../types';
 
 export interface Props {
   snoozed: boolean
@@ -18,7 +18,7 @@ class NotificationBadgeImpl extends React.PureComponent<Props, {}> {
 }
 
 const NotificationBadge = connect(
-  (state: Immutable.Map<string, any>) => ({
+  (state: StationState) => ({
     snoozed: Boolean(getSnoozeDuration(state)),
   }),
   (dispatch: Dispatch<any>) => bindActionCreators({}, dispatch)

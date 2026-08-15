@@ -3,6 +3,7 @@ import {
   take,
   fork,
 } from 'redux-saga/effects';
+import { SagaIterator } from 'redux-saga';
 
 type SelectorFn<S, R> = (state: S) => R;
 type WorkerFn<R> = (current: R, previous: R, ...args: any[]) => any;
@@ -23,7 +24,7 @@ export function observe<S, R, Fn extends WorkerFn<R>>(
   worker: Fn,
   ...args: Tail<Parameters<Fn>>
 ) {
-  return fork(function* () {
+  return fork(function* (): SagaIterator {
     let previous = null;
 
     while (true) {

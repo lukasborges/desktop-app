@@ -160,9 +160,9 @@ class SettingsMyAppsImpl extends React.PureComponent<Props, State> {
   }
 }
 
-const SettingsMyApps = connect<StateProps, DispatchProps>(
+const SettingsMyApps = connect<StateProps, DispatchProps, OwnProps>(
   (state: StationState) => ({
-    manifestsUrls: orderedManifestsUrls(state),
+    manifestsUrls: orderedManifestsUrls(state).toArray(),
     selectedManifestURL: getUISettingsManifestURL(state),
   }),
   (dispatch) => bindActionCreators(

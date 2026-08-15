@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose, Dispatch } from 'redux';
-import * as Immutable from 'immutable';
 import { oc } from 'ts-optchain';
 
 import { withGetApplicationById } from './queries@local.gql.generated';
@@ -35,6 +34,7 @@ import {
   PasswordManager,
 } from './types';
 import { getActiveApplicationId } from '../nav/selectors';
+import { StationState } from '../types';
 
 export interface InjectedStateProps {
   shouldAttachPasswordManagerItem: boolean,
@@ -58,7 +58,7 @@ interface InjectedDispatchProps {
   onAddPasswordManager: () => void,
   askUnlock: (passwordManager: PasswordManager) => void,
   onUnlock: (passwordManager: PasswordManager, payload: any, webcontentsId: number) => void,
-  loadAccounts: (passwordManager: Provider) => void,
+  loadAccounts: (passwordManager: PasswordManager) => void,
   onSelect: (passwordManager: any, applicationId: string, item: any) => void,
   onCancel: (passwordManager: PasswordManager) => void,
   onCancelUnlock: (passwordManager: PasswordManager, exitFromAutofill: boolean) => void,
@@ -178,8 +178,8 @@ class PasswordManagerImpl extends React.PureComponent<Props, {}> {
 }
 
 const connector = compose(
-  connect<InjectedStateProps, InjectedDispatchProps>(
-    (state: Immutable.Map<string, any>) => {
+  connect<InjectedStateProps, InjectedDispatchProps, OverridableProps>(
+    (state: StationState) => {
       const activeApplicationId = getActiveApplicationId(state)!;
       return {
         shouldUnlock: getUnlockProcess(state).step !== UnlockStep.NotAsked,
@@ -195,7 +195,7 @@ const connector = compose(
         provider: getProviderJS(state),
       };
     },
-    (dispatch) => bindActionCreators({
+    (dispatch: Dispatch) => bindActionCreators({
       onAddPasswordManager: () => accounts({ step: AccountsStep.WaitConfiguration }),
       askUnlock: (passwordManager: PasswordManager) => unlock({ step: UnlockStep.Ask, passwordManager }),
       onUnlock: (passwordManager: PasswordManager, payload: object, webcontentsId: number) =>
@@ -204,7 +204,7 @@ const connector = compose(
       onSelect: (passwordManager: any, applicationId: string, item: any) =>
         addLink({ passwordManager, applicationId, passwordManagerItemId: item.id, login: item.username, avatar: item.avatar }),
       onCancel: (passwordManager: PasswordManager) => accounts({ step: AccountsStep.Unload, passwordManager }),
-      onCancelUnlock: (passwordManager: PasswordManager, exitFromAutofill) => {
+      onCancelUnlock: (passwordManager: PasswordManager, exitFromAutofill: boolean) => {
         const step = exitFromAutofill ? UnlockStep.ExitFromAutofill : UnlockStep.Exit;
         return unlock({ step, passwordManager });
       },
@@ -213,11 +213,11 @@ const connector = compose(
       onCloseRemoveLinkBanner: () => displayRemoveLinkBanner(false),
     }, dispatch)
   ),
-  withGetApplicationById<InjectedStateProps & InjectedDispatchProps, InjectedGQLProps>({
-    options: (props) => ({ variables: { applicationId: props.applicationId } }),
-    props: ({ data }) => ({
+  (withGetApplicationById as any)({
+    options: (props: InjectedStateProps) => ({ variables: { applicationId: props.applicationId } }),
+    props: ({ data }: any) => ({
       loading: !data || data.loading,
-      applicationName: oc(data).application.manifestData.name(''),
+      applicationName: oc(data).application.manifestData.name,
       applicationIcon: oc(data).application.manifestData.interpretedIconURL()!,
       themeColor: oc(data).application.manifestData.theme_color()!,
       applicationManifestURL: oc(data).application.manifestURL()!,
@@ -225,4 +225,4 @@ const connector = compose(
   }),
 );
 
-export default connector(PasswordManagerImpl);
+export default connector(PasswordManagerImpl as any) as React.ComponentType<OverridableProps>;

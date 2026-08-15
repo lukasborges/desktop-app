@@ -102,7 +102,7 @@ export class BxNotification extends EventTarget('click', 'error', 'close', 'show
     // ipcRenderer.removeListener('trigger-notification-click', this._handleNotificationClickIPC);
   }
 
-  _handleNotificationClickIPC = (_e: Event, notificationId: string) => {
+  _handleNotificationClickIPC = (_e: Electron.IpcRendererEvent, notificationId: string) => {
     if (this.id !== notificationId) return;
     this.dispatchEvent(new MouseEvent('click'));
     this._unregisterIPC();

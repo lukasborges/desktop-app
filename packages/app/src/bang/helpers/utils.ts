@@ -1,5 +1,7 @@
-import { equals, find, pipe } from 'ramda';
-import { SearchResultSerialized } from '../duck';
+type Identifiable = {
+  uniqId?: string,
+  resourceId: string,
+};
 
 /**
  * Get the ID of a SearchResultSerialized
@@ -7,7 +9,7 @@ import { SearchResultSerialized } from '../duck';
  * @param {SearchResultSerialized} item
  * @return {string}
  */
-export const getId = (item: SearchResultSerialized) => item.uniqId || item.resourceId;
+export const getId = (item: Identifiable) => item.uniqId || item.resourceId;
 
 /**
  * Find a SearchResultSerialized using id
@@ -16,11 +18,5 @@ export const getId = (item: SearchResultSerialized) => item.uniqId || item.resou
  * @param {SearchResultSerialized[]} items
  * @returns {SearchResultSerialized | undefined}
  */
-export const findItemById = (id: string, items: SearchResultSerialized[]): SearchResultSerialized | undefined =>
-  find(
-    pipe(
-      getId,
-      equals(id)
-    ),
-    items
-  );
+export const findItemById = <T extends Identifiable>(id: string, items: T[]): T | undefined =>
+  items.find(item => getId(item) === id);

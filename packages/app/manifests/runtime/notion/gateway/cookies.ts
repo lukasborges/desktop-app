@@ -6,7 +6,7 @@ import memoizee = require('memoizee');
 
 const requiredCookiesForAuthenticatedUser = ['token_v2', 'userId'];
 
-const optsForMemoizedCookies: memoizee.Options = {
+const optsForMemoizedCookies: memoizee.Options<(...args: any[]) => any> = {
   maxAge: 10000,
   promise: true,
   preFetch: true,
@@ -14,7 +14,7 @@ const optsForMemoizedCookies: memoizee.Options = {
 
 export const isLogged = memoizee(
   async (sdk: SDK) =>
-    (await cookies(sdk)).map(c => c.name)
+    (await cookies(sdk)).map((c: session.Cookie) => c.name)
       .includes(requiredCookiesForAuthenticatedUser[0]),
   optsForMemoizedCookies
 );
@@ -22,8 +22,8 @@ export const isLogged = memoizee(
 export const authCookies = memoizee(
   async (sdk: SDK) =>
     (await cookies(sdk))
-      .filter(c => requiredCookiesForAuthenticatedUser.includes(c.name))
-      .map(c => `${c.name}=${c.value};`)
+      .filter((c: session.Cookie) => requiredCookiesForAuthenticatedUser.includes(c.name))
+      .map((c: session.Cookie) => `${c.name}=${c.value};`)
       .join(' '),
   optsForMemoizedCookies
 );

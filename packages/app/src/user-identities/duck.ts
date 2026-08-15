@@ -1,6 +1,6 @@
 import * as Immutable from 'immutable';
 import { fromJS } from '../utils/ts';
-import { StationUserIdentitiesImmutable } from './types';
+import { StationUserIdentitiesImmutable, StationUserIdentity } from './types';
 
 /**
  * -------------
@@ -69,7 +69,7 @@ export default function reducer(state: StationUserIdentitiesImmutable = Immutabl
         accessToken,
         refreshToken,
       } = action;
-      return state.set(identityId, fromJS({
+      return state.set(identityId, fromJS<StationUserIdentity>({
         identityId,
         provider,
         userId,

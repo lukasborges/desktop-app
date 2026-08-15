@@ -70,7 +70,7 @@ export class IdentityProxy extends MapProxyMixin({
     // Create profileData if it does not exists
     if (state.has('profileData')) {
       const profileData = state.get('profileData');
-      obj.profileDataId = (await ProfileDataProxy.findOrCreate(profileData)).get().profileDataId;
+      obj.profileDataId = (await ProfileDataProxy.findOrCreate(profileData)).get().get('profileDataId');
     }
     return obj;
   },
@@ -235,7 +235,7 @@ export class UserWeeklyUsageProxy extends ListProxyMixin({
   mapStateToArray: async state => {
     const l = [];
     let i = 0;
-    for (const elt of state) {
+    for (const elt of state.toArray()) {
       l.push({
         timestamp: elt,
         order: i,
@@ -271,7 +271,7 @@ export class DockProxy extends ListProxyMixin({
   mapStateToArray: async state => {
     const l = [];
     let i = 0;
-    for (const elt of state) {
+    for (const elt of state.toArray()) {
       l.push({
         applicationId: elt,
         order: i,
@@ -289,7 +289,7 @@ export class SubwindowProxy extends ListProxyMixin({
   model: Subwindow,
   mapStateToArray: async state => {
     const l = [];
-    for (const elt of state) {
+    for (const elt of state.toArray()) {
       l.push({
         tabId: elt,
       });
@@ -366,7 +366,7 @@ export default function getBackend() {
     onboarding: new SingletonStateProxy(OnboardingProxy),
     tabs: new MapStateProxy(TabProxy),
     subwindows: new ListStateProxy(SubwindowProxy),
-    servicesData: new KeyValueStateProxy(ServicesDataProxyMixin),
+    servicesData: new KeyValueStateProxy(ServicesDataProxyMixin as any),
     ui: getUIProxy(models),
     passwordManagers: getPasswordManagers(),
     passwordManagerLinks: getPasswordManagerLinks(models),

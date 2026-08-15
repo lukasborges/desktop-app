@@ -1,6 +1,5 @@
 import log from 'electron-log';
 import { filter } from 'rxjs/operators'
-import { mergeAll } from 'ramda';
 import { logger } from '../../api/logger';
 import { fromEvent } from 'rxjs';
 
@@ -12,7 +11,7 @@ export type HandleErrorOptions = {
 const defaultOptions: HandleErrorOptions = { console: true, log: true };
 
 export const handleError = (options: Partial<HandleErrorOptions> = defaultOptions) => {
-  const { console: consoleOn, log: logOn } = mergeAll<Partial<HandleErrorOptions>>([defaultOptions, options]);
+  const { console: consoleOn, log: logOn } = { ...defaultOptions, ...options };
   return (e: Error, opts?: any) => {
     if (logOn && log) {
       log.error(e);

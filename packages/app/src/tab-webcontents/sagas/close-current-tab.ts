@@ -62,11 +62,7 @@ function* navigateToPreviousTabFromApplicationHome(tab: StationTabImmutable): Sa
   }
 }
 
-function* closeCurrentTab(via: 'click' | 'keyboard-shortcut'): SagaIterator {
-  const {
-    manifestProvider,
-  }: BrowserXAppWorker = yield getContext('bxApp');
-
+function* closeCurrentTab(_via: 'click' | 'keyboard-shortcut'): SagaIterator {
   const windowClosed = yield call(closeWindowIfNotMain);
 
   if (windowClosed) return;

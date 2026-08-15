@@ -61,7 +61,8 @@ export const getApplicationsForDock = createSelector([getDock, getApplications, 
 );
 
 export const getApplicationsWithFaviconsForDock = createSelector([getApplicationsForDock, getTabs],
-  (applications, tabs) => applications.map((application: ApplicationImmutable) => {
+  (applications, tabs) => applications.map((application: any) => {
+    if (!application) return application;
     const activeTab = tabs.get(getApplicationActiveTab(application));
     const faviconURL = activeTab ? getFavicon(activeTab) : undefined;
     return application.merge(Immutable.Map({ faviconURL }));

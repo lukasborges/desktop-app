@@ -1,4 +1,3 @@
-import * as Immutable from 'immutable';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
@@ -13,6 +12,7 @@ import { addPasswordManager, AddPasswordManagerAction, ConfigurationStep, remove
 import Providers from './providers/';
 import { getConfigurationProcess, getPasswordManager, getProviderJS } from './selectors';
 import { PasswordManager, Provider } from './types';
+import { StationState } from '../types';
 
 interface Classes {
   container: string,
@@ -86,7 +86,7 @@ class PasswordManagerSubdockImpl extends React.PureComponent<Props & Overridable
 }
 
 const PasswordManagerSubdock = connect<any, any, OverridableProps>(
-  (state: Immutable.Map<string, any>) => ({
+  (state: StationState) => ({
     configurationProcess: getConfigurationProcess(state),
     canConfigure: getConfigurationProcess(state).step !== ConfigurationStep.NotStarted,
     canAddPasswordManager: getConfigurationProcess(state).step === ConfigurationStep.NotStarted && !getPasswordManager(state),
@@ -95,12 +95,12 @@ const PasswordManagerSubdock = connect<any, any, OverridableProps>(
   }),
   (dispatch: Dispatch<any>) => bindActionCreators({
     onLogout: (passwordManager: PasswordManager) => removePasswordManager({ passwordManager }),
-    onAdd: provider => addPasswordManager({
+    onAdd: (provider: Provider) => addPasswordManager({
       step: ConfigurationStep.Credentials,
       provider,
     }),
-    onConnect: (provider, credentials) => addPasswordManager({ step: ConfigurationStep.Test, provider, payload: credentials }),
-    onCancel: provider => addPasswordManager({
+    onConnect: (provider: Provider, credentials: object) => addPasswordManager({ step: ConfigurationStep.Test, provider, payload: credentials }),
+    onCancel: (provider: Provider) => addPasswordManager({
       step: ConfigurationStep.Cancel,
       provider,
     }),

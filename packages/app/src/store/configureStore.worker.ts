@@ -38,7 +38,7 @@ function asyncInit(store: StationStoreWorker, sagaMiddleware: SagaMiddleware<any
     });
     const persistor = createPersistor(
       store,
-      storage.getPersistConfig(),
+      storage.getPersistConfig() as any,
     );
     persistor.pause();
 
@@ -60,7 +60,7 @@ function asyncInit(store: StationStoreWorker, sagaMiddleware: SagaMiddleware<any
       sagaPromise,
       promiseState,
     ]).then(([, restoredState]) => restoredState)
-      .then(restoredState => persistor.rehydrate(restoredState.toObject()))
+      .then(restoredState => persistor.rehydrate(restoredState.toObject(), {}))
       .then(() => persistor.resume())
       .then(() => store.dispatch({ type: REHYDRATION_COMPLETE }))
       .then(() => eventEmitter.emit('ready'))
@@ -73,7 +73,7 @@ function asyncInit(store: StationStoreWorker, sagaMiddleware: SagaMiddleware<any
           title: 'Platform Fatal Error',
           message: 'Platform Fatal Error',
           detail: err.message,
-        }, () => {
+        }).then(() => {
           services.electronApp.quit();
         });
       });

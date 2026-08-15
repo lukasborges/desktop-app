@@ -79,7 +79,7 @@ export const serialize = (params: any[] = [], srvcPeerHandler?: ServicePeerHandl
   if (!Array.isArray(params)) throw new Error('params must be an array');
   // see https://stackoverflow.com/questions/21034760/strange-behaviour-in-json-stringify-with-replacer-function
   const storeToJSON = Date.prototype.toJSON;
-  delete Date.prototype.toJSON;
+  delete (Date.prototype as { toJSON?: typeof Date.prototype.toJSON }).toJSON;
   const res = params.map(param => JSON.stringify(param, stringifyResolver(srvcPeerHandler)));
   Date.prototype.toJSON = storeToJSON;
   return res;

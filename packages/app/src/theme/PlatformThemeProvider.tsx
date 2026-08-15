@@ -27,7 +27,7 @@ const platformTheme = {
   $bodyBkg: 'var(--app-surface-raised)',
 };
 
-export default class PlatformThemeProvider extends React.PureComponent {
+export default class PlatformThemeProvider extends React.PureComponent<React.PropsWithChildren<{}>> {
   render() {
     return (
       <ThemeProvider theme={platformTheme}>

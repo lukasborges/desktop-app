@@ -1,12 +1,11 @@
 import { GradientType, InjectedProps as withGradientProps, withGradient } from '@getstation/theme';
 import { withApollo, WithApolloClient } from '@apollo/client/react/hoc';
 import * as remote from '@electron/remote';
-import * as Immutable from 'immutable';
 // @ts-ignore: no declaration file
 import { validate as validateEmail } from 'isemail';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators, compose, Dispatch } from 'redux';
 import {
   MinimalApplication,
   Props as WithMyApplicationsProps,
@@ -23,12 +22,16 @@ import {
 } from './queries@local.gql.generated';
 
 import { OnboardingType } from '../ui/types';
-import { manifestToMinimalApplication, search } from '../../manifests';
+import { search } from '../../manifests';
 import connectUI from '../ui/connectUI';
 
 export interface DispatchFromProps {
   onClickLogin: typeof startOnboarding,
   onAppStoreStepFinished: typeof appStoreStepFinished,
+}
+
+interface StateToProps {
+  firstName?: string,
 }
 
 export interface UIProp {
@@ -217,31 +220,31 @@ class OnboardingImpl extends React.PureComponent<Props, State> {
 }
 
 const Onboarding = compose(
-  withInstallApplication({
-    props: ({ mutate }): InstallApplicationProps => {
+  (withInstallApplication as any)({
+    props: ({ mutate }: any): InstallApplicationProps => {
       const installApplication = async (input: InstallApplicationInput): Promise<void> => {
         mutate && await mutate({ variables: { input } });
       };
       return { installApplication };
     },
   }),
-  withOnboardingDone({
-    props: ({ mutate }) => {
+  (withOnboardingDone as any)({
+    props: ({ mutate }: any) => {
       const onboardingDone = async (nbInstalledApps: number, onboardeeId?: string): Promise<void> => {
         mutate && await mutate({ variables: { nbInstalledApps, onboardeeId } });
       };
       return { onboardingDone };
     },
   }),
-  withGetDefaultApplicationsForOnboarding({
-    props:({ data }) => ({
+  (withGetDefaultApplicationsForOnboarding as any)({
+    props:({ data }: any) => ({
       applications: !!data && data.applications,
     }),
   }),
   withApollo,
-  connect<{}, DispatchFromProps, {}>(
-    (state: Immutable.Map<string, any>) => ({}),
-    dispatch => bindActionCreators(
+  (connect as any)(
+    () => ({}),
+    (dispatch: Dispatch) => bindActionCreators(
       {
         onAppStoreStepFinished: appStoreStepFinished,
       },

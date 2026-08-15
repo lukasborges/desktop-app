@@ -1,6 +1,5 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { GraphQLSchema } from 'graphql';
-import { Resolvers } from './resolvers-types.generated';
 
 import appResolvers from '../app/resolvers';
 import autoUpdateResolvers from '../auto-update/resolvers';
@@ -16,29 +15,19 @@ import onboardingResolver from '../onboarding/resolvers';
 // Classic `addResolveFunctionsToSchema` does not support reactive resolvers
 // (resolvers that returns Observable) whereas it's definitely fine.
 // Let's override its declaration to make make typing happy
-declare module 'graphql-tools' {
-  interface IAddResolveFunctionsToSchemaOptions {
-    schema: GraphQLSchema;
-    resolvers: Resolvers;
-    // not complete
-  }
-  function addResolveFunctionsToSchema(
-    options: IAddResolveFunctionsToSchemaOptions | GraphQLSchema,
-  ): GraphQLSchema;
-}
-
 /**
  * Import and add Platform resolvers to the schema.
  */
 export function addAllResolvers(schema: GraphQLSchema) {
-  addResolveFunctionsToSchema({ schema, resolvers: appResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: autoUpdateResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: applicationsResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: abstractApplicationsResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: activityResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: tabWebContentResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: tabsResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: resourcesResolvers });
-  addResolveFunctionsToSchema({ schema, resolvers: favoriteResolver });
-  addResolveFunctionsToSchema({ schema, resolvers: onboardingResolver });
+  const addResolvers = addResolveFunctionsToSchema as any;
+  addResolvers({ schema, resolvers: appResolvers });
+  addResolvers({ schema, resolvers: autoUpdateResolvers });
+  addResolvers({ schema, resolvers: applicationsResolvers });
+  addResolvers({ schema, resolvers: abstractApplicationsResolvers });
+  addResolvers({ schema, resolvers: activityResolvers });
+  addResolvers({ schema, resolvers: tabWebContentResolvers });
+  addResolvers({ schema, resolvers: tabsResolvers });
+  addResolvers({ schema, resolvers: resourcesResolvers });
+  addResolvers({ schema, resolvers: favoriteResolver });
+  addResolvers({ schema, resolvers: onboardingResolver });
 }

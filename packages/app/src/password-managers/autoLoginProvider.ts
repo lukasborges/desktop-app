@@ -17,7 +17,7 @@ export class TabWebContentsAutoLoginDetailsProviderServiceImpl extends TabWebCon
 
   async getCredentials(webContentsId: number) {
     if (this.isWebContentsFocused(webContentsId) && canSendLoginToWebContents(webContentsId)) {
-      return this.store.runSaga(getCredentialsForWebContents, webContentsId).done;
+      return this.store.runSaga(getCredentialsForWebContents, webContentsId).toPromise();
     }
     return { status: false };
   }

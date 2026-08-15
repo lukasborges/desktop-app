@@ -1,5 +1,4 @@
 import { ThemeTypes as Theme } from '@getstation/theme';
-import * as Immutable from 'immutable';
 import * as React from 'react';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
@@ -19,6 +18,7 @@ import {
 } from './duck';
 import NotificationCenterBody from './NotificationCenterBody';
 import { getSnoozeDuration, getSnoozeStartedOn } from './selectors';
+import { StationState } from '../types';
 
 export interface Props {
   markAllAsRead: () => MarkAllAsReadAction,
@@ -77,7 +77,7 @@ class NotificationCenterSubdockContentImpl extends React.PureComponent<Props, {}
 }
 
 const NotificationCenterSubdockContent = connect(
-  (state: Immutable.Map<string, any>) => ({
+  (state: StationState) => ({
     currentSnoozeDuration: getSnoozeDuration(state),
     currentSnoozeStartedOn: getSnoozeStartedOn(state),
   }),

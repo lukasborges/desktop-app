@@ -12,20 +12,26 @@ import { CLICK_DIALOG, ClickDialogAction } from './duck';
 
 function* onClickDialog(action: ClickDialogAction): SagaIterator {
   const {
-    dialog: { application, tab: { tabId } },
+    dialog: { application, tab },
     buttonClicked: { onClick },
   } = action;
 
   switch (onClick) {
-    case 'open-tab':
-      yield put(navigateToApplicationTab(application.applicationId, tabId) as any);
+    case 'open-tab': {
+      if (!application || !tab) return;
+      yield put(navigateToApplicationTab(application.applicationId, tab.tabId) as any);
       break;
-    case 'install-application-confirm':
+    }
+    case 'install-application-confirm': {
+      if (!application) return;
       yield put(markApplicationsWithManifestAsInstallable(application.manifestURL, false));
       break;
-    case 'install-application-blacklist':
+    }
+    case 'install-application-blacklist': {
+      if (!application) return;
       yield put(markApplicationsWithManifestAsInstallable(application.manifestURL, true));
       break;
+    }
   }
 }
 

@@ -93,11 +93,12 @@ function* setCursorIconInWebContents({ cursor }: SetCursorIcon): SagaIterator {
 function* sagaToggleVisibility(action: UiToggleVisibility): SagaIterator {
   const { key } = action;
   const isVisible: boolean = yield select((state: StationState) => state.getIn(['ui', ...key] as any, false));
+  const [uiKey, name] = key;
 
-  yield put(updateUI(...key, !isVisible));
+  yield put(updateUI(uiKey, name, !isVisible));
 }
 
-function* onBoardingState() {
+function* onBoardingState(): SagaIterator {
   const state = yield select(isDone);
   yield call(setStateMenuItemResetCurrentApplication, state);
 }

@@ -83,19 +83,19 @@ export default class BasicAuth extends React.PureComponent<Props, State> {
     };
   }
 
-  handleBasicAuth(event: Event) {
+  handleBasicAuth(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const { username, password } = this.state;
     this.props.performBasicAuth(username, password);
     this.setState({ username: '', password: '' });
   }
 
-  handleUsernameChange(event: Event) {
-    this.setState({ username: event.target.value });
+  handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ username: event.currentTarget.value });
   }
 
-  handlePasswordChange(event: Event) {
-    this.setState({ password: event.target.value });
+  handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ password: event.currentTarget.value });
   }
 
   render() {

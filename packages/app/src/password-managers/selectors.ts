@@ -1,4 +1,3 @@
-import * as Immutable from 'immutable';
 import { createSelector } from 'reselect';
 
 import {
@@ -10,8 +9,9 @@ import {
   UnlockStep,
 } from './duck';
 import Providers from './providers';
+import { StationState } from '../types';
 
-export const getPasswordManagers = (state: Immutable.Map<string, any>) =>
+export const getPasswordManagers = (state: StationState) =>
   state.get('passwordManagers');
 
 export const getProvider = createSelector(
@@ -24,8 +24,7 @@ export const getProviderId = () => 'onePassword';
 export const getProviderJS = createSelector(
   getProviderId,
   providerId => {
-    const provider = Object.assign({}, Providers[providerId]);
-    delete provider.runtime;
+    const { runtime: _runtime, ...provider } = Providers[providerId];
     return provider;
   }
 );
@@ -50,7 +49,7 @@ export const getPasswordManagerId = createSelector(
   passwordManager => passwordManager.id
 );
 
-export const getConfigurationProcess = (state: Immutable.Map<string, any>) => {
+export const getConfigurationProcess = (state: StationState) => {
   const configuration = state.getIn(['passwordManagers', 'configuration']);
 
   if (configuration) {
@@ -59,7 +58,7 @@ export const getConfigurationProcess = (state: Immutable.Map<string, any>) => {
   return { step: ConfigurationStep.NotStarted };
 };
 
-export const getAccounts = (state: Immutable.Map<string, any>) => {
+export const getAccounts = (state: StationState) => {
   const accounts = state.getIn(['passwordManagers', 'accounts']);
 
   if (accounts) {
@@ -68,7 +67,7 @@ export const getAccounts = (state: Immutable.Map<string, any>) => {
   return { step: AccountsStep.NotAsked };
 };
 
-export const getUnlockProcess = (state: Immutable.Map<string, any>) => {
+export const getUnlockProcess = (state: StationState) => {
   const unlock = state.getIn(['passwordManagers', 'unlock']);
 
   if (unlock) {
@@ -77,7 +76,7 @@ export const getUnlockProcess = (state: Immutable.Map<string, any>) => {
   return { step: UnlockStep.NotAsked };
 };
 
-export const getLinks = (state: Immutable.Map<string, any>) =>
+export const getLinks = (state: StationState) =>
   state.get('passwordManagerLinks');
 
 export const getLink = createSelector(
@@ -92,11 +91,11 @@ export const getLinkForActiveApplication = createSelector(
   (applicationId, links) => links.get(applicationId)
 );
 
-export const getDisplayBanner = (state: Immutable.Map<string, any>) =>
+export const getDisplayBanner = (state: StationState) =>
   state.getIn(['passwordManagers', 'displayBanner']) || false;
 
-export const getDisplayRemoveLinkBanner = (state: Immutable.Map<string, any>) =>
+export const getDisplayRemoveLinkBanner = (state: StationState) =>
   state.getIn(['passwordManagers', 'displayRemoveLinkBanner']) || false;
 
-export const getLoadingCredentials = (state: Immutable.Map<string, any>) =>
+export const getLoadingCredentials = (state: StationState) =>
   state.getIn(['passwordManagers', 'loadingCredentials']) || false;

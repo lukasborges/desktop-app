@@ -25,13 +25,14 @@ export const compare = (operation: Operation) => <T>(a: ExecutionResult<T>, b: E
  * If they match, new result is not sent.
  */
 export class DistinctConsecutiveResultsLink extends ApolloLink {
-  request(operation: Operation, forward: NextLink) {
+  request(operation: Operation, forward?: NextLink): ZenObservable<ExecutionResult> | null {
+    if (!forward) return null;
     const observable = forward(operation);
     // zen -> rx -> distinct -> zen
     return ZenObservable.from(
       // @ts-ignore: TS definitions slightly incompatible, but it works like a charm
       from(observable)
         .pipe(distinctUntilChanged(compare(operation)))
-    );
+    ) as ZenObservable<ExecutionResult>;
   }
 }

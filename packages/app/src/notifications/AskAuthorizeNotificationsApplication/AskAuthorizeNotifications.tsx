@@ -74,15 +74,15 @@ class AskAuthorizeNotificationsApplicationView extends React.PureComponent<Props
 }
 
 const connector = compose(
-  withGetApplicationById<OwnProps, InjectedProps>({
-    options: (props) => ({ variables: { applicationId: props.applicationId } }),
-    props: ({ data }) => ({
+  (withGetApplicationById as any)({
+    options: (props: OwnProps) => ({ variables: { applicationId: props.applicationId } }),
+    props: ({ data }: any) => ({
       loading: !data || data.loading,
-      applicationName: oc(data).application.manifestData.name()!,
+      applicationName: oc(data).application.manifestData.name!,
       applicationIcon: oc(data).application.manifestData.interpretedIconURL()!,
       themeColor: oc(data).application.manifestData.theme_color()!,
     }),
   }),
 );
 
-export default connector(AskAuthorizeNotificationsApplicationView);
+export default connector(AskAuthorizeNotificationsApplicationView as any) as React.ComponentType<OwnProps>;

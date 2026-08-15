@@ -2,7 +2,7 @@ import { SagaIterator } from 'redux-saga';
 import { select, call, getContext } from 'redux-saga/effects';
 import { BrowserXAppWorker } from '../../app-worker';
 import { applicationLabel } from '../../abstract-application/helpers';
-import { getApplicationIdByTabId, getTabById } from '../../tabs/selectors';
+import { getApplicationIdByTabId } from '../../tabs/selectors';
 import { ApplicationConfigData } from '../duck';
 import { formatStartUrl, formatNewPageUrl } from '../helpers';
 import { BxAppManifest, MultiInstanceConfig } from '../manifest-provider/bxAppManifest';
@@ -10,9 +10,8 @@ import { getPresets, isMultiInstanceConfigurator } from '../manifest-provider/he
 import { MultiInstanceConfigPreset } from '../manifest-provider/types';
 import { getMultiInstanceConfiguratorURL } from '../multi-instance-configuration/helpers';
 import { getApplicationById, getApplicationFullConfigData } from '../selectors';
-import { getApplicationManifestURL, getApplicationActiveTab } from '../get';
+import { getApplicationManifestURL } from '../get';
 import { getTabURL } from '../../tabs/get';
-import { ApplicationImmutable } from '../types';
 import { StationTabImmutable } from '../../tabs/types';
 import { getActiveTabByApplicationId } from '../../app/selectors';
 
@@ -37,7 +36,7 @@ export function* getStartURL(
   }
 
   // handle presets start url
-  const startUrl = yield call(getStartURLForPreset, manifest, applicationId, presets, configData);
+  const startUrl = yield (call as any)(getStartURLForPreset, manifest, applicationId, presets, configData);
 
   // if no startUrl is computed, get multi instance configurator URL
   return startUrl || getMultiInstanceConfiguratorURL(manifestURL, applicationId);
@@ -59,7 +58,7 @@ export function* getNewPageURL(
   const presets = getPresets(manifest);
   const isMultiInstance = presets.length > 0;
   if (isMultiInstance) {
-    return yield call(getNewPageURLForPreset, manifest, applicationId, presets, configData);
+    return yield (call as any)(getNewPageURLForPreset, manifest, applicationId, presets, configData);
   }
   return manifest.bx_new_page_url || manifest.start_url;
 }
@@ -138,7 +137,7 @@ export function* getManifestByApplicationId(applicationId: string): SagaIterator
 
   const application = yield select(getApplicationById, applicationId);
   const manifestUrl = yield call(getApplicationManifestURL, application);
-  const { manifest } = yield manifestProvider.getFirstValue(manifestUrl);
+  const { manifest } = yield call([manifestProvider, manifestProvider.getFirstValue], manifestUrl);
 
   return manifest;
 }

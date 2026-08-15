@@ -189,7 +189,7 @@ export const getUIConfirmResetApplicationModalIsVisible = (state: StationState, 
   state.getIn(['ui', 'confirmResetApplicationModal', 'isVisible'], false) === windowId;
 
 // TODO memoize
-export const getApplicationDescription = (state: StationState, application) => {
+export const getApplicationDescription = (state: StationState, application: ApplicationImmutable) => {
   if (!application) return null;
   const identityId = getApplicationIdentityId(application);
   const subdomain = getApplicationSubdomain(application);
@@ -203,10 +203,10 @@ export const getApplicationDescription = (state: StationState, application) => {
   const identity = getIdentityById(state, identityId);
   if (!identity) return null;
 
-  let description = identity.getIn(['profileData', 'email'], null);
+  let description = getEmail(identity);
 
   if (!description) {
-    description = identity.get('email', null);
+    description = (identity as any).get('email', null);
   }
 
   return `Connected as ${description}`;
@@ -247,7 +247,7 @@ export const getFirstApplicationWithAttachedActiveTab = (state: StationState) =>
   getApplications(state)
     .filter(application => {
       const tabId = getApplicationActiveTab(application);
-      return !hasSubwindowsTabId(state, tabId);
+      return !hasSubwindowsTabId(getSubwindows(state), tabId);
     })
     .first();
 

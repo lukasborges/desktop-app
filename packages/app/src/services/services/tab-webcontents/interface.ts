@@ -122,7 +122,7 @@ export class TabWebContentsNotificationsObserver extends ServiceBase implements 
 export class UrlDispatcherProviderService extends ServiceBase
   implements RPC.Interface<UrlDispatcherProviderService> {
   // @ts-ignore
-  dispatchUrl(url: string, originWebContentsId: number, target: Targets = NEW_TAB): void { }
+  dispatchUrl(url: string, originWebContentsId: number, target: Targets = NEW_TAB): Promise<void> { }
 }
 
 @service('webcontents')

@@ -1,4 +1,3 @@
-import * as Immutable from 'immutable';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
@@ -6,6 +5,7 @@ import FocusModeDockIcon from './components/FocusModeDockIcon';
 import { INFINITE, SYNC_WITH_OS } from './constants';
 import { resetSnoozeDuration, ResetSnoozeDurationAction, setSnoozeDuration, SetSnoozeDurationAction } from './duck';
 import { getSnoozeDuration, getSnoozeDurationInMs, getSnoozeState } from './selectors';
+import { StationState } from '../types';
 
 interface StateFromProps {
   currentSnoozeDuration: string | undefined,
@@ -47,7 +47,7 @@ class FocusModeDockContainerImpl extends React.PureComponent<Props, {}> {
 }
 
 const FocusModeDockContainer = connect<StateFromProps, DispatchFromProps, {}>(
-  (state: Immutable.Map<string, any>) => ({
+  (state: StationState) => ({
     currentSnoozeDuration: getSnoozeDuration(state),
     currentSnoozeDurationInMs: getSnoozeDurationInMs(state),
     isSnoozed: getSnoozeState(state),

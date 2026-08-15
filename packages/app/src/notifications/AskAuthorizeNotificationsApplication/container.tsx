@@ -7,6 +7,7 @@ import { askEnableNotifications } from '../../applications/duck';
 import { RequestForApplicationNotificationsStep } from '../duck';
 import { getNotificationsRequests } from '../selectors';
 import AskAuthorizeNotification from './AskAuthorizeNotifications';
+import { StationState } from '../../types';
 
 export interface Props {
   notificationsRequests: Immutable.List<any>
@@ -78,11 +79,11 @@ class AskAuthorizeNotificationsApplicationImpl extends React.PureComponent<Props
 
 const connector = compose(
   connect<any, any, {}>(
-    (state: Immutable.Map<string, any>) => ({
+    (state: StationState) => ({
       notificationsRequests: getNotificationsRequests(state),
     }),
     (dispatch: Dispatch<any>) => bindActionCreators({
-      onAnswer: (notificationRequest) => askEnableNotifications(notificationRequest),
+      onAnswer: (notificationRequest: any) => askEnableNotifications(notificationRequest),
     }, dispatch)
   ),
 );

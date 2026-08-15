@@ -30,6 +30,6 @@ export const getLink = (contextFn: () => StationGQLContext) => {
     new ReactiveSchemaLink<StationGQLContext>({
       schema,
       context: contextFn,
-    })
+    }) as any
   );
 };

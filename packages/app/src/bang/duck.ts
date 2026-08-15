@@ -21,7 +21,7 @@ export type SearchResultSerialized =
     },
   };
 
-export interface SearchSectionSerialized extends SearchSection {
+export interface SearchSectionSerialized extends Omit<SearchSection, 'results'> {
   sectionKind: SectionKinds,
   results?: SearchResultSerialized[];
 }

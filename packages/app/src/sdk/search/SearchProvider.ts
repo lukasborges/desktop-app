@@ -14,7 +14,7 @@ export function combineConsumersResultsWrappers(resultsWrappers: search.SearchRe
   // A Set of all categories that are in loading state
   const allLoadingCategories: Set<string> = resultsWrappers.reduce(
     (accumulator, currentValue) => currentValue.loading ? accumulator.add(currentValue.loading) : accumulator,
-    new Set()
+    new Set<string>()
   );
   // Leverage groupBy method of Immutable
   const mapByCategories = Immutable.List(allResults).groupBy<string>(results => results!.category);

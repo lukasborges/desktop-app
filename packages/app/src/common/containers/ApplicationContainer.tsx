@@ -14,6 +14,7 @@ export interface Props {
   classes?: Classes,
   themeGradient?: string,
   applicationIcon: string,
+  children?: React.ReactNode,
 }
 
 const styles = {
@@ -78,4 +79,4 @@ export class ApplicationContainerImpl extends React.PureComponent<Props, {}> {
   }
 }
 
-export default withGradient(GradientType.normal)(ApplicationContainerImpl);
+export default withGradient(GradientType.normal)(ApplicationContainerImpl as any) as React.ComponentType<Props>;
