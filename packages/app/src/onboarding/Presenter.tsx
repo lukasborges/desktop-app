@@ -11,8 +11,9 @@ import {
   InstallApplicationMutationVariables,
   Platform,
 } from './queries@local.gql.generated';
+import { resolveWebpackAsset } from '../../manifests/webpackAsset';
 
-const platformAppIcon = require('../static/logos/platform-app-icon.svg');
+const platformAppIcon = resolveWebpackAsset(require('../static/logos/platform-app-icon.svg'));
 
 export interface Classes {
   container: string,
