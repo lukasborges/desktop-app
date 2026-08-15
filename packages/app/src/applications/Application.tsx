@@ -6,7 +6,10 @@ import * as slack from 'slack';
 import { GradientType, withGradient } from '@getstation/theme';
 import ElectronWebview from '../common/components/ElectronWebview';
 import * as classNames from 'classnames';
-import { clipboard } from 'electron';
+// `clipboard` is deprecated in renderers since Electron 40, so we go through
+// `@electron/remote` to run the call in the main process.
+// @see https://www.electronjs.org/docs/latest/breaking-changes#deprecated-clipboard-api-access-from-renderer-processes
+import * as remote from '@electron/remote';
 // @ts-ignore no declaration file
 import { fetchFavicon, setFetchFaviconTimeout } from '@getstation/fetch-favicon';
 import Maybe from 'graphql/tsutils/Maybe';
@@ -84,7 +87,7 @@ const webviewMethods: WebviewMethods = {
   'go-back': (webview) => webview.isReady() && webview.goBack(),
   'go-forward': (webview) => webview.isReady() && webview.goForward(),
   'toggle-dev-tools': (webview) => webview.isReady() && toggleDevTools(webview),
-  'copy-url-to-clipboard': (webview) => webview.isReady() && clipboard.write({
+  'copy-url-to-clipboard': (webview) => webview.isReady() && remote.clipboard.write({
     bookmark: webview.getTitle(),
     text: webview.getURL(),
   }),
@@ -185,7 +188,7 @@ class ApplicationImpl extends React.PureComponent {
     this.setWebviewRef = this.setWebviewRef.bind(this);
     this.handleTitleUpdated = this.handleTitleUpdated.bind(this);
     this.handleFaviconUpdated = this.handleFaviconUpdated.bind(this);
-    this.handleWebcontentsCrashed = this.handleWebcontentsCrashed.bind(this);
+    this.handleRenderProcessGone = this.handleRenderProcessGone.bind(this);
     this.handleRemoveApplication = this.handleRemoveApplication.bind(this);
 
     this.state = {
@@ -385,7 +388,13 @@ class ApplicationImpl extends React.PureComponent {
     }
   }
 
-  handleWebcontentsCrashed() {
+  /**
+   * Replaces the `crashed` event, removed in Electron 29.
+   * `render-process-gone` also fires on a normal shutdown, which is not a crash.
+   */
+  handleRenderProcessGone(event: Electron.RenderProcessGoneEvent) {
+    const details = event && event.details;
+    if (details && details.reason === 'clean-exit') return;
     this.props.onWebcontentsCrashed();
   }
 
@@ -405,7 +414,6 @@ class ApplicationImpl extends React.PureComponent {
 
   render() {
     const tab = this.props.tab;
-    const useNativeWindowOpen = !this.props.notUseNativeWindowOpen;
     const tabUrl = tab.get('url', '');
     const {
       applicationId, applicationName, applicationIcon,
@@ -476,8 +484,8 @@ class ApplicationImpl extends React.PureComponent {
           onDidStopLoading={this.handleDidStopLoading}
           onDidFailLoad={this.handleDidFailLoad}
           onDomReady={this.handleDomReady}
-          onCrashed={this.handleWebcontentsCrashed}
-          webpreferences={`allowRunningInsecureContent=true,nativeWindowOpen=${useNativeWindowOpen},contextIsolation=true,nodeIntegration=true`}
+          onRenderProcessGone={this.handleRenderProcessGone}
+          webpreferences={'allowRunningInsecureContent=true,contextIsolation=true,nodeIntegration=true'}
         />
 
       </div>
