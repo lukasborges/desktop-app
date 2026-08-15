@@ -86,9 +86,13 @@ function* produceResults(providerResults: Timestamp<SearchSection[]>, query: Tim
   const resultsSyncedWithQuery = (providerResults.timestamp - query.timestamp) > -1;
 
   if (resultsSyncedWithQuery) {
-    const topHitsResults: search.SearchResultItem[] = bxSearchEngine.search(flattenedResults, { query: query.value.value }, TOP_HITS_ITEMS);
+    const topHitsResults = bxSearchEngine.search(
+      flattenedResults as search.SearchResultItem[],
+      { query: query.value.value },
+      TOP_HITS_ITEMS
+    ) as unknown as SearchResultSerialized[];
 
-    const topHits = {
+    const topHits: SearchSectionSerialized = {
       sectionKind: 'top-hits',
       sectionName: EMPTY_SECTION,
       results: topHitsResults.map((result: SearchResultSerialized) => ({ ...result, sectionKind: 'top-hits' })),
@@ -118,7 +122,7 @@ function* sdkSearchProvider(computedResults$: Subject<Pair<SearchSectionSerializ
 
   yield takeEveryWitness(
     providerResultsWithQueryChannel,
-    function* (providerResultsWithQuery: [Timestamp<SearchSection[]>, Timestamp<search.SearchQuery>]) {
+    function* (providerResultsWithQuery: [Timestamp<SearchSection[]>, Timestamp<search.SearchQuery>]): SagaIterator {
       const sections: SearchSectionSerialized[] = yield call(produceResults, providerResultsWithQuery[0], providerResultsWithQuery[1]);
       const historyItems = yield select(getHistoryItems);
       const historySection = yield call(historyItemsAsLastUsedSection, historyItems.toJS());
@@ -135,12 +139,13 @@ function* getActivityEntries(): SagaIterator {
   function* asEntries(
     selector: Selector<StationState, any>,
     converter: Function
-  ) {
+  ): SagaIterator {
     const tabsWithApps = yield select(selector);
     const entries: ActivityEntry[] = [];
 
     for (const [tab, application] of tabsWithApps) {
-      const { manifest } = yield manifestProvider.getFirstValue(
+      const { manifest } = yield call(
+        [manifestProvider, manifestProvider.getFirstValue],
         getApplicationManifestURL(application)
       );
 
@@ -170,7 +175,7 @@ function* appsSearchConsumer(): SagaIterator {
   const queryChannel = observableChannel(sdk.search.query.pipe(distinctUntilChanged()));
   yield takeEveryWitness(
     queryChannel,
-    function* ({ value }: search.SearchQuery) {
+    function* ({ value }: search.SearchQuery): SagaIterator {
       sdk.search.results.next({ loading: SectionKinds.getCategory('apps') });
 
       cancelRunningQuery();
@@ -245,7 +250,7 @@ function* resetQueryOnBangShow({ visible, format }: SetVisibilityAction): SagaIt
   }
 }
 
-export default function* main() {
+export default function* main(): SagaIterator {
   const computedResults$: Subject<Pair<SearchSectionSerialized[]>> = new Subject();
   let feedGlobalFrecencyStorageSubscription: Subscription | null = null;
 

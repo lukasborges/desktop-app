@@ -52,7 +52,7 @@ const isDoneState: (state: DownloadState) => boolean = anyPass([
 const downloadFinished = (doneState: DownloadDoneState, savePath: string) => {
   if (doneState === 'completed') {
     if (isDarwin) {
-      app.dock.downloadFinished(savePath);
+      app.dock?.downloadFinished(savePath);
     }
   }
 };

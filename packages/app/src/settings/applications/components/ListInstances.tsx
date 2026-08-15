@@ -259,14 +259,14 @@ class ListInstances extends React.PureComponent<Props> {
 
   render() {
     const { applications, classes, instances, instanceTypeWording } = this.props;
-    const applicationIds: ListImmutable<string> = applications.map(app => app.get('applicationId'));
+    const applicationIds: ListImmutable<string> = applications.map((app: any) => app.get('applicationId'));
     const orderedInstances = orderInstances(instances, applicationIds);
 
     return (
       <section className={classes!.container}>
         <div className={classes!.title}>{pluralize(instanceTypeWording)}</div>
         <ul className={classes!.list}>
-          {orderedInstances.map(this.renderInstance)}
+          {orderedInstances.map(this.renderInstance).toArray()}
         </ul>
       </section>
     );

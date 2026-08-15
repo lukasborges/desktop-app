@@ -18,8 +18,6 @@ const defaultOnListChangedHandlers: OnListChangedHandlers<any> = {
  */
 function useOnListChanged<T>(list: T[] = [], pHandlers: Partial<OnListChangedHandlers<T>>) {
 
-  if (!list) return;
-
   const handlers: OnListChangedHandlers<T> = {
     ...defaultOnListChangedHandlers,
     ...pHandlers,
@@ -33,12 +31,12 @@ function useOnListChanged<T>(list: T[] = [], pHandlers: Partial<OnListChangedHan
   const diff = difference(list, prevList);
 
   if (list.length > prevList.length) {
-    return setImmediate(() => handlers.onAdd(prevList, diff));
+    setImmediate(() => handlers.onAdd(prevList, diff));
   } else if (list.length < prevList.length) {
-    return setImmediate(() => handlers.onRemove(prevList, diff));
+    setImmediate(() => handlers.onRemove(prevList, diff));
+  } else {
+    setImmediate(() => handlers.onUpdate(prevList));
   }
-  // Default one when just values inside has changed
-  setImmediate(() => handlers.onUpdate(prevList));
 }
 
 export { useOnListChanged };

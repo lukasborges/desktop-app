@@ -66,6 +66,8 @@ type OwnProps = DefaultProps & {
   ) => any,
 };
 
+type ExternalProps = Pick<OwnProps, 'classes' | 'manifestURL' | 'attachAppRef' | 'closeSettings'>;
+
 interface DispatchProps {
   onRemoveAllInstances: () => any,
   onAddNewInstance: () => any,
@@ -366,12 +368,12 @@ class AppImpl extends React.PureComponent<Props, State> {
 }
 
 // Apollo HOCs are not pure, so retain the outer shallow-prop memoization.
-const App = React.memo(compose(
-  withGetAbstractApplication({
+const App = React.memo((compose(
+  (withGetAbstractApplication as any)({
     options: ({ manifestURL }: Props) => ({
       variables: { manifestURL },
     }),
-    props: ({ data }) => {
+    props: ({ data }: any) => {
       if (data) {
         const abstractApplication = oc(data).abstractApplication;
         const manifest = abstractApplication.manifest;
@@ -382,7 +384,7 @@ const App = React.memo(compose(
           return {
             alwaysLoadedByDefault: manifest.bx_keep_always_loaded(),
             alwaysLoaded: settings.alwaysLoaded(),
-            applicationName: manifest.name(),
+            applicationName: manifest.name,
             applicationIcon: manifest.interpretedIconURL(),
             applicationThemeColor: manifest.theme_color(),
             instanceWording: manifest.bx_multi_instance_config!.instance_wording(),
@@ -394,8 +396,8 @@ const App = React.memo(compose(
       return {};
     },
   }),
-  withCheckForUpdatesApplicationMutation({
-    props: ({ mutate, ownProps }) => ({
+  (withCheckForUpdatesApplicationMutation as any)({
+    props: ({ mutate, ownProps }: any) => ({
       checkForUpdatesApplication: () =>
         // @ts-ignore manifestURL exists on ownPropsw
         mutate && mutate({ variables: { manifestURL: ownProps.manifestURL } }),
@@ -444,6 +446,6 @@ const App = React.memo(compose(
       );
     },
   ),
-)(AppImpl));
+)(AppImpl as any)) as React.ComponentType<ExternalProps>);
 
 export default App;

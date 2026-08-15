@@ -50,10 +50,10 @@ class ServicesManager {
     const mainPeerHandler = getMainPeerHandler();
     this.handlers.add(mainPeerHandler);
     mainPeerHandler.on('close', () => this.handlers.delete(mainPeerHandler));
-    const mainServicesConnected = mapObject(mainServices, mainPeerHandler);
+    const mainServicesConnected = mapObject(mainServices, mainPeerHandler) as GlobalServices;
 
     // impl
-    const workerServicesConnected = mapObject(workerServices);
+    const workerServicesConnected = mapObject(workerServices) as GlobalServices;
     observeNewClients().subscribe((client: ServicePeerHandler) => {
       this.handlers.add(client);
       client.on('close', () => this.handlers.delete(client));
@@ -75,8 +75,8 @@ class ServicesManager {
     this.handlers.add(mainPeerHandler);
     this.handlers.add(workerPeerHandler);
 
-    const mainServicesConnected = mapObject(mainServices, mainPeerHandler);
-    const workerServicesConnected = mapObject(workerServices, workerPeerHandler);
+    const mainServicesConnected = mapObject(mainServices, mainPeerHandler) as GlobalServices;
+    const workerServicesConnected = mapObject(workerServices, workerPeerHandler) as GlobalServices;
 
     return {
       ...mainServicesConnected,
@@ -92,7 +92,7 @@ class ServicesManager {
     const handler = getWorkerPeerHandler(mainWorkerDuplex);
     this.handlers.add(handler);
     handler.on('close', () => this.handlers.delete(handler));
-    const workerServicesConnected = mapObject(workerServices, handler);
+    const workerServicesConnected = mapObject(workerServices, handler) as GlobalServices;
 
     // Lazy connection between the worker and main process
     firstConnectionHandler(duplex => {
@@ -100,7 +100,7 @@ class ServicesManager {
     }, servicesDuplexWorkerMainNamespace);
 
     // impl
-    const mainServicesConnected = mapObject(mainServices);
+    const mainServicesConnected = mapObject(mainServices) as GlobalServices;
     map(s => handler.connect(s), mainServicesConnected as any);
     observeNewClients().subscribe((client: ServicePeerHandler) => {
       this.handlers.add(client);

@@ -13,7 +13,7 @@ interface Props {
   size?: number,
 }
 
-const styles = (theme: ThemeTypes) => createStyles({
+const styles = (_theme: ThemeTypes) => createStyles({
   container: {
     alignItems: 'center',
     backgroundColor: 'var(--app-rail-tile)',

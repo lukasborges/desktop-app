@@ -1,6 +1,7 @@
 import { RecursiveImmutableMap } from '../types';
 
 export type StationTab = {
+  favoriteId?: string,
   tabId: string,
   applicationId: string,
   title?: string,

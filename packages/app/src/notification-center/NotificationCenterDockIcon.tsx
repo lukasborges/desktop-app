@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, bindActionCreators, Dispatch } from 'redux';
-import * as Immutable from 'immutable';
 import { toggleVisibility } from './duck';
 import { getNotifications, getSnoozeDuration, isVisible } from './selectors';
 import NativeAppDockIcon, { IconSymbol } from '../dock/components/NativeAppDockIcon';
+import { StationState } from '../types';
 
 interface StateToProps {
   snoozeDuration: string | undefined,
@@ -34,7 +34,7 @@ class NotificationCenterDockIconImpl extends React.PureComponent<StateToProps & 
 }
 
 const NotificationCenterDockIcon = connect<StateToProps, DispatchToProps, {}>(
-  (state: Immutable.Map<string, any>) => ({
+  (state: StationState) => ({
     snoozeDuration: getSnoozeDuration(state),
     badge: getNotifications(state).size,
     active: isVisible(state),

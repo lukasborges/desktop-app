@@ -11,7 +11,7 @@ export const startActivityRecording = async (
   manifestURL: string,
   resourceExtractor: ResourceExtractor
 ): Promise<Observable<Error>> => {
-  const observeCurrentTabNextResource = tabId => (
+  const observeCurrentTabNextResource = (tabId: string) => (
     sdk.tabs.getTab(tabId)
       .pipe(distinctUntilChanged((before, after) => before.url === after.url))
       .pipe(map((tab: tabs.Tab): ResourceRecord | undefined => {

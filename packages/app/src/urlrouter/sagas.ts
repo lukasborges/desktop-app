@@ -3,7 +3,6 @@ import log from 'electron-log';
 import * as shortid from 'shortid';
 import { SagaIterator } from 'redux-saga';
 import { all, call, delay, fork, getContext, put, race, select, take } from 'redux-saga/effects';
-import { getApplicationManifestURL } from '../applications/get';
 import { listAllApplications, manifestToApplicationItem } from '../../manifests';
 import { logger } from '../api/logger';
 import { BrowserXAppWorker } from '../app-worker';
@@ -14,7 +13,6 @@ import {
   installApplication,
   navigateToApplicationTabAutomatically,
 } from '../applications/duck';
-import { getApplicationById } from '../applications/selectors';
 import { REHYDRATION_COMPLETE } from '../store/duck';
 import { navigateTabToURL, changeHashAndNavigateToTab } from '../tab-webcontents/duck';
 import {
@@ -26,10 +24,7 @@ import {
 import { getCursorIcon } from '../ui/selectors';
 import { callService, takeEveryWitness, tryCatch } from '../utils/sagas';
 import { ApplicationItem, URLRouterAction, URLRouterActionAndDestination } from './types';
-import { BrowserWindowService } from '../services/services/browser-window/interface';
 import services from '../services/servicesManager';
-import { RPC } from '../services/lib/types';
-import { service } from '../services/lib/decorator';
 import { unwrapGoogleRedirectUrl } from '../utils/applicationLinks';
 
 export type DispatchUrlOptions = {
@@ -102,7 +97,7 @@ export function* dispatchUrlSaga(
   const finalDispatch = action === URLRouterAction.DEFAULT_BROWSER
     ? { ...routingDispatch, url: originalUrl }
     : routingDispatch;
-  yield call(triggerCorrespondingAction, action, destination, finalDispatch);
+  yield (call as any)(triggerCorrespondingAction, action, destination, finalDispatch);
 
   return { url: finalDispatch.url, origin, options, action, destination };
 }
@@ -111,14 +106,8 @@ function* triggerCorrespondingAction(
   action: URLRouterAction,
   destination: any,
   { url, origin, options }: DispatchURLAction
-) {
+): SagaIterator {
   if (process.env.NODE_ENV === 'test') return;
-
-  let originApplicationManifestURL = null;
-  if (origin && origin.applicationId) {
-    const application = yield select(getApplicationById, origin.applicationId);
-    originApplicationManifestURL = getApplicationManifestURL(application);
-  }
 
   switch (action) {
     case URLRouterAction.RELOAD:
@@ -181,7 +170,7 @@ function* triggerCorrespondingAction(
     case URLRouterAction.INSTALL_AND_OPEN: {
       yield put(installApplication(destination.manifestURL, {
         optOutFlow: true,
-        installContext: { url, origin, options },
+        installContext: { url, origin, options } as any,
         navigate: true,
         andCreateTabWithURL: url,
       }));
@@ -192,7 +181,7 @@ function* triggerCorrespondingAction(
   }
 }
 
-export function* manifestsScopesClock(bxApp: BrowserXAppWorker) {
+export function* manifestsScopesClock(bxApp: BrowserXAppWorker): SagaIterator {
   yield take(REHYDRATION_COMPLETE);
 
   // When app is ready, update the tree source once
@@ -200,10 +189,10 @@ export function* manifestsScopesClock(bxApp: BrowserXAppWorker) {
 
   const allScopes: ApplicationItem[] = listAllApplications().map(manifestToApplicationItem);
 
-  yield router.dataRouter.next(allScopes);
+  yield call([router.dataRouter, router.dataRouter.next], allScopes);
 }
 
-export default function* main(bxApp: BrowserXAppWorker) {
+export default function* main(bxApp: BrowserXAppWorker): SagaIterator {
   yield all([
     takeEveryWitness(DISPATCH_URL, dispatchUrlSaga),
     fork(tryCatch(manifestsScopesClock), bxApp),

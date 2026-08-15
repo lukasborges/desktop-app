@@ -41,7 +41,6 @@ class DockNavigationContainerImpl extends React.PureComponent<Props, {}> {
         canGoForward={this.props.canGoForward}
         onGoBack={this.handleGoBack}
         onGoForward={this.handleGoForward}
-        showPopover={true}
       />
     );
   }

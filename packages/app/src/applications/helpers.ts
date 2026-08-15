@@ -48,5 +48,5 @@ const formatURL = (urlType: URLType, manifest: BxAppManifest, configData: Config
 
 export const interpretedIconUrl = (manifest: BxAppManifest) => {
   // FIXME: Should we update the `BxAppManifest` or ignore this ?
-  return manifest.icon;
+  return (manifest as BxAppManifest & { icon?: string }).icon;
 };

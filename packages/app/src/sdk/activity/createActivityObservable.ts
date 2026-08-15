@@ -1,7 +1,7 @@
 import { activity } from '@getstation/sdk';
 import {
   complement, compose, dissoc, findIndex, findLastIndex, identity, inc,
-  insert, is, pipe, propEq, take, flatten, filter, map,
+  insert, is, pipe, propEq, take, filter, map,
 } from 'ramda';
 import * as operators from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
@@ -28,37 +28,37 @@ const createActivityFilter = (options: Options): GlobalActivityFilter => {
   const filterWhereResource: GlobalActivityFilter = !where.resourceIds
     ? identity
     : is(Array, where.resourceIds) ?
-      filter(e => where.resourceIds!.includes(e.resourceId)) :
+      filter((e: GlobalActivityEntry) => where.resourceIds!.includes(e.resourceId)) :
       filter(propEq('resourceId', where.resourceIds));
 
   const filterWhereManifest: GlobalActivityFilter = !where.manifestURLs
     ? identity
     : is(Array, where.manifestURLs) ?
-      filter(e => where.manifestURLs!.includes(e.manifestURL!)) :
+      filter((e: GlobalActivityEntry) => where.manifestURLs!.includes(e.manifestURL!)) :
       filter(propEq('manifestURL', where.manifestURLs));
 
   const filterWhereType: GlobalActivityFilter = !where.types
     ? identity
     : is(Array, where.types) ?
-      filter(e => where.types!.includes(e.type)) :
+      filter((e: GlobalActivityEntry) => where.types!.includes(e.type)) :
       filter(propEq('type', where.types));
 
   const filterWhereNotResource: GlobalActivityFilter = !whereNot.resourceIds
     ? identity
     : is(Array, whereNot.resourceIds) ?
-      filter(e => !whereNot.resourceIds!.includes(e.resourceId)) :
+      filter((e: GlobalActivityEntry) => !whereNot.resourceIds!.includes(e.resourceId)) :
       filter(complement(propEq('resourceId', whereNot.resourceIds)));
 
   const filterWhereNotManifest: GlobalActivityFilter = !whereNot.manifestURLs
     ? identity
     : is(Array, whereNot.manifestURLs) ?
-      filter(e => !whereNot.manifestURLs!.includes(e.manifestURL!)) :
+      filter((e: GlobalActivityEntry) => !whereNot.manifestURLs!.includes(e.manifestURL!)) :
       filter(complement(propEq('manifestURL', whereNot.manifestURLs)));
 
   const filterWhereNotType: GlobalActivityFilter = !whereNot.types
     ? identity
     : is(Array, whereNot.types) ?
-      filter(e => !whereNot.types!.includes(e.type)) :
+      filter((e: GlobalActivityEntry) => !whereNot.types!.includes(e.type)) :
       filter(complement(propEq('type', whereNot.types)));
 
   return pipe(
@@ -90,7 +90,7 @@ const orderAndLimit = <T extends Record<K, number>, K extends keyof T>(
   limit: number,
 ): Reducer<T[], T[]> => {
   return (sortedEntries, newEntries) => {
-    return flatten(newEntries.map(newEntry => {
+    return newEntries.flatMap(newEntry => {
       const getBiggerValueIndex = createGetBiggerValueIndex<T, K>(newEntry, sortKey, ascending);
       const index = getBiggerValueIndex(sortedEntries); // negative index means need to be push back
       const nextEntries = insert(index, newEntry, sortedEntries);
@@ -100,7 +100,7 @@ const orderAndLimit = <T extends Record<K, number>, K extends keyof T>(
       }
 
       return take(limit, nextEntries);
-    }));
+    });
   };
 };
 

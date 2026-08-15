@@ -453,7 +453,7 @@ class Presenter extends React.PureComponent<Props, State> {
     const {
       classes, applications, searchInputValue, handleSearchInputValue,
     } = this.props;
-    const { selectedApplications, isLoading, page, setupError } = this.state;
+    const { selectedApplications, page, setupError } = this.state;
 
     return (
       <div className={classes!.container}>

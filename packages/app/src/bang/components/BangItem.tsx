@@ -99,7 +99,7 @@ interface State {
       ...theme.mixins.ellipsis(1),
     },
     image: {
-      ...theme.avatarMixin(imageSize),
+      ...theme.avatarMixin(imageSize as any),
       flexShrink: 0,
       '&.placeholder': {
         content: '""',

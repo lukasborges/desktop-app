@@ -9,7 +9,7 @@ const resolvers: IResolvers = {
     getTabWebContent: (_obj, args, context) => {
       return subscribeStore(
         context.store,
-        state => getTabWebcontentsById(state, args.tabId)
+        state => args.tabId ? getTabWebcontentsById(state, args.tabId) : undefined
       ).pipe(distinctUntilChanged(Immutable.is));
     },
   },

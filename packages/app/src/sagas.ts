@@ -1,8 +1,9 @@
 /* eslint-disable global-require */
+import { SagaIterator } from 'redux-saga';
 import { all, call, spawn } from 'redux-saga/effects';
 
 function createAsyncImport(...args: any[]) {
-  return function* asyncImport(importPromise: Promise<any>) {
+  return function* asyncImport(importPromise: Promise<any>): SagaIterator {
     const w = yield call(() => importPromise.then(y => y.default || y));
     // Start the long-running saga only after its module has loaded, then let
     // this registration task finish so startup can reliably signal readiness.
@@ -10,7 +11,7 @@ function createAsyncImport(...args: any[]) {
   };
 }
 
-export default function* root(bxApp: any) {
+export default function* root(bxApp: any): SagaIterator {
   yield all([
     call(createAsyncImport(bxApp), import('./activity/sagas')),
     call(createAsyncImport(bxApp), import('./bang/sagas')),

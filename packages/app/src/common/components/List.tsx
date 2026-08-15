@@ -40,7 +40,7 @@ export default class List extends React.PureComponent<Props, {}> {
         <ul className={classes!.itemsWrapper}>
           { items.map((item: ListItemType) =>
             <ListItem key={item.id} iconSize={iconSize} item={item} />
-          )}
+          ).toArray()}
         </ul>
       </div>
     );

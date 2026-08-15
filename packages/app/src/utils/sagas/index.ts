@@ -1,6 +1,6 @@
 import log from 'electron-log';
 import { EventEmitter } from 'events';
-import { buffers, Channel, END, eventChannel, TakeableChannel } from 'redux-saga';
+import { buffers, END, EventChannel, eventChannel, SagaIterator, TakeableChannel } from 'redux-saga';
 import {
   call,
   cancel,
@@ -29,9 +29,9 @@ import { GlobalServices } from '../../services/types';
 export function tryCatch<Fn extends (...args: any[]) => any>(saga: Fn) {
   // Inspired by https://github.com/cyrilluce/redux-saga-catch
   // @author cyrilluce@gmail.com
-  return function* wrappedTryCatch(...args: any[]) {
+  return function* wrappedTryCatch(...args: any[]): SagaIterator {
     try {
-      yield call(saga, ...args);
+      yield (call as any)(saga, ...args);
     } catch (e) {
       log.error(e);
       logger.notify(e);
@@ -39,18 +39,23 @@ export function tryCatch<Fn extends (...args: any[]) => any>(saga: Fn) {
   };
 }
 
-export function takeFirstWitness(pattern: Pattern | TakeableChannel, worker: Function, ...args: any[]): ForkEffect {
-  return fork(function* () {
+// These helpers are the compatibility boundary between legacy sagas with
+// heterogeneous signatures and redux-saga's stricter modern overloads.
+type Worker = any;
+type ActionPattern = Pattern<any> | TakeableChannel<any> | any;
+
+export function takeFirstWitness(pattern: ActionPattern, worker: Worker, ...args: any[]): ForkEffect {
+  return fork(function* (): SagaIterator {
     const action = yield take(pattern);
     yield call(tryCatch(worker), ...args.concat(action));
   });
 }
 
-export function takeEveryWitness(pattern: Pattern | TakeableChannel, worker: Function, ...args: any[]): ForkEffect {
+export function takeEveryWitness(pattern: ActionPattern, worker: Worker, ...args: any[]): ForkEffect {
   return takeEvery(pattern, tryCatch(worker), ...args);
 }
 
-export function takeLatestWitness(pattern: Pattern | TakeableChannel, worker: Function, ...args: any[]): ForkEffect {
+export function takeLatestWitness(pattern: ActionPattern, worker: Worker, ...args: any[]): ForkEffect {
   return takeLatest(pattern, tryCatch(worker), ...args);
 }
 
@@ -59,8 +64,8 @@ export function takeLatestWitness(pattern: Pattern | TakeableChannel, worker: Fu
  * After spawning a task once, it blocks until spawned saga completes and then starts to listen for a pattern again.
  * In short, it is listening for the actions when it doesn't run a saga.
  */
-export function takeLeadingWitness(pattern: Pattern | TakeableChannel, worker: Function, ...args: any[]): ForkEffect {
-  return fork(function* () {
+export function takeLeadingWitness(pattern: ActionPattern, worker: Worker, ...args: any[]): ForkEffect {
+  return fork(function* (): SagaIterator {
     while (true) {
       const action = yield take(pattern);
       yield call(tryCatch(worker), ...args.concat(action));
@@ -69,12 +74,12 @@ export function takeLeadingWitness(pattern: Pattern | TakeableChannel, worker: F
 }
 
 export function takeComplexLatestWitness(
-  pattern: Pattern | TakeableChannel,
-  getUnicityKey: Function,
-  worker: CallEffectFn<any>,
+  pattern: ActionPattern,
+  getUnicityKey: Worker,
+  worker: Worker,
   ...args: any[]
 ): ForkEffect {
-  return fork(function* () {
+  return fork(function* (): SagaIterator {
     const lastTaskMap = new Map();
     while (true) {
       const action = yield take(pattern);
@@ -88,7 +93,7 @@ export function takeComplexLatestWitness(
   });
 }
 
-export function throttleWitness(ms: number, pattern: Pattern | TakeableChannel, worker: Function, ...args: any[]): ForkEffect {
+export function throttleWitness(ms: number, pattern: ActionPattern, worker: Worker, ...args: any[]): ForkEffect {
   return throttle(ms, pattern, tryCatch(worker), ...args);
 }
 
@@ -98,7 +103,7 @@ export function createEmitterEventChannel(
   eventEmitter: EventEmitter,
   paramEventNames: string | string[],
   endEventName?: string,
-): Channel<any> {
+): EventChannel<any> {
   return eventChannel(emit => {
     const eventHandler = (...args: any[]) => emit(args);
     let eventNames = paramEventNames;
@@ -121,7 +126,7 @@ export function createEmitterEventChannel(
   });
 }
 
-export function observableChannel<C extends Observable<R>, R>(observable: C): Channel<R> {
+export function observableChannel<C extends Observable<R>, R extends {}>(observable: C): EventChannel<R> {
   return eventChannel(
     ((emitter) => {
       const subscription = observable.subscribe({
@@ -136,7 +141,7 @@ export function observableChannel<C extends Observable<R>, R>(observable: C): Ch
   );
 }
 
-export function periodicTick(ms: number, stopAfter?: number): Channel<any> {
+export function periodicTick(ms: number, stopAfter?: number): EventChannel<any> {
   return eventChannel((emit) => {
     let total = 0;
     const iv = setInterval(() => {
@@ -151,10 +156,10 @@ export function periodicTick(ms: number, stopAfter?: number): Channel<any> {
   });
 }
 
-export type GenericCallEffectFn = CallEffectFn<(...args: any[]) => any>;
+export type GenericCallEffectFn = Worker;
 
-function tryCatchAck(saga: Function) {
-  return function* wrappedTryCatch(...args: any[]) {
+function tryCatchAck(saga: Worker) {
+  return function* wrappedTryCatch(...args: any[]): SagaIterator {
     const [{ __ack_id }] = args;
     try {
       yield* saga(...args);
@@ -167,7 +172,7 @@ function tryCatchAck(saga: Function) {
   };
 }
 
-export function takeEveryWithAck(pattern: Pattern | TakeableChannel, worker: Function, ...args: any[]): ForkEffect {
+export function takeEveryWithAck(pattern: ActionPattern, worker: Worker, ...args: any[]): ForkEffect {
   return takeEvery(pattern, tryCatchAck(worker), ...args);
 }
 
@@ -178,7 +183,7 @@ export function wrapAck(action: any) {
   };
 }
 
-export function* putAck(action: any, worker: CallEffectFn<any>, errorWorker?: CallEffectFn<any>) {
+export function* putAck(action: any, worker: Worker, errorWorker?: Worker): SagaIterator {
   const ackAction = wrapAck(action);
   yield put(ackAction);
 
@@ -202,8 +207,8 @@ export function* putAck(action: any, worker: CallEffectFn<any>, errorWorker?: Ca
  * @param {Function} saga
  * @param {Array} args
  */
-export function* debounceFor(ms: number, pattern: Pattern | TakeableChannel, saga: Function, ...args: any[]) {
-  function* delayedSaga(action: TakeEffect) {
+export function* debounceFor(ms: number, pattern: ActionPattern, saga: Worker, ...args: any[]): SagaIterator {
+  function* delayedSaga(action: TakeEffect): SagaIterator {
     yield call(delay, ms);
     yield call<TakeEffect, any>(saga, action, ...args);
   }
@@ -242,7 +247,7 @@ export function createServiceObserverChannel
     service: NodeWithObserver<T, M>,
     observerMethodName: K,
     prefix?: string,
-    ): Channel<FirstParamOrEmpty<T[K]>> => {
+    ): EventChannel<FirstParamOrEmpty<T[K]>> => {
     return eventChannel(
       ((emitter) => {
         const obs = {
@@ -273,7 +278,7 @@ export function createWebContentsServiceObserverChannel
   >(webContentsId: number,
     methodName: M,
     observerMethodName: K,
-    prefix?: string): Channel<FirstParamOrEmpty<O[K]>> {
+    prefix?: string): EventChannel<FirstParamOrEmpty<O[K]>> {
   return eventChannel(
     ((emitter) => {
       const obsParams = {

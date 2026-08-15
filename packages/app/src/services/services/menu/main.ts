@@ -125,7 +125,7 @@ export class ContextMenuServiceImpl extends ContextMenuService implements RPC.No
     });
     this.subscribeClickItem(contextMenu, this.contextMenuObservable);
 
-    contextMenu.popup(BrowserWindow.fromWebContents(wc.hostWebContents));
+    contextMenu.popup(BrowserWindow.fromWebContents(wc.hostWebContents!)!);
   }
 
   async popupAutofill({ emails, rect }: { emails: [string], rect: any }) {
@@ -135,7 +135,7 @@ export class ContextMenuServiceImpl extends ContextMenuService implements RPC.No
     this.subscribeClickItem(autofill, this.contextMenuObservable);
 
     autofill.popup({
-      window: BrowserWindow.fromWebContents(wc.hostWebContents),
+      window: BrowserWindow.fromWebContents(wc.hostWebContents!)!,
       // The rect we receive is given without our own UI elements
       // The rect is relative to the webview, so account for Platform's custom shell.
       x: Math.floor(rect.left + 68),

@@ -9,7 +9,7 @@ import { Omit } from '../../types';
 import { dissoc } from 'ramda';
 import * as remote from '@electron/remote';
 
-export interface ElectronWebviewProps extends Omit<Electron.WebviewTag, 'src'> {
+export interface ElectronWebviewProps extends Partial<Omit<Electron.WebviewTag, 'src'>> {
   // webview `src` is updated by the webview itself, so we do not want to
   // update it ourselves directly. Instead we must call `loadUrl` on underlying
   // webcontents, and the webview will update the src attribute accordingly.
@@ -24,7 +24,8 @@ export interface ElectronWebviewProps extends Omit<Electron.WebviewTag, 'src'> {
   hidden: boolean;
   className: string;
   preload: string;
-  allowpopus: string;
+  allowpopus?: string;
+  allowpopups?: boolean;
 
   onDidAttach?: EventListener;
   onLoadCommit?: EventListener;
@@ -214,6 +215,9 @@ const removeInitialSrcProp = dissoc('initialSrc');
 
 // Additional dynamically generated members
 interface ElectronWebview {
+  loadURL: (url: string) => Promise<void>;
+  getUserAgent: () => string;
+  setUserAgent: (userAgent: string) => void;
   reload: () => any;
   isDevToolsOpened: Function;
   getURL: () => any;
@@ -276,7 +280,7 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
           this.view.addEventListener(event, this.props[propName], false);
         }
       });
-      if (this.props.onDidAttach) this.props.onDidAttach(...attachArgs);
+      if (this.props.onDidAttach) this.props.onDidAttach(attachArgs[0]);
     });
 
     this.view.addEventListener('dom-ready', () => {
@@ -306,7 +310,7 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
   forwardKeyboardEvents() {
     // Inspired by https://github.com/electron/electron/issues/14258#issuecomment-416893856
     remote.webContents
-      .fromId(this.view.getWebContentsId())
+      .fromId(this.view.getWebContentsId())!
       .on('before-input-event', (_event, input) => {
         // Create a fake KeyboardEvent from the data provided
         const emulatedKeyboardEvent = new KeyboardEvent(

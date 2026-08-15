@@ -41,11 +41,11 @@ export default class OSBar extends React.PureComponent<Props, {}> {
   }
 
   handleGoBack() {
-    this.props.onGoBack();
+    this.props.onGoBack?.();
   }
 
   handleGoForward() {
-    this.props.onGoForward();
+    this.props.onGoForward?.();
   }
 
   render() {
@@ -57,8 +57,8 @@ export default class OSBar extends React.PureComponent<Props, {}> {
 
         <div className={classes!.navigation}>
           <DockNavigationButtons
-            canGoBack={canGoBack}
-            canGoForward={canGoForward}
+            canGoBack={Boolean(canGoBack)}
+            canGoForward={Boolean(canGoForward)}
             onGoBack={this.handleGoBack}
             onGoForward={this.handleGoForward}
           />

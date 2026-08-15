@@ -1,5 +1,4 @@
 import { activity, history, SDK } from '@getstation/sdk';
-import { map, pipe, prop, uniqBy } from 'ramda';
 import { compact } from 'ramda-adjunct';
 import { EMPTY, Observable, Subscription } from 'rxjs';
 import { getDeepResourceId } from './activity';
@@ -46,14 +45,11 @@ export const startHistoryRecording = async (sdk: SDK): Promise<Observable<Error>
       where: { manifestURLs: [sdk.activity.id] },
     })
     .subscribe(async (activityEntries: activity.ActivityEntry[]) => {
-      const historyEntries = await Promise.all(
-        pipe(
-          compact,
-          // TODO: should be done in sdk activity provider (via the query)
-          uniqBy(prop('resourceId')),
-          map(getHistoryItem)
-        )(activityEntries)
+      // TODO: deduplication should be done in the SDK activity provider.
+      const uniqueEntries = Array.from(
+        new Map(activityEntries.map(entry => [entry.resourceId, entry])).values()
       );
+      const historyEntries = await Promise.all(uniqueEntries.map(getHistoryItem));
 
       sdk.history.entries.next(compact(historyEntries));
     });

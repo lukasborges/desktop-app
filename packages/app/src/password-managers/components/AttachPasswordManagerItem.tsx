@@ -125,11 +125,11 @@ export default class AttachPasswordManagerItem extends React.PureComponent<Props
   }
 
   onCancel() {
-    onCancel();
+    this.props.onCancel();
   }
 
   onSelect(account: Account) {
-    onSelect(account);
+    this.props.onSelect(account);
   }
 
   render() {
@@ -153,7 +153,7 @@ export default class AttachPasswordManagerItem extends React.PureComponent<Props
               type="search"
               placeholder="Search among your logins…"
               value={query}
-              onChange={e => this.handleInputChange(e)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}
             />
           </div>
 

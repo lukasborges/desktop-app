@@ -3,7 +3,7 @@ import { app } from 'electron';
 import log from 'electron-log';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
-import * as Sequelize from 'sequelize';
+import { Sequelize, Transaction } from 'sequelize';
 import operatorsAliases from './operatorsAliases';
 
 const isRenderer = process.type === 'renderer';
@@ -22,7 +22,7 @@ export const getDatabasePath = () => {
 
 export const createEngine = () => {
   const ns = cls.createNamespace('station');
-  Sequelize.useCLS(ns);
+  Sequelize.useCLS(ns as any);
 
   const dbPath = getDatabasePath();
   // http://docs.sequelizejs.com/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
@@ -35,7 +35,7 @@ export const createEngine = () => {
       idle: 3600,
     },
     operatorsAliases,
-    transactionType: Sequelize.Transaction.TYPES.IMMEDIATE,
+    transactionType: Transaction.TYPES.IMMEDIATE,
     logging: () => {},
     storage: dbPath,
   });

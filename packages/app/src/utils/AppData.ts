@@ -14,7 +14,7 @@ export const createLockFile = (file: FILE) => {
   // TODO : Change app.getPath() with ElectronAppService (or else) on migration
   const filepath = path.resolve(app.getPath('userData'), file);
 
-  fs.writeFile(filepath, null, (err: any) => {
+  fs.writeFile(filepath, '', (err: any) => {
     if (err) {
       log.error(`[APP DATA] Error with creation of file ${file}`);
       throw err;

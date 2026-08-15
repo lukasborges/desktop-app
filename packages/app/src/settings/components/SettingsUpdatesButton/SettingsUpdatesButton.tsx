@@ -135,8 +135,8 @@ class SettingsUpdatesButton extends React.PureComponent<Props, State> {
 }
 
 const connect = compose(
-  withGetAutoUpdateStatus({
-    props: ({ data }) => ({
+  (withGetAutoUpdateStatus as any)({
+    props: ({ data }: any) => ({
       isDownloadingUpdate: data && data.autoUpdateStatus && data.autoUpdateStatus.isDownloadingUpdate ?
         data.autoUpdateStatus.isDownloadingUpdate : false,
       isCheckingUpdate: data && data.autoUpdateStatus && data.autoUpdateStatus.isCheckingUpdate ?
@@ -144,19 +144,19 @@ const connect = compose(
       isUpdateAvailable: data && data.autoUpdateStatus && data.autoUpdateStatus.isUpdateAvailable ?
         data.autoUpdateStatus.isUpdateAvailable : false,
       releaseName: data && data.autoUpdateStatus && data.autoUpdateStatus.releaseName ?
-        data.autoUpdateStatus.releaseName : null,
+        data.autoUpdateStatus.releaseName : '',
     }),
   }),
-  withCheckForUpdatesMutation({
-    props: ({ mutate }) => ({
+  (withCheckForUpdatesMutation as any)({
+    props: ({ mutate }: any) => ({
       checkForUpdates: () => mutate && mutate({ variables: { } }),
     }),
   }),
-  withOpenReleaseNotesMutation({
-    props: ({ mutate }) => ({
+  (withOpenReleaseNotesMutation as any)({
+    props: ({ mutate }: any) => ({
       openReleaseNotes: () => mutate && mutate({ variables: { } }),
     }),
   }),
 );
 
-export default connect(SettingsUpdatesButton);
+export default connect(SettingsUpdatesButton as any) as React.ComponentType<{}>;

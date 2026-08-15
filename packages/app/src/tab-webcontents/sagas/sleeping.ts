@@ -66,9 +66,9 @@ function* checkSleepyTabs(): SagaIterator {
   }
 }
 
-export default function* main() {
+export default function* main(): SagaIterator {
   yield all([
-    takeLatestWitness(MAIN_APP_READY, function* () {
+    takeLatestWitness(MAIN_APP_READY, function* (): SagaIterator {
       const tickChannel = yield call(periodicTick, STATION_CHECK_INACTIVE_TAB_EVERY_MS);
       yield takeEveryWitness(tickChannel, checkSleepyTabs);
     }),

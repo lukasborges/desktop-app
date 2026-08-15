@@ -252,8 +252,8 @@ class BangSubdockImpl extends React.PureComponent<Props> {
 }
 
 const BangSubdock = compose(
-  withGetActivity({
-    props: ({ data }) => ({
+  (withGetActivity as any)({
+    props: ({ data }: any) => ({
       historyItems: data && data.activity ? data.activity : [],
     }),
   }),

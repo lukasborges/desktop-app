@@ -1,3 +1,4 @@
+import { SagaIterator } from 'redux-saga';
 import { all, call, put, select } from 'redux-saga/effects';
 import * as shortid from 'shortid';
 import { getTabApplicationId, getTabFavicons, getTabTitle, getTabURL } from '../tabs/get';
@@ -18,7 +19,7 @@ import {
 import { getFavorite } from './selectors';
 import { reorderTab } from '../ordered-tabs/duck';
 
-function* sagaAddTabAsFavorite(action: AddTabAsFavoriteAction) {
+function* sagaAddTabAsFavorite(action: AddTabAsFavoriteAction): SagaIterator {
   const { tabId } = action;
   const tab = yield select(getTabById, tabId);
 
@@ -37,7 +38,7 @@ function* sagaAddTabAsFavorite(action: AddTabAsFavoriteAction) {
 /**
  * Will remove the favorite from favorite.
  */
-function* doRemoveFavorite(action: RemoveFavoriteAction) {
+function* doRemoveFavorite(action: RemoveFavoriteAction): SagaIterator {
   const { favoriteId, tabId } = action;
 
   // Put back the related tab on top of the list if it exists
@@ -46,17 +47,17 @@ function* doRemoveFavorite(action: RemoveFavoriteAction) {
   yield put(deleteFavorite(favoriteId));
 }
 
-function* openFavorite(action: OpenFavoriteAction) {
+function* openFavorite(action: OpenFavoriteAction): SagaIterator {
   const favorite = yield select(getFavorite, action.favoriteId);
 
   const origin = { applicationId: favorite.get('applicationId') };
   const options = {
     target: action.newWindow ? NEW_WINDOW : NEW_TAB,
   };
-  yield call(dispatchUrlSaga, { url: favorite.get('url'), origin, options });
+  yield (call as any)(dispatchUrlSaga, { url: favorite.get('url'), origin, options });
 }
 
-export default function* main() {
+export default function* main(): SagaIterator {
   yield all([
     takeEveryWitness(ADD_TAB, sagaAddTabAsFavorite),
     takeEveryWitness(OPEN, openFavorite),

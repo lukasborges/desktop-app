@@ -84,21 +84,21 @@ export default class ContextMenu extends EventEmitter {
         label: 'Cut',
         // needed because of macOS limitation:
         // https://github.com/electron/electron/issues/5860
-        role: can('Cut') ? 'cut' : '',
+        role: can('Cut') ? 'cut' : undefined,
         enabled: can('Cut'),
         visible: props.isEditable,
       },
       {
         id: 'copy',
         label: 'Copy',
-        role: can('Copy') ? 'copy' : '',
+        role: can('Copy') ? 'copy' : undefined,
         enabled: can('Copy'),
         visible: props.isEditable || hasText,
       },
       {
         id: 'paste',
         label: 'Paste',
-        role: editFlags.canPaste ? 'paste' : '',
+        role: editFlags.canPaste ? 'paste' : undefined,
         enabled: editFlags.canPaste,
         visible: props.isEditable,
       },
@@ -249,7 +249,7 @@ export default class ContextMenu extends EventEmitter {
             win.webContents.inspectElement(props.x, props.y);
 
             if (win.webContents.isDevToolsOpened()) {
-              win.webContents.devToolsWebContents.focus();
+              win.webContents.devToolsWebContents?.focus();
             }
           },
         },

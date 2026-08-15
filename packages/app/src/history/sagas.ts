@@ -35,7 +35,7 @@ function* sdkHistoryProvider(): SagaIterator {
 
   yield takeEveryWitness(
     providerHistoryChannel,
-    function* (entries: history.HistoryEntry[]) {
+    function* (entries: history.HistoryEntry[]): SagaIterator {
       const historySectionSerialized = yield call(
         serializeResults,
         [historyItemsAsLastUsedSection(entries)],
@@ -90,12 +90,12 @@ function* sdkHistoryAppConsumer({ store }: BrowserXAppWorker): SagaIterator {
 
   yield takeEveryWitness(
     activityWithTabsChannel,
-    function* (activityWithTabs: [activity.ActivityEntry[], StationTabsImmutable]) {
+    function* (activityWithTabs: [activity.ActivityEntry[], StationTabsImmutable]): SagaIterator {
       const [activities, tabs] = activityWithTabs;
 
-      const entries = yield all(activities
+      const entries = yield (all as any)(activities
         .map(
-          function* ({ resourceId, createdAt, manifestURL }: activity.ActivityEntry) {
+          function* ({ resourceId, createdAt, manifestURL }: activity.ActivityEntry): SagaIterator {
             const activeConsumer = manifestURL && isActiveConsumer('history', manifestURL, bxSDK);
             if (activeConsumer) return undefined;
 
@@ -106,7 +106,10 @@ function* sdkHistoryAppConsumer({ store }: BrowserXAppWorker): SagaIterator {
             if (!application) return undefined;
 
             const { manifestProvider }: BrowserXAppWorker = yield getContext('bxApp');
-            const { manifest } = yield manifestProvider.getFirstValue(getApplicationManifestURL(application));
+            const { manifest } = yield call(
+              [manifestProvider, manifestProvider.getFirstValue],
+              getApplicationManifestURL(application)
+            );
 
             return {
               ...tabAsActivityEntry(tab, application, manifest, yield select()),
@@ -121,7 +124,7 @@ function* sdkHistoryAppConsumer({ store }: BrowserXAppWorker): SagaIterator {
   );
 }
 
-export default function* main(bxApp: BrowserXAppWorker) {
+export default function* main(bxApp: BrowserXAppWorker): SagaIterator {
   yield all([
     fork(sdkHistoryProvider),
     fork(sdkHistoryAppConsumer, bxApp),

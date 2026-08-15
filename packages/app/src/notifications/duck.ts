@@ -1,6 +1,6 @@
 import * as Immutable from 'immutable';
 import { fromJS } from '../utils/ts';
-import { ImmutableNotifications } from './types';
+import { ImmutableNotifications, StationNotification } from './types';
 
 // Types
 
@@ -37,7 +37,7 @@ export type AddNotificationAction = {
   notificationId: string,
   applicationId: string | undefined,
   tabId: string | undefined,
-  webContentsId: string | undefined,
+  webContentsId: number | undefined,
   title: string,
   timestamp: number,
   body?: string,
@@ -57,7 +57,7 @@ export type NotificationsActions =
 export const addNotification = (notificationId: string, args: {
   applicationId: string | undefined,
   tabId: string | undefined,
-  webContentsId: string | undefined,
+  webContentsId: number | undefined,
   title: string,
   timestamp: number,
   body?: string,
@@ -83,7 +83,7 @@ export default function notifications(state: ImmutableNotifications = defaultSta
 
     case ADD_NOTIFICATION: {
       const { notificationId, applicationId, tabId, title, timestamp, body, icon, full, silent, webContentsId } = action;
-      return state.set(notificationId, fromJS({
+      return state.set(notificationId, fromJS<StationNotification>({
         notificationId,
         applicationId,
         tabId,

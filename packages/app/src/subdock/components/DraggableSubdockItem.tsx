@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DragSource, DragSourceMonitor, DropTarget } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import SubdockItem, { BareApplication, WrappedActions } from './SubdockItem';
+import SubdockItem, { MinimalSubdockApplication as BareApplication, WrappedActions } from './SubdockItem';
 import { compose } from 'redux';
 import { withReorderFavoriteMutation, withReorderTabMutation } from '../../tabs/queries@local.gql.generated';
 
@@ -129,7 +129,9 @@ const collectSource = (connect: any, monitor: any) => ({
 
 // COMPONENT
 
+// @ts-ignore legacy React DnD decorator typing
 @DropTarget(({ dragType }: Props) => dragType, SubdockItemTarget, collectTarget)
+// @ts-ignore legacy React DnD decorator typing
 @DragSource(({ dragType }: Props) => dragType, dockAppSource, collectSource)
 class DraggableSubdockItemImpl extends React.PureComponent<Props> {
   private rootElement: HTMLDivElement | null;
@@ -178,21 +180,21 @@ class DraggableSubdockItemImpl extends React.PureComponent<Props> {
 // COMPOSE
 
 const DraggableSubdockItem = compose(
-  withReorderTabMutation({
-    props: ({ mutate }) => ({
+  (withReorderTabMutation as any)({
+    props: ({ mutate }: any) => ({
       reorderTab: (tabId: string, newPosition: number) =>
         // @ts-ignore tabId exists on ownProps
         mutate && mutate({ variables: { tabId, newPosition } }),
     }),
   }),
-  withReorderFavoriteMutation({
-    props: ({ mutate }) => ({
+  (withReorderFavoriteMutation as any)({
+    props: ({ mutate }: any) => ({
       reorderFavorite: (favoriteId: string, newPosition: number) =>
         // @ts-ignore tabId exists on ownProps
         mutate && mutate({ variables: { favoriteId, newPosition } }),
     }),
   }),
-)(DraggableSubdockItemImpl);
+)(DraggableSubdockItemImpl as React.ComponentType<any>);
 
 // EXPORT
 

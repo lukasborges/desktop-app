@@ -19,15 +19,14 @@ type EnhancedProps = {
  * @return enhanced component
  */
 
-const withApplication = <OwnProps>(component: ComponentType<OwnProps>) => {
-  type Props = OwnProps & EnhancedProps;
-  return withGetApplicationState<OwnProps, EnhancedProps>({
+const withApplication = <OwnProps extends { applicationId: string }>(component: ComponentType<OwnProps & EnhancedProps>) => {
+  return (withGetApplicationState as any)({
     options: (props: OwnProps) => ({ variables: { applicationId: props.applicationId } }),
-    props: ({ data }) => ({
+    props: ({ data }: any) => ({
       isApplicationLoading: !data || data.loading,
       application: oc(data).application(),
     }),
-  })(component as any) as ComponentType<Props>;
+  })(component as any) as ComponentType<OwnProps>;
 };
 
 export default withApplication;

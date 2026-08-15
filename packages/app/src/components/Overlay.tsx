@@ -25,7 +25,7 @@ export interface Classes {
 }
 
 type DefaultProps = {
-  withClickOutside: boolean,
+  withClickOutside?: boolean,
 };
 
 type HocProps = {
@@ -108,7 +108,7 @@ class Overlay extends React.PureComponent<Props & HocProps> {
   }
 
   render() {
-    const { classes, className, contentClassName, headClassName, title, onClose, withClickOutside } = this.props;
+    const { classes, className, contentClassName, headClassName, title, onClose } = this.props;
 
     return (
       <div className={classNames(classes!.container, 'station-content-overlay', className)}>

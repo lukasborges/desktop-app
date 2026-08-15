@@ -67,8 +67,8 @@ export default class DockTopSection extends React.PureComponent<Props, {}> {
           setHighlightedItemId={setHighlightedRecentSubdockItemId}
           recentApplications={recentApplications}
           selectItem={
-            (item: SearchResultSerialized, via: SearchPaneItemSelectedVia, position: number) =>
-              selectItem(item, position, via, 'subdock')
+            (item: ActivityEntry, via: SearchPaneItemSelectedVia, position: number) =>
+              selectItem(item as unknown as SearchResultSerialized, position, via, 'subdock')
           }
           ctrlTabCycling={ctrlTabCycling}
           stopCycling={stopCycling}

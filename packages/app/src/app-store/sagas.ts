@@ -1,6 +1,6 @@
 import * as remote from '@electron/remote';
-import * as isBlank from 'is-blank';
-import * as _ from 'lodash';
+import isBlank = require('is-blank');
+import _ = require('lodash');
 import { SagaIterator } from 'redux-saga';
 import { all, call, delay, getContext, put, putResolve, race, select } from 'redux-saga/effects';
 
@@ -157,7 +157,7 @@ const retrieveAllCategories = (apps: Manifest[]): string[] => {
 const sortAllCategories = (categories: string[]): string[] => {
   if (categories.length) {
     const sortedCategories = categories
-      .filter(category => !_.some(specialCategoriesForList, item => item === category))
+      .filter(category => !_.some(specialCategoriesForList, (item: string) => item === category))
       .sort((a, b) => {
         const aIndex = catalogCategories.indexOf(a);
         const bIndex = catalogCategories.indexOf(b);

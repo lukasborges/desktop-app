@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { getTabApplicationId, getTabTitle } from '../tabs/get';
 import { getApplicationManifestURL } from '../applications/get';
-import { getApplicationsWithUserIdentity } from '../applications/compartmentalizedSelectors';
+import { getApplications } from '../applications/selectors';
 import { Resolvers } from '../graphql/resolvers-types.generated';
 import { getHistoryItems } from '../history/selectors';
 import { getBxResourceForManifestURLAndURL } from '../resources/utils';
@@ -37,7 +37,7 @@ const resolvers: Resolvers = {
         createSelector(
           state => state,
           getHistoryItems,
-          getApplicationsWithUserIdentity,
+          getApplications,
           getTabsSortedByLastActivityAt,
           (state, history, applications, tabsSortedByLastActivityAt) =>
             history.size > 0 ? history.toJS() :
@@ -48,7 +48,7 @@ const resolvers: Resolvers = {
                 .reverse()
                 .slice(0, 8)
                 .map(async (tab: StationTabImmutable) => {
-                  const application = applications.get(getTabApplicationId(tab));
+                  const application = applications.get(getTabApplicationId(tab))!;
                   const { manifest } = await manifestProvider.getFirstValue(
                     getApplicationManifestURL(application)
                   );

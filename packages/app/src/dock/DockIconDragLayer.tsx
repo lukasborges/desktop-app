@@ -66,6 +66,7 @@ function getItemStyles(props: Props) {
   };
 }
 
+// @ts-ignore legacy React DnD decorator typing
 @DragLayer(monitor => ({
   item: monitor.getItem(),
   itemType: monitor.getItemType(),
@@ -109,6 +110,7 @@ class DockIconDragLayer extends React.PureComponent<Props> {
           <AppDockIcon
             applicationId={item.applicationId}
             active={true}
+            iconRef={() => undefined}
           />
 
           {/* Uncomment for the expanded state */}

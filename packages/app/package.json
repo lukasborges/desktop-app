@@ -19,7 +19,7 @@
   "scripts": {
     "sass": "sass src/theme/scss/app.global.scss src/theme/css/app.global.css",
     "clean-gql-gen": "rm -f src/**/*.generated.ts ||: && rm -f src/**/*.generated.tsx ||:",
-    "gql-gen": "yarn run clean-gql-gen && graphql-codegen --config codegen-local.yml",
+    "gql-gen": "yarn run clean-gql-gen && graphql-codegen --config codegen-local.yml && node scripts/fix-generated-types.mjs",
     "build-webpack:webui:dev": "cross-env NODE_ENV=development webpack --config webpack.config.webui.js --colors --no-progress --mode=development",
     "build-webpack:webui:prod": "cross-env NODE_ENV=production webpack --config webpack.config.webui.js --colors --mode=production --no-progress",
     "build-webpack:prod": "yarn run gql-gen && yarn run sass && rimraf dist && electron-webpack --no-progress && yarn run build-webpack:webui:prod",

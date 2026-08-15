@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 
 export interface Props {
   into: string | HTMLElement,
+  children?: React.ReactNode,
 }
 
 export default class Portal extends React.PureComponent<Props, {}> {

@@ -305,7 +305,7 @@ export class BrowserXAppWorker {
               },
             });
           },
-          onClickItem(params: IMenuServiceObserverOnClickItemParam) {
+          async onClickItem(params: IMenuServiceObserverOnClickItemParam) {
             handleMenuItemClick(params);
           },
         }, 'ctx-show-click'));

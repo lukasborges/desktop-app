@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactApolloHooks from '@apollo/client';
+import { MutationFunction } from '@apollo/client/react/types/types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 // @ts-ignore: no declaration file
 import injectSheet from 'react-jss';
@@ -28,11 +28,11 @@ import FavoriteItem from './FavoriteItem';
 // PROPS
 
 export interface RawFavoriteActions {
-  onSelect: ReactApolloHooks.MutationFn<SelectFavoriteMutation, SelectFavoriteMutationVariables>,
-  onClose: ReactApolloHooks.MutationFn<CloseFavoriteMutation, CloseFavoriteMutationVariables>,
-  onClickFavorite: ReactApolloHooks.MutationFn<UnpinFavoriteMutation, UnpinFavoriteMutationVariables>,
+  onSelect: MutationFunction<SelectFavoriteMutation, SelectFavoriteMutationVariables>,
+  onClose: MutationFunction<CloseFavoriteMutation, CloseFavoriteMutationVariables>,
+  onClickFavorite: MutationFunction<UnpinFavoriteMutation, UnpinFavoriteMutationVariables>,
   onClickAttach: SubdockActionsProps['onAttachTab'],
-  onClickDetach: ReactApolloHooks.MutationFn<DetachFavoriteMutation, DetachFavoriteMutationVariables>,
+  onClickDetach: MutationFunction<DetachFavoriteMutation, DetachFavoriteMutationVariables>,
 }
 
 export type OwnProps = SubdockActionsProps & {
@@ -112,12 +112,17 @@ const Favorites = ({
  * Get only the necessary actions from props to be used by Favorites.
  */
 export const useFavoritesMutators = (props: SubdockActionsProps) => {
+  const [onSelect] = useSelectFavoriteMutation();
+  const [onClose] = useCloseFavoriteMutation();
+  const [onClickFavorite] = useUnpinFavoriteMutation();
+  const [onClickDetach] = useDetachFavoriteMutation();
+
   return {
-    onSelect: useSelectFavoriteMutation(),
-    onClose: useCloseFavoriteMutation(),
-    onClickFavorite: useUnpinFavoriteMutation(),
+    onSelect,
+    onClose,
+    onClickFavorite,
     onClickAttach: props.onAttachTab,
-    onClickDetach: useDetachFavoriteMutation(),
+    onClickDetach,
   };
 };
 

@@ -1,8 +1,8 @@
-import * as Immutable from 'immutable';
+import { StationState } from '../types';
 
-export const getUserActivities = (state: Immutable.List<number>) : any =>
+export const getUserActivities = (state: StationState) =>
   state.get('userActivities');
 
-export const isUserSAU = (state: Immutable.List<number>) : any => {
+export const isUserSAU = (state: StationState): boolean => {
   return state.get('userActivities').size >= 3;
 };

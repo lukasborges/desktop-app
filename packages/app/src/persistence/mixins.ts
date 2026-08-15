@@ -13,13 +13,13 @@ const filterMap = (x: any) => {
 };
 
 export type MapObjectToState<T> = (obj: any) => Promise<T>;
-export type MapStateToObject<T> = (obj: Immutable.Collection<any, any>) => Promise<T>;
+export type MapStateToObject<T, S = Immutable.Map<string, any>> = (obj: S) => Promise<T>;
 
 function createInstanceFromClass<T>(cl: new(...args: any[]) => T, ...args: any[]): T {
   return new cl(...args);
 }
 
-export class SingletonProxy<T extends Sequelize.Instance<any>> {
+export class SingletonProxy<T extends Sequelize.Model<any, any>> {
 
   public modelInstance: T;
 
@@ -27,23 +27,23 @@ export class SingletonProxy<T extends Sequelize.Instance<any>> {
     this.modelInstance = model;
   }
 
-  static async mapStateToObject(_state: Immutable.Map<string, any>): Promise<any> {
+  static async mapStateToObject(_state: any): Promise<any> {
     throw new Error('Unimplement method');
   }
 
-  static mapObjectToState(_obj: any): Promise<Immutable.Map<string, any>> {
+  static mapObjectToState(_obj: any): Promise<any> {
     throw new Error('Unimplement method');
   }
 
-  static async create(_state: Immutable.Map<string, any>): Promise<any> {
+  static async create(_state: any): Promise<any> {
     throw new Error('Unimplement method');
   }
 
-  static async getOne(): Promise<any> {
+  static async getOne(..._args: any[]): Promise<any> {
     throw new Error('Unimplement method');
   }
 
-  static async truncate() {
+  static async truncate(..._args: any[]): Promise<any> {
     throw new Error('Unimplement method');
   }
 
@@ -52,7 +52,8 @@ export class SingletonProxy<T extends Sequelize.Instance<any>> {
   }
 
   async update(state: Immutable.Map<string, any>) {
-    const [obj] = await this.constructor.mapStateToObject(state);
+    const proxyClass = this.constructor as typeof SingletonProxy;
+    const [obj] = await proxyClass.mapStateToObject(state);
 
     this.modelInstance = await lock.acquire('db', () => this.modelInstance.update(obj));
     return this;
@@ -68,11 +69,12 @@ export class SingletonProxy<T extends Sequelize.Instance<any>> {
 
   async toState() {
     if (!this.modelInstance) return null;
-    return this.constructor.mapObjectToState(this.modelInstance);
+    const proxyClass = this.constructor as typeof SingletonProxy;
+    return proxyClass.mapObjectToState(this.modelInstance);
   }
 }
 
-export class MapProxy<T extends Sequelize.Instance<any>> extends SingletonProxy<T> {
+export class MapProxy<T extends Sequelize.Model<any, any>> extends SingletonProxy<T> {
 
   static async mapObjectToStateOrNull(dbObj: any) {
     if (!dbObj) return null;
@@ -92,12 +94,12 @@ export class MapProxy<T extends Sequelize.Instance<any>> extends SingletonProxy<
   }
 }
 
-export class ListProxy<T extends Sequelize.Instance<any>> extends SingletonProxy<T> {
+export class ListProxy<T extends Sequelize.Model<any, any>> extends SingletonProxy<T> {
   static async getAll(): Promise<any[]> {
     throw new Error('Unimplement method');
   }
 
-  static async mapArrayToState(_obj: any[]) {
+  static async mapArrayToState(_obj: any[]): Promise<any> {
     throw new Error('Unimplement method');
   }
 
@@ -106,7 +108,7 @@ export class ListProxy<T extends Sequelize.Instance<any>> extends SingletonProxy
   }
 }
 
-export class KeyValueProxy<T extends Sequelize.Instance<any>> extends SingletonProxy<T> {
+export class KeyValueProxy<T extends Sequelize.Model<any, any>> extends SingletonProxy<T> {
   static async getAll(): Promise<any> {
     throw new Error('Unimplement method');
   }
@@ -122,12 +124,12 @@ export class KeyValueProxy<T extends Sequelize.Instance<any>> extends SingletonP
 }
 
 export type SingletonProxyMixinParams = {
-  model: Sequelize.Model<any, any>
+  model: Sequelize.ModelStatic<Sequelize.Model<any, any>>
   mapStateToObject: MapStateToObject<any>
   mapObjectToState: MapObjectToState<Immutable.Map<string, any>>,
 };
 
-export const SingletonProxyMixin = <T extends Sequelize.Instance<any>>({
+export const SingletonProxyMixin = <T extends Sequelize.Model<any, any>>({
   model,
   mapStateToObject,
   mapObjectToState,
@@ -154,18 +156,18 @@ export const SingletonProxyMixin = <T extends Sequelize.Instance<any>>({
 
   static async getOne(...args: any[]) {
     const result = await model.findOne(...args);
-    return new this(result);
+    return new this(result as T);
   }
 };
 
 export type MapProxyMixinParams = {
-  model: Sequelize.Model<any, any>
+  model: Sequelize.ModelStatic<Sequelize.Model<any, any>>
   key: string
   mapStateToObject: MapStateToObject<any>
   mapObjectToState: MapObjectToState<Immutable.Collection<any, any>>,
 };
 
-export const MapProxyMixin = <T extends Sequelize.Instance<any>>({
+export const MapProxyMixin = <T extends Sequelize.Model<any, any>>({
   model,
   key,
   mapStateToObject,
@@ -193,7 +195,7 @@ export const MapProxyMixin = <T extends Sequelize.Instance<any>>({
     return createInstanceFromClass(this, x);
   }
 
-  static async findOrCreate(state: Immutable.Map<string, any>) {
+  static async findOrCreate(state: Immutable.Map<string, any>): Promise<any> {
     const [data] = await this.mapStateToObject(state);
     const options = {
       where: { [key]: data[key] },
@@ -203,23 +205,23 @@ export const MapProxyMixin = <T extends Sequelize.Instance<any>>({
     return createInstanceFromClass(this, x);
   }
 
-  static async getAll(...args: any[]) {
+  static async getAll(...args: any[]): Promise<any> {
     return model.findAll(...args).then(this.mapAll.bind(this));
   }
 
   getObjectKey() {
-    return this.modelInstance.get(key);
+    return String(this.modelInstance.get(key));
   }
 };
 
 export type ListProxyMixinParams = {
-  model: Sequelize.Model<any, any>
-  mapStateToArray: MapStateToObject<any[]>
+  model: Sequelize.ModelStatic<Sequelize.Model<any, any>>
+  mapStateToArray: MapStateToObject<any[], Immutable.Collection<any, any>>
   mapArrayToState: MapObjectToState<Immutable.List<any>>,
   orderBy?: string,
 };
 
-export const ListProxyMixin = <T extends Sequelize.Instance<any>>({
+export const ListProxyMixin = <T extends Sequelize.Model<any, any>>({
   model,
   mapStateToArray,
   mapArrayToState,
@@ -253,14 +255,14 @@ export const ListProxyMixin = <T extends Sequelize.Instance<any>>({
     return model.truncate();
   }
 
-  static async getAll(...args: any[]) {
+  static async getAll(...args: any[]): Promise<any> {
     const opts = orderBy ? { order: [orderBy] } : undefined;
     return model.findAll(...args, opts).then(this.mapAll.bind(this));
   }
 };
 
 export type KeyValueProxyMixinParams = {
-  model: Sequelize.Model<any, any>
+  model: Sequelize.ModelStatic<Sequelize.Model<any, any>>
   key: string,
   mapStateToObject: MapStateToObject<any>
   mapObjectToState: MapObjectToState<Immutable.Map<string, any>>,
@@ -271,7 +273,7 @@ export type KeyValueProxyMixinLine = {
   [x: string]: string,
 };
 
-export const KeyValueProxyMixin = <T extends Sequelize.Instance<any>>({
+export const KeyValueProxyMixin = <T extends Sequelize.Model<any, any>>({
   model,
   key,
   mapStateToObject,
@@ -314,7 +316,7 @@ export const KeyValueProxyMixin = <T extends Sequelize.Instance<any>>({
     return results.map(x => createInstanceFromClass(this, x));
   }
 
-  static async getAll(options: Sequelize.FindOptions<any> = {}) {
+  static async getAll(options: Sequelize.FindOptions<any> = {}): Promise<any> {
     return model
       .findAll(options)
       .then(this.mapAll.bind(this));

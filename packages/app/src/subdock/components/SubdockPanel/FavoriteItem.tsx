@@ -6,6 +6,14 @@ import { MinimalSubdockApplication, WrappedActions } from '../SubdockItem';
 import { Favorite } from './types';
 import { RawFavoriteActions } from './Favorites';
 
+type FavoriteWithRelatedTab = Favorite & {
+  relatedTab?: {
+    id: string,
+    isDetached?: boolean,
+    specificIconId?: string,
+  },
+};
+
 // PROPS
 
 interface OwnProps {
@@ -49,7 +57,7 @@ const FavoriteItem = (props: OwnProps) => {
 const useSanitization = (item: Favorite, isActive: boolean) => {
   return React.useMemo(
     () => {
-      const { relatedTab } = item;
+      const { relatedTab } = item as FavoriteWithRelatedTab;
       return {
         title: item.title || '',
         isActive,
@@ -57,7 +65,7 @@ const useSanitization = (item: Favorite, isActive: boolean) => {
         isDetached: (relatedTab) ? Boolean(relatedTab.isDetached) : false,
         icon: (relatedTab) ? relatedTab.specificIconId : undefined,
         canPin: true,
-        canDetach: true,
+        canDetach: Boolean(relatedTab),
         isPinned: true,
         noClose: false,
       };
@@ -76,7 +84,7 @@ const useActionsWrapper = (
 ): WrappedActions => {
   return React.useMemo(
     () => {
-      const { favoriteId, relatedTab } = item;
+      const { favoriteId, relatedTab } = item as FavoriteWithRelatedTab;
       if (!favoriteId) throw new Error('Missing Favorite ID to wrap actions');
 
       const payloadId = { variables: { id: favoriteId } };
@@ -85,7 +93,7 @@ const useActionsWrapper = (
         onSelect: () => actions.onSelect(payloadId),
         onClose: () => actions.onClose(payloadId),
         onClickFavorite: () => actions.onClickFavorite(payloadId),
-        onClickAttach: () => actions.onClickAttach(relatedTab.id),
+        onClickAttach: () => relatedTab && actions.onClickAttach(relatedTab.id),
         onClickDetach: () => actions.onClickDetach(payloadId),
       };
     },

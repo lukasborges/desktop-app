@@ -129,7 +129,7 @@ const resolvers: Resolvers = {
     },
     passwordManagerLogin: (application, _, context) =>
       subscribeStore(context.store, state => {
-        const passwordManagerLink = getLink(state, application.applicationId);
+        const passwordManagerLink = getLink(state, getApplicationId(application));
         return passwordManagerLink ? passwordManagerLink.get('login') : null;
       }).pipe(distinctUntilChanged()),
     identity: (application, _, context) =>

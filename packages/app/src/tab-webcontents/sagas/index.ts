@@ -62,7 +62,6 @@ import sleepingSagas from './sleeping';
 import closeCurrentTabSagas from './close-current-tab';
 import ms = require('ms');
 import { ContextMenuService } from '../../services/services/menu/interface';
-import services from '../../services/servicesManager';
 
 let seenWebcontents = new Set();
 
@@ -82,7 +81,7 @@ function* interceptPrint({ webcontentsId, tabId }: NewWebcontentsAttachedToTabAc
     webcontentsId, 'addPrintObserver', 'onPrint', 'intercept-print');
 
   // Listen for print events
-  yield takeEveryWitness(printChannel, function* handle() {
+  yield takeEveryWitness(printChannel, function* handle(): SagaIterator {
     const currentActiveTabId = yield select(getFrontActiveTabId);
     if (currentActiveTabId === tabId) {
       // If print is called on  current active tab, show print modal...
@@ -96,7 +95,7 @@ function* interceptPrint({ webcontentsId, tabId }: NewWebcontentsAttachedToTabAc
   });
 
   // Listen for active tab change events
-  yield takeLatestWitness(FRONT_ACTIVE_TAB_CHANGE, function* handle(action: FrontActiveTabChangeAction) {
+  yield takeLatestWitness(FRONT_ACTIVE_TAB_CHANGE, function* handle(action: FrontActiveTabChangeAction): SagaIterator {
     // When active tab is changed, if the new active tab is in the print queue,
     // trigger the print modal.
     if (waitingForPrint && action.tabId === tabId) {
@@ -112,7 +111,7 @@ function* interceptDestroyedEvents({ webcontentsId, tabId }: NewWebcontentsAttac
   const destroyedChannel = createWebContentsServiceObserverChannel(
     webcontentsId, 'addLifeCycleObserver', 'onDestroyed', 'intercept-destroyed');
 
-  yield takeEveryWitness(destroyedChannel, function* () {
+  yield takeEveryWitness(destroyedChannel, function* (): SagaIterator {
     const twc = yield select(getTabWebcontentsByWebContentsId, webcontentsId);
     // only clear tabWebcontents if the tabIb have not been reattached
     if (twc && getWebcontentsTabId(twc) === tabId) {
@@ -138,11 +137,11 @@ function* watchForNewWebContents({ tabId, webcontentsId }: NewWebcontentsAttache
   }
 }
 
-function* interceptWebcontentsReady({ webcontentsId, tabId }: DomReadyAction) {
+function* interceptWebcontentsReady({ webcontentsId, tabId }: DomReadyAction): SagaIterator {
   const domReadyEventChannel = createWebContentsServiceObserverChannel(
     webcontentsId, 'addLifeCycleObserver', 'onDomReady', 'intercept-ready');
 
-  yield takeEveryWitness(domReadyEventChannel, function* handle() {
+  yield takeEveryWitness(domReadyEventChannel, function* handle(): SagaIterator {
     yield put(domReady(webcontentsId, tabId));
   });
 }
@@ -152,7 +151,7 @@ function* interceptNavigateEvents({ webcontentsId, tabId }: NewWebcontentsAttach
     webcontentsId, 'addLifeCycleObserver', 'onNavigate', 'intercept-nav');
 
   yield takeEveryWitness(navigationEventChannel,
-    function* navigationEventChannelCallback({ canGoBack, canGoForward }: { canGoBack: boolean, canGoForward: boolean }) {
+    function* navigationEventChannelCallback({ canGoBack, canGoForward }: { canGoBack: boolean, canGoForward: boolean }): SagaIterator {
       yield put(updateBackForwardState(tabId, canGoBack, canGoForward));
     }
   );
@@ -168,7 +167,7 @@ function* closeSubwindowIfReattachedOrTimeout({ tabId }: CloseAfterReattachedOrT
   yield call([SubWindowManager, SubWindowManager.close], tabId);
 }
 
-function* getTabsToLoadOnStartup() {
+function* getTabsToLoadOnStartup(): SagaIterator {
   const bxApp: BrowserXAppWorker = yield getContext('bxApp');
 
   const manifestURLs = yield select(getInstalledManifestURLs);
@@ -195,7 +194,7 @@ function* getTabsToLoadOnStartup() {
   });
 }
 
-function* startProgressiveWarmup() {
+function* startProgressiveWarmup(): SagaIterator {
   const isOnboardingDone = yield select(isDone);
 
   if (!isOnboardingDone) {
@@ -222,7 +221,7 @@ function* startProgressiveWarmup() {
   }
 }
 
-function* setTabActivityDebounced({ tabId }: FrontActiveTabChangeAction) {
+function* setTabActivityDebounced({ tabId }: FrontActiveTabChangeAction): SagaIterator {
   const now:number = yield call(Date.now);
   // FRONT_ACTIVE_TAB_CHANGE can be triggered 2 times quickly
   // when switching from tab 1 in app A to tab 2 in app B
@@ -271,7 +270,7 @@ function* sagaExecuteWebviewMethodForCurrentTab({ method }: ExecuteWebviewMethod
   yield put(executeWebviewMethod(tabId, method));
 }
 
-function* interceptAutofill({ webcontentsId }: { webcontentsId: number }) {
+function* interceptAutofill({ webcontentsId }: { webcontentsId: number }): SagaIterator {
   const autofillMenu: ContextMenuService = yield callService('contextMenu', 'create', { webcontentsId });
   // const popupChannel = serviceAddObserverChannel(autofillMenu, 'onAskAutofillPopup', 'autofill-popup-asked');
   const clickChannel = serviceAddObserverChannel(autofillMenu, 'onClickItem', 'autofill-popup-value-selected');
@@ -287,7 +286,7 @@ function* interceptAutofill({ webcontentsId }: { webcontentsId: number }) {
   // });
 }
 
-export default function* main() {
+export default function* main(): SagaIterator {
   yield all([
     takeEveryWitness(MAIN_APP_READY, startProgressiveWarmup),
     takeEveryWitness(FRONT_ACTIVE_TAB_CHANGE, reloadTabIfCrashed),

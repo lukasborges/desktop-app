@@ -511,14 +511,14 @@ class ApplicationImpl extends React.PureComponent {
 }
 
 const Application = compose(
-  withGetApplicationState({
+  (withGetApplicationState as any)({
     options: ({ application, tab }: Props) => ({
       variables: {
         applicationId: application.get('applicationId'),
         tabId: tab.get('tabId'),
       },
     }),
-    props: ({ data }) => {
+    props: ({ data }: any) => {
       if (!data) return { loading: true };
       const { application, stationStatus } = oc(data);
       const manifestData = application.manifestData;
@@ -527,7 +527,7 @@ const Application = compose(
         manifestURL: application.manifestURL(),
         appstoreApplicationId: application.appstoreApplicationId(),
         applicationId: data.variables.applicationId,
-        applicationName: manifestData.name(),
+        applicationName: manifestData.name,
         applicationIcon: manifestData.interpretedIconURL(),
         themeColor: manifestData.theme_color(),
         notUseNativeWindowOpen: manifestData.bx_not_use_native_window_open_on_host(),

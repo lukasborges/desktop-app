@@ -22,7 +22,7 @@ const layerStyles = {
   top: 0,
   width: '100%',
   height: '100%',
-};
+} as React.CSSProperties;
 
 function getItemStyles(props: Props) {
   const { initialOffset, currentOffset } = props;
@@ -44,6 +44,7 @@ function getItemStyles(props: Props) {
   };
 }
 
+// @ts-ignore legacy React DnD decorator typing
 @DragLayer(monitor => ({
   item: monitor.getItem(),
   itemType: monitor.getItemType(),
@@ -65,8 +66,19 @@ export default class SubdockItemDragLayer extends React.PureComponent<Props> {
       <div style={layerStyles}>
         <ul style={getItemStyles(this.props)}>
           <SubdockItem
-            application={item.application}
-            item={item.item}
+            application={{ ...item.application, iconUrl: null, themeColor: null }}
+            item={{
+              ...item.item,
+              isActive: false,
+              isTabApplicationHome: false,
+              isDetached: false,
+            }}
+            actions={{
+              onSelect: () => undefined,
+              onClose: () => undefined,
+              onClickFavorite: () => undefined,
+              onClickDetach: () => undefined,
+            }}
           />
         </ul>
       </div>

@@ -150,16 +150,16 @@ class SettingsDownloadFolder extends React.PureComponent<Props> {
 }
 
 const connect = compose(
-  withGetPromptDownloadStatus({
-    props:({ data }) => ({
+  (withGetPromptDownloadStatus as any)({
+    props:({ data }: any) => ({
       promptDownloadEnabled: !!data && data.promptDownloadEnabled,
     }),
   }),
-  withEnablePromptDownload({
-    props:({ mutate }): MutationProps => ({
+  (withEnablePromptDownload as any)({
+    props:({ mutate }: any): MutationProps => ({
       togglePromptDownload: (enabled: boolean) => mutate && mutate({ variables: { enabled } }),
     }),
   }),
 );
 
-export default connect(SettingsDownloadFolder) as React.ComponentType<OwnProps>;
+export default connect(SettingsDownloadFolder as any) as React.ComponentType<OwnProps>;

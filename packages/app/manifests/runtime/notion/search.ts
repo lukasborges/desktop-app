@@ -25,7 +25,7 @@ import {
 type CancelQuery = () => void;
 
 class Search {
-  public static instance;
+  public static instance: Search | null = null;
 
   private static readonly errors: Subject<Error> = new Subject();
 
@@ -130,7 +130,7 @@ class Search {
             results: rejectResultIfAvailableAsTab(results),
           });
         },
-        e => Search.errors.next(e)
+        (e: Error) => Search.errors.next(e)
       );
   }
 
@@ -161,7 +161,7 @@ class Search {
 
         return undefined;
       })
-      .filter(r => Boolean(r));
+      .filter((r: search.SearchResultItem | undefined): r is search.SearchResultItem => Boolean(r));
   }
 }
 

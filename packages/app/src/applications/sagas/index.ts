@@ -63,7 +63,7 @@ import { goToStartUrlAfterSetConfigData, updateApplicationIconAfterSetConfigData
 import { ApplicationImmutable } from '../types';
 import { pickCustomIcon, resetCustomIcon } from './customIcon';
 
-function* interceptZoomActions({ applicationId }: ZoomActions) {
+function* interceptZoomActions({ applicationId }: ZoomActions): SagaIterator {
   const application = yield select(getApplicationById, applicationId);
 
   if (!application) return undefined;
@@ -73,14 +73,14 @@ function* interceptZoomActions({ applicationId }: ZoomActions) {
 
   for (const webcontentsId of webcontentsIds) {
     try {
-      yield callService('tabWebContents', 'setZoomLevel', webcontentsId, zoomLevel);
+      yield callService('tabWebContents', 'setZoomLevel', Number(webcontentsId), Number(zoomLevel));
     } catch (e) {
       console.warn(e);
     }
   }
 }
 
-function* setHomeTabAsActiveForApplication({ applicationId }: SetHomeTabAsActiveAction) {
+function* setHomeTabAsActiveForApplication({ applicationId }: SetHomeTabAsActiveAction): SagaIterator {
   const application = yield select(getApplicationById, applicationId);
   if (!application) return;
 
@@ -96,7 +96,7 @@ function* setHomeTabAsActiveForApplication({ applicationId }: SetHomeTabAsActive
   }
 }
 
-function* sagaCreateNewTab({ applicationId, url, home, detach: shouldDetach, navigateToApplication }: CreateNewTabAction) {
+function* sagaCreateNewTab({ applicationId, url, home, detach: shouldDetach, navigateToApplication }: CreateNewTabAction): SagaIterator {
   const id = shortid.generate();
   const tabId = `${applicationId}/${id}`;
   if (shouldDetach) {
@@ -115,7 +115,7 @@ function* sagaCreateNewTab({ applicationId, url, home, detach: shouldDetach, nav
   }
 }
 
-function* sagaCreateNewEmptyTab({ applicationId, home }: CreateNewEmptyTabAction) {
+function* sagaCreateNewEmptyTab({ applicationId, home }: CreateNewEmptyTabAction): SagaIterator {
   const bxApp: BrowserXAppWorker = yield getContext('bxApp');
   const application = yield select(getApplicationById, applicationId);
   if (!application) return;
@@ -129,7 +129,7 @@ function* sagaCreateNewEmptyTab({ applicationId, home }: CreateNewEmptyTabAction
   yield put(createNewTab(applicationId, newPageUrl, { home, navigateToApplication: true }));
 }
 
-export function* focusActiveTab({ applicationId, tabId }: SetActiveTabAction) {
+export function* focusActiveTab({ applicationId, tabId }: SetActiveTabAction): SagaIterator {
   const activeApplicationId = yield select(getActiveApplicationId);
 
   if (applicationId === activeApplicationId) {
@@ -144,7 +144,7 @@ export function* focusActiveTab({ applicationId, tabId }: SetActiveTabAction) {
  * successively.
  * Only the `installContext` is kept between the previous and the new application.
  */
-export function* onResetApplication({ applicationId, via }: ResetApplicationAction) {
+export function* onResetApplication({ applicationId }: ResetApplicationAction): SagaIterator {
   yield put(updateUI('confirmResetApplicationModal', 'isVisible', false));
 
   const application: ApplicationImmutable = yield select(getApplicationById, applicationId);
@@ -190,7 +190,7 @@ function* sagaNavigateToApplicationTabAutomatically({ tabId, via, silent }: Navi
   return yield put(navigateToApplicationTab(applicationId, tabId, via, silent));
 }
 
-function* sagaChangeSelectedApp({ applicationId, via, markAsActiveTab }: ChangeSelectedAppAction): SagaIterator {
+function* sagaChangeSelectedApp({ applicationId, via: _via, markAsActiveTab }: ChangeSelectedAppAction): SagaIterator {
   const tabs = yield select(getTabsForApplication, applicationId);
   if (tabs.size === 1) {
     const tabId = getTabId(tabs.first());
@@ -212,7 +212,7 @@ function* sagaChangeSelectedApp({ applicationId, via, markAsActiveTab }: ChangeS
   }
 }
 
-export default function* main(bxApp: BrowserXAppWorker) {
+export default function* main(_bxApp: BrowserXAppWorker): SagaIterator {
   yield all([
     fork(watchLifecyleActions),
     takeEveryWitness([ZOOM_IN, ZOOM_OUT, RESET_ZOOM], interceptZoomActions),

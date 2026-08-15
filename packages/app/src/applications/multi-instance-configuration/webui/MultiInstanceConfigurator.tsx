@@ -222,7 +222,7 @@ export default class MultiInstanceConfigurator extends React.Component<Props, St
     if (!manifest) return null;
 
     return (
-      <ApplicationContainer applicationIcon={interpretedIconUrl(manifest)}>
+      <ApplicationContainer applicationIcon={interpretedIconUrl(manifest) || ''}>
         <div className={classes!.container}>
           {this.chooseForm()}
 

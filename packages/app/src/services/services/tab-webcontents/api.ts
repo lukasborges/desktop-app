@@ -17,7 +17,7 @@ export const getWebContentsFromIdOrThrow = async (webContentsId: number, maxTrie
   while (wc === null && count > 0) {
     wc = await new Promise(resolve => {
       process.nextTick(() => {
-        resolve(webContents.fromId(webContentsId));
+        resolve(webContents.fromId(webContentsId) || null);
       });
     });
     count = count - 1;

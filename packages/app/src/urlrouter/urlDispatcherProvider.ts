@@ -5,7 +5,7 @@ import { getTabWebcontentsByWebContentsId, getWebcontentsTabId } from '../tab-we
 import { getApplicationIdByTabId } from '../tabs/selectors';
 import { DEFAULT_BROWSER_BACKGROUND, NEW_TAB, Targets } from './constants';
 import { dispatchUrlSaga } from './sagas';
-import { StationStoreWorker } from 'app/types';
+import { StationStoreWorker } from '../types';
 
 export class UrlDispatcherProviderServiceImpl extends UrlDispatcherProviderService
   implements RPC.Interface<UrlDispatcherProviderService> {

@@ -6,6 +6,7 @@ import { bindActionCreators, compose } from 'redux';
 import { markAsRead, notificationClick, toggleVisibility } from '../duck';
 import { getFullNotificationsOrderedGrouped } from '../selectors';
 import NotificationGroup from './NotificationGroup';
+import { StationState } from '../../types';
 
 interface StateProps {
   groupedNotifications: Immutable.List<Immutable.Map<string, any>>,
@@ -69,7 +70,7 @@ export class NotificationCenterBodyImpl extends React.PureComponent<Props> {
 
 const connector = compose(
   connect<StateProps, DispatchProps, {}>(
-    (state: Immutable.Map<string, any>) => ({
+    (state: StationState) => ({
       groupedNotifications: getFullNotificationsOrderedGrouped(state),
     }),
     (dispatch: any) => bindActionCreators({

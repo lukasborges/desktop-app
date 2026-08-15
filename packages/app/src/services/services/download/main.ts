@@ -38,7 +38,8 @@ function isAttachmentAsMainframe(details: Electron.OnCompletedListenerDetails) {
 function hasEmptyHistory(webContentsId?: number) {
   if (!webContentsId) return true;
   try {
-    return !webContents.fromId(webContentsId).canGoBack;
+    const wc = webContents.fromId(webContentsId);
+    return !wc || !wc.canGoBack();
   } catch (e) { }
   return true;
 }
@@ -123,6 +124,7 @@ export class DownloadServiceImpl extends DownloadService implements RPC.Interfac
         if (isAttachmentAsMainframe(details)) {
           observer.onRequestCompleted!({
             ...details,
+            responseHeaders: details.responseHeaders || {},
             hasEmptyHistory: hasEmptyHistory(details.webContentsId),
           });
         }

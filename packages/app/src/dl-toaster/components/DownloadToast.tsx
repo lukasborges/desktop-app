@@ -128,7 +128,7 @@ class DownloadToast extends React.PureComponent<FullProps> {
     const finished = completed || failed;
 
     if (loading) return null;
-    if (completed && onFinished && typeof onFinished === 'function') {
+    if (completed && onFinished && typeof onFinished.doTheJob === 'function') {
       setTimeout(onFinished.doTheJob, onFinished.delay);
     }
 
@@ -169,9 +169,9 @@ class DownloadToast extends React.PureComponent<FullProps> {
 }
 
 const connector = compose(
-  withGetApplication({
+  (withGetApplication as any)({
     options: (props: Props) => ({ variables: { applicationId: props.applicationId } }),
-    props: ({ data }) => ({
+    props: ({ data }: any) => ({
       loading: !data || data.loading,
       interpretedIconUrl: oc(data).application.manifestData.interpretedIconURL(),
       themeColor: oc(data).application.manifestData.theme_color(),
@@ -180,4 +180,4 @@ const connector = compose(
 
 );
 
-export default connector(DownloadToast);
+export default connector(DownloadToast as any) as React.ComponentType<Props>;

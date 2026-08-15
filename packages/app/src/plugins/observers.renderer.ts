@@ -29,7 +29,7 @@ const observePluginsActivation = observer(
     const pluginIds = Immutable.Set<string>(pluginsToServiceIds(plugins));
     const previousPluginIds = previousPlugins ? Immutable.Set<string>(pluginsToServiceIds(previousPlugins)) : Immutable.Set<string>();
     const newPluginIds = pluginIds.subtract(previousPluginIds).filter(Boolean);
-    for (const serviceId of newPluginIds) {
+    for (const serviceId of newPluginIds.toArray()) {
       const manifestURL = getManifestURLFromServiceId(plugins, serviceId);
       getServiceRuntimeRenderer(serviceId)
         .then(runtime => {

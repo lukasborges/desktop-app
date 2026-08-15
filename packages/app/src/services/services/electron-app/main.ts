@@ -16,7 +16,7 @@ function initProxyResolver() {
 
     // Use electron session resolver to detect proxy settings with a distant URL
     // If settings are detected, parse them then intialize a global tunnel for the whole app
-    defaultSession.resolveProxy('https://auth0.com/', (proxyDetected) => {
+    defaultSession.resolveProxy('https://auth0.com/').then((proxyDetected: string) => {
       if (proxyDetected === 'DIRECT') {
         log.info('Proxy : no settings detected');
       } else {
@@ -28,7 +28,7 @@ function initProxyResolver() {
           port: Number(proxySettings[1]),
         });
       }
-    });
+    }).catch(error => log.error('Proxy detection failed', error));
   });
 }
 
@@ -64,7 +64,7 @@ export class ElectronAppServiceImpl extends ElectronAppService implements RPC.In
   }
 
   async getPath(name: ElectronAppPath) {
-    return app.getPath(name);
+    return app.getPath(name as Parameters<typeof app.getPath>[0]);
   }
 
   async quit() {
