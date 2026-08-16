@@ -167,7 +167,7 @@ export const addOnNotificationCloseObserver = (wc: Electron.WebContents, obs: RP
 
 const downloadHackPerfixes: string[] = [
   'https://files.slack.com',    // Download file from Slack.com
-  'about:blank',                // 
+  'about:blank',                //
 ];
 
 const getDownloadHackPrefix = (url : string): (string | null) => {
@@ -177,10 +177,10 @@ const getDownloadHackPrefix = (url : string): (string | null) => {
     }
   }
   return null;
-}
+};
 
 export const handleDownloadHack = (wc: Electron.WebContents, url: string): boolean => {
-  let result: boolean = false;
+  let result = false;
   const downloadUrlPrefix = getDownloadHackPrefix(url);
   if (downloadUrlPrefix !== null) {
     result = true;
@@ -194,7 +194,7 @@ export const handleDownloadHack = (wc: Electron.WebContents, url: string): boole
               wc.session.once('will-download', () => resolve(true));
           }),
           new Promise<boolean>(resolve => {
-              setTimeout(() => resolve(false), 2000)
+              setTimeout(() => resolve(false), 2000);
           }),
         ])
         .then(downloadItem => {
@@ -206,7 +206,7 @@ export const handleDownloadHack = (wc: Electron.WebContents, url: string): boole
             window.show();
           }
         });
-    });      
+    });
   }
   return result;
-}
+};

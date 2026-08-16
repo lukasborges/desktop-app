@@ -366,8 +366,8 @@ class ApplicationImpl extends React.PureComponent {
 
   async handleDomReady() {
 
-    const webviewInjectJS = require(`!!raw-loader!../static/preload/webview-inject.js`).default
-    this.webView.view.executeJavaScript(webviewInjectJS); //`(function(){\n${bxNotifJS}\n})()`);
+    const webviewInjectJS = require(`!!raw-loader!../static/preload/webview-inject.js`).default;
+    this.webView.view.executeJavaScript(webviewInjectJS); // `(function(){\n${bxNotifJS}\n})()`);
 
     // The `<webview>` tag has no `muted` attribute, so the initial audio mute
     // state (e.g. app started while notifications are snoozed) must be applied

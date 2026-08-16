@@ -328,7 +328,7 @@ export class BrowserXAppWorker {
     this.mainWindowManager.on('swipe-left', () => this.dispatch(executeWebviewMethodForCurrentTab('go-back')));
     this.mainWindowManager.on('swipe-right', () => this.dispatch(executeWebviewMethodForCurrentTab('go-forward')));
     this.mainWindowManager.on('new-notification', (notificationId: string, props: NotificationProps, options: NotificationOptions) => {
-      this.dispatch(notificationCenter.newNotification(undefined, undefined, notificationId, props, options))
+      this.dispatch(notificationCenter.newNotification(undefined, undefined, notificationId, props, options));
     });
   }
 

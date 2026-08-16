@@ -31,11 +31,11 @@ export class AutolaunchServiceImpl extends AutolaunchService implements RPC.Inte
         path: process.env.APPIMAGE,
       } : { name: appName };
       const autoLauncher = new AutoLaunch(autolaunchConfig);
-  
+
       let isAutoLaunched;
       try {
         isAutoLaunched = await autoLauncher.isEnabled();
-      } 
+      }
       catch (e) {
         isAutoLaunched = false;
       }
@@ -45,7 +45,7 @@ export class AutolaunchServiceImpl extends AutolaunchService implements RPC.Inte
       } else if (!enable && isAutoLaunched) {
         await autoLauncher.disable();
       }
-    } 
+    }
     catch (e) {
       log.error('autoLauncher enable/disable failed', e);
       await this.provider.setAutoLaunchEnabled(false);

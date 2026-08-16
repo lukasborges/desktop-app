@@ -25,12 +25,12 @@ export class UrlDispatcherProviderServiceImpl extends UrlDispatcherProviderServi
 
     // run the `dispatchUrlSaga`, which is the entry point to dispatch a new URL inside bx
     await this.store.runSaga(
-      dispatchUrlSaga, 
+      dispatchUrlSaga,
       {
-        type: DISPATCH_URL, 
-        url, 
-        origin: { tabId, applicationId }, 
-        options: { 
+        type: DISPATCH_URL,
+        url,
+        origin: { tabId, applicationId },
+        options: {
           target,
           loadInBackground: target === DEFAULT_BROWSER_BACKGROUND,
         },

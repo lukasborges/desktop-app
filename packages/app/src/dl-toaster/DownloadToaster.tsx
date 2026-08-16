@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
 import { compose, bindActionCreators } from 'redux';
 import { getThemeColors } from '../theme/selectors';
-import { ImmutableList, ObjectToImmutable } from '../types';
+import { ImmutableList, ObjectToImmutable, StationState } from '../types';
 import DownloadToast from './components/DownloadToast';
 import { openDownloadedFile, removeToastForDownload } from './duck';
 import { getFormatedDownloadsToShow } from './selectors';
 import { Style, ButtonIcon, IconSymbol } from '@getstation/theme';
-import { StationState } from '../types';
 
 type DownloadItem = ObjectToImmutable<{
   downloadId: string,

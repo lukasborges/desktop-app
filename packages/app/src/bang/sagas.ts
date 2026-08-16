@@ -4,16 +4,14 @@ import { observeOn, distinctUntilChanged, timestamp } from 'rxjs/operators';
 import * as log from 'electron-log';
 import isEmpty = require('is-empty');
 import { SagaIterator } from 'redux-saga';
-import { delay } from 'redux-saga/effects';
-import { all, call, fork, put, select, getContext } from 'redux-saga/effects';
+import { all, call, delay, fork, getContext, put, select } from 'redux-saga/effects';
 import { Selector } from 'reselect';
 // @ts-ignore: no declaration file
 import { updateUI } from 'redux-ui/transpiled/action-reducer';
 import { flatten, uniqBy } from 'ramda';
 import { noop } from 'ramda-adjunct';
-import { Subscription, Subject, combineLatest } from 'rxjs';
+import { asyncScheduler, combineLatest, Subject, Subscription } from 'rxjs';
 import { Timestamp } from 'rxjs/internal/operators/timestamp';
-import { asyncScheduler } from 'rxjs';
 import { dispatchUrl } from '../applications/duck';
 import { historyItemsAsLastUsedSection } from '../history/api';
 import bxSDK from '../sdk';

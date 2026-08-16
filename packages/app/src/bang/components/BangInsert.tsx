@@ -72,7 +72,7 @@ export default class BangInsert extends React.PureComponent<Props> {
 
     return (
       <div className={classes!.item}>
-  
+
         <img className={classes!.gdriveIcon} src={gDriveIcon} />
 
         <p className={classes!.gdriveDesc}>Access Google Docs and Sheets with the Quick Switch</p>

@@ -149,18 +149,6 @@ const getHeaderMenuLabel = (item: Electron.MenuItem): string => {
 class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMenuLevelState> {
   state: HeaderMenuLevelState = { activeSubmenu: null };
 
-  private openSubmenu = (index: number, item: Electron.MenuItem) => {
-    this.setState({ activeSubmenu: item.submenu ? index : null });
-  }
-
-  private selectItem = (item: Electron.MenuItem, index: number) => {
-    if (item.submenu) {
-      this.setState({ activeSubmenu: this.state.activeSubmenu === index ? null : index });
-      return;
-    }
-    this.props.onActivate(item);
-  }
-
   render() {
     const { depth = 0, items, menuRef, onActivate } = this.props;
 
@@ -245,6 +233,18 @@ class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMe
         })}
       </div>
     );
+  }
+
+  private openSubmenu = (index: number, item: Electron.MenuItem) => {
+    this.setState({ activeSubmenu: item.submenu ? index : null });
+  }
+
+  private selectItem = (item: Electron.MenuItem, index: number) => {
+    if (item.submenu) {
+      this.setState({ activeSubmenu: this.state.activeSubmenu === index ? null : index });
+      return;
+    }
+    this.props.onActivate(item);
   }
 }
 

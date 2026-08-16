@@ -1,11 +1,12 @@
 import { Icon, IconSymbol } from '@getstation/theme';
+// @ts-ignore
+import * as animationData from '@src/shared/animations/add-application-animation.json';
 import * as React from 'react';
 import injectSheet from 'react-jss';
 import Lottie from 'react-lottie';
-// @ts-ignore
-import * as animationData from '@src/shared/animations/add-application-animation.json';
 
 import { iconNeedsContrastBackground } from '../../../../../../app/src/utils/iconContrast';
+
 import styles, { AppStoreApplicationLogoClasses } from './styles';
 
 export type AppStoreApplicationLogoProps = {

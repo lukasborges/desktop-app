@@ -1,6 +1,5 @@
 import { IconSymbol } from '@getstation/theme';
 import type { Meta, StoryObj } from '@storybook/react';
-
 import { ButtonWithIcon } from '@src/components/common/ButtonWithIcon/ButtonWithIcon';
 
 const meta: Meta<typeof ButtonWithIcon> = {

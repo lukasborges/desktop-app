@@ -325,7 +325,7 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
             repeat: input.isAutoRepeat,
             bubbles: true,
             composed: true,
-            cancelable: true
+            cancelable: true,
           }
         );
         // Workaround for mousetrap
@@ -334,10 +334,10 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
           emulatedKeyboardEvent.code
         );
         Object.defineProperty(emulatedKeyboardEvent, 'which', {
-          value: keyCodeValue
+          value: keyCodeValue,
         });
         Object.defineProperty(emulatedKeyboardEvent, 'keyCode', {
-          value: keyCodeValue
+          value: keyCodeValue,
         });
 
         this.view.dispatchEvent(emulatedKeyboardEvent);
@@ -365,7 +365,7 @@ class ElectronWebview extends React.Component<ElectronWebviewProps, {}> {
       const className = `${props.className} ${props.hidden ? 'hidden' : ''}`;
       return this.view.setAttribute('class', className);
     }
-  };
+  }
 
   focus() {
     if (!this.view) return;

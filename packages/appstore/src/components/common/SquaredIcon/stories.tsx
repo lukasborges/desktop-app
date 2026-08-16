@@ -1,6 +1,5 @@
 import { IconSymbol } from '@getstation/theme';
 import type { Meta, StoryObj } from '@storybook/react';
-
 import SquaredIcon from '@src/components/common/SquaredIcon/SquaredIcon';
 
 const meta: Meta<typeof SquaredIcon> = {

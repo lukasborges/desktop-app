@@ -35,7 +35,7 @@ function* closeWindowIfNotMain(): SagaIterator {
   // yield callService('browserWindow', 'getFocusedWindow') doesn't work
   // since we don't manage SaaS his own opened windows
   const focusedWindow = yield call([remote.BrowserWindow, remote.BrowserWindow.getFocusedWindow]);
-  //vk: const focusedWindow = yield call([remote, remote.BrowserWindow.getFocusedWindow]);
+  // vk: const focusedWindow = yield call([remote, remote.BrowserWindow.getFocusedWindow]);
 
   if (mainWindowId !== focusedWindow.id) {
     yield call([focusedWindow, focusedWindow.close]);
