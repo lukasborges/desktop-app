@@ -22,11 +22,11 @@ const umzug = new Umzug({
         },
         down({ context }) {
           return f.down(context, DataTypes);
-        }
+        },
       };
-    }
+    },
   },
-  logger: process.env.NODE_ENV === 'test' ? undefined : log
+  logger: process.env.NODE_ENV === 'test' ? undefined : log,
 });
 
 export default umzug;

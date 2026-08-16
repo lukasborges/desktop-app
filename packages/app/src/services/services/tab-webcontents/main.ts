@@ -218,8 +218,8 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
   }
 
   /**
-   * @param details 
-   * @returns true if a site wants to open a new window for user request (e.g. authorisation window) 
+   * @param details
+   * @returns true if a site wants to open a new window for user request (e.g. authorisation window)
    */
   isNewWindowForUserRequest(details: HandlerDetails): boolean {
 
@@ -254,7 +254,7 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
           }
         }
       }
-      if (popup 
+      if (popup
           || noLocation && noToolbar && noMenubar) {
         return true;
       }
@@ -265,7 +265,7 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
         return true;
       }
     }
-    
+
     return false;
   }
 
@@ -326,7 +326,7 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
             overrideBrowserWindowOptions: {
               fullscreen: false,
               show: false,
-            }
+            },
           };
         }
 
@@ -344,7 +344,7 @@ export class TabWebContentsServiceImpl extends TabWebContentsService implements 
           overrideBrowserWindowOptions: {
             fullscreen: false,
             show: true,
-          }
+          },
         };
       });
     }));

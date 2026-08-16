@@ -61,11 +61,11 @@ abstract class AbstractStateProxy<T> {
 }
 
 type SingletonProxyClass<S extends Sequelize.Model<any, any>, T extends SingletonProxy<S>> = {
+  readonly name: string;
   new(model: S): T;
   create(...args: any[]): Promise<T>;
   getOne(...args: any[]): Promise<T>;
   truncate(...args: any[]): Promise<unknown>;
-  readonly name: string;
 };
 
 type ListProxyClass<S extends Sequelize.Model<any, any>, T extends ListProxy<S>> = {
@@ -77,10 +77,10 @@ type ListProxyClass<S extends Sequelize.Model<any, any>, T extends ListProxy<S>>
 };
 
 type MapProxyClass<S extends Sequelize.Model<any, any>, T extends MapProxy<S>> = {
+  readonly name: string;
   new(model: S): T;
   findOrCreate(...args: any[]): Promise<T>;
   getAll(...args: any[]): Promise<T[]>;
-  readonly name: string;
 };
 
 type KeyValueProxyClass<S extends Sequelize.Model<any, any>, T extends KeyValueProxy<S>> = {

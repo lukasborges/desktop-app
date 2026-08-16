@@ -66,7 +66,7 @@ const connectUI = ({ key, state: defaultState, persist = false }: Options) =>
         Object.keys(updates).forEach(name => {
           this.props.dispatch(updateUIAction([key], name, updates[name]));
         });
-      };
+      }
 
       render() {
         const { dispatch, uiState, ...props } = this.props;

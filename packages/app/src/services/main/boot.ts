@@ -8,7 +8,7 @@ import { app, ipcMain } from 'electron';
 import { startSessionsListening } from '../api/sessions';
 
 export default () => {
-  
+
   // make sure that `stream-electron-ipc` side-effect is called early
   require('../../utils/stream-ipc-proxy');
 
@@ -17,5 +17,5 @@ export default () => {
   ipcMain.on('get-is-packaged', (event) => {
     event.returnValue = app.isPackaged;
   });
-  
+
 };

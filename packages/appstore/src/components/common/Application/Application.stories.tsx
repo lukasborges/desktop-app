@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
 import Application from '@src/components/common/Application/Application';
 
 const meta: Meta<typeof Application> = {

@@ -155,7 +155,7 @@ export default class GenericWindowManager extends EventEmitter {
           },
           onMinimize() {
             self.emit('minimize');
-          }
+          },
         },
         'gwm'
       )

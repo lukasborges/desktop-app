@@ -115,7 +115,7 @@ function* triggerCorrespondingAction(
       break;
     case URLRouterAction.DEFAULT_BROWSER:
       if (!options || !options.loadInBackground) {
-        remote.shell.openExternal(url)
+        remote.shell.openExternal(url);
       }
       else {
         services.browserWindow.getFocusedWindow()
@@ -126,8 +126,8 @@ function* triggerCorrespondingAction(
                   .then(() => setTimeout(() => {
                       lastFocusedWindow.show();
                       lastFocusedWindow.setAlwaysOnTop(false);
-                    }, 
-                    100) //vk: I can't explain why, but without this timeout, open in background doesn't work
+                    },
+                    100) // vk: I can't explain why, but without this timeout, open in background doesn't work
                   )
                 );
             }

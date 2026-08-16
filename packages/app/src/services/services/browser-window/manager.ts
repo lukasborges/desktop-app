@@ -39,7 +39,7 @@ export class BrowserWindowManagerServiceImpl extends BrowserWindowManagerService
   async create(options: BrowserWindowServiceConstructorOptions) {
     const windowService = new BrowserWindowServiceImpl({
       autoHideMenuBar: this.autoHideMainMenu,
-      ...options
+      ...options,
     });
     this.weakrefs.set(windowService.window, windowService);
     return windowService;
@@ -75,7 +75,7 @@ export class BrowserWindowManagerServiceImpl extends BrowserWindowManagerService
     }
     if (this.worker.webContents.isDevToolsOpened()) {
       this.worker.webContents.closeDevTools();
-    } 
+    }
     else {
       this.worker.webContents.openDevTools({
         mode: 'detach',
@@ -88,17 +88,6 @@ export class BrowserWindowManagerServiceImpl extends BrowserWindowManagerService
     if (bw) {
       bw.focus();
     }
-  }
-
-  private getServiceFromBrowserWindow(bw?: Electron.BrowserWindow | null): BrowserWindowServiceImpl {
-    if (!bw) {
-      throw new Error('BrowserWindow is not defined');
-    }
-    const windowService = this.weakrefs.get(bw);
-    if (!windowService) {
-      throw new Error(`BrowserWindow ${bw.id} has not been initialized through BrowserWindowManagerService`);
-    }
-    return windowService;
   }
 
   async setProvider(provider: RPC.Node<BrowserWindowManagerProviderService>) {
@@ -121,5 +110,16 @@ export class BrowserWindowManagerServiceImpl extends BrowserWindowManagerService
     BrowserWindow.getAllWindows().forEach((bw) => {
       bw.hide();
     });
+  }
+
+  private getServiceFromBrowserWindow(bw?: Electron.BrowserWindow | null): BrowserWindowServiceImpl {
+    if (!bw) {
+      throw new Error('BrowserWindow is not defined');
+    }
+    const windowService = this.weakrefs.get(bw);
+    if (!windowService) {
+      throw new Error(`BrowserWindow ${bw.id} has not been initialized through BrowserWindowManagerService`);
+    }
+    return windowService;
   }
 }

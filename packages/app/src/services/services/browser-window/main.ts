@@ -33,7 +33,7 @@ export class BrowserWindowServiceImpl extends BrowserWindowService implements RP
     // );
 
     // this.window.webContents.on(
-    //     'did-attach-webview', 
+    //     'did-attach-webview',
     //     (event: Event, webContents: WebContents) => {
     //       require('electron-log').info(`BB [ ${webContents.id} ] ${process.type} ${webContents.getURL()}`);
     //       remoteMain.enable(webContents);
@@ -45,7 +45,7 @@ export class BrowserWindowServiceImpl extends BrowserWindowService implements RP
     // );
 
     // this.window.webContents.on(
-    //   'will-attach-webview', 
+    //   'will-attach-webview',
     //   (event: Event, webPreferences: Electron.WebPreferences /*, params: Record<string, string> */) => {
     //       webPreferences.nodeIntegration = true;
     //       webPreferences.nodeIntegrationInSubFrames = true;
@@ -59,7 +59,6 @@ export class BrowserWindowServiceImpl extends BrowserWindowService implements RP
     //         });
     //     }
     // );
-
 
     if (options.preventNavigation) {
       this.window.webContents.on('will-navigate', event => event.preventDefault());
@@ -171,6 +170,10 @@ export class BrowserWindowServiceImpl extends BrowserWindowService implements RP
     ], obs, this);
   }
 
+  async setAlwaysOnTop(flag: boolean, level?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver', relativeLevel?: number) {
+    this.window.setAlwaysOnTop(flag, level, relativeLevel);
+  }
+
   private onAny(key: string, callback?: Function) {
     if (!callback) return noop;
     return fromEvent(this.window, key).subscribe(() => callback());
@@ -251,9 +254,5 @@ export class BrowserWindowServiceImpl extends BrowserWindowService implements RP
     if (this.window.isFullScreen()) {
       this.window.setFullScreen(false);
     }
-  }
-
-  async setAlwaysOnTop(flag: boolean, level?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver', relativeLevel?: number) {
-    this.window.setAlwaysOnTop(flag, level, relativeLevel); 
   }
 }

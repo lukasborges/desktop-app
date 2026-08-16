@@ -5,7 +5,10 @@
   ],
   "rules": {
     "jsx-no-lambda": false,
-    "jsx-no-multiline-js": false
+    "jsx-no-multiline-js": false,
+    "no-import-side-effect": [true, {
+      "ignore-module": "(\\.css)$"
+    }]
   },
   "linterOptions": {
     "exclude": [

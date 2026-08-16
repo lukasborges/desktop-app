@@ -1,7 +1,6 @@
 import ms = require('ms');
 import { SagaIterator } from 'redux-saga';
-import { delay } from 'redux-saga/effects';
-import { all, call, fork, select, take } from 'redux-saga/effects';
+import { all, call, delay, fork, select, take } from 'redux-saga/effects';
 import * as Sequelize from 'sequelize';
 import Activity from '../activity/model';
 import { getActiveTabId } from '../app/selectors';

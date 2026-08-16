@@ -29,7 +29,7 @@ export default class ElectronNotificationStatePoller extends EventEmitter {
         })
         .catch(e => {
           console.log('Error while polling OS notification state', e);
-        }); 
+        });
     }, this.interval);
   }
 
