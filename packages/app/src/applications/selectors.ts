@@ -4,7 +4,7 @@ import * as isBlank from 'is-blank';
 import * as memoize from 'memoizee';
 import { uniq } from 'ramda';
 import { createSelector } from 'reselect';
-import { getActiveApplicationId } from '../nav/selectors';
+import { getActiveApplicationId, getPreviousActiveApplicationId } from '../nav/selectors';
 import { getSnoozeDuration } from '../notification-center/selectors';
 import { hasSubwindowsTabId } from '../subwindows/get';
 import { getSubwindows } from '../subwindows/selectors';
@@ -84,6 +84,25 @@ export const getActiveApplication = (state: StationState) =>
 
 export const getApplicationById = (state: StationState, applicationId: string) =>
   getApplications(state).get(applicationId);
+
+export const getApplicationToSelectAfterUninstall = (
+  state: StationState,
+  applicationId: string,
+): string | undefined => {
+  if (getActiveApplicationId(state) !== applicationId) return undefined;
+
+  const applications = getApplications(state);
+  const previousApplicationId = getPreviousActiveApplicationId(state);
+  if (previousApplicationId
+      && previousApplicationId !== applicationId
+      && applications.has(previousApplicationId)) {
+    return previousApplicationId;
+  }
+
+  return state.get('dock').find((candidateId: string) =>
+    candidateId !== applicationId && applications.has(candidateId)
+  );
+};
 
 export const getApplicationsWithNotificationsEnabled = (state: StationState) =>
   getApplications(state).filter(app => app.get('notificationsEnabled', false));
