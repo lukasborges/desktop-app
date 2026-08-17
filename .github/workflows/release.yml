@@ -46,6 +46,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -67,6 +69,9 @@ jobs:
 
       - name: Bump package version
         run: bash scripts/bump-version.sh "${{ needs.prepare.outputs.next_n }}"
+
+      - name: Generate release notes from commits
+        run: node scripts/generate-release-notes.mjs
 
       - name: Build workspaces
         run: yarn build
@@ -102,6 +107,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -139,6 +146,9 @@ jobs:
       - name: Bump package version
         shell: bash
         run: bash scripts/bump-version.sh "${{ needs.prepare.outputs.next_n }}"
+
+      - name: Generate release notes from commits
+        run: node scripts/generate-release-notes.mjs
 
       - name: Build workspaces
         run: yarn build
@@ -187,9 +197,10 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TAG: ${{ needs.prepare.outputs.tag }}
-      COMMIT_MSG: ${{ github.event.head_commit.message }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download release artifacts
         uses: actions/download-artifact@v4
@@ -223,12 +234,16 @@ jobs:
         shell: bash
         run: |
           notes_file=$(mktemp)
+          previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [[ -n "$previous_tag" ]]; then
+            commit_notes=$(git log "${previous_tag}..${GITHUB_SHA}" --format='- %s (`%h`)' --no-merges)
+          else
+            commit_notes=$(git log "${GITHUB_SHA}" --format='- %s (`%h`)' --no-merges)
+          fi
           {
             printf 'Automated release from commit [`%s`](%s/%s/commit/%s).\n\n' \
               "${GITHUB_SHA::7}" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_SHA"
-            printf '## Commit\n\n```\n'
-            printf '%s\n' "$COMMIT_MSG"
-            printf '```\n\n'
+            printf '## Changes\n\n%s\n\n' "$commit_notes"
             printf '## Artifacts\n\n'
             printf '### Linux (x86_64)\n- `Platform-x86_64.AppImage` — distro-agnostic\n- `Platform-amd64.deb` — Debian / Ubuntu\n- `Platform-x86_64.rpm` — Fedora / RHEL (built with `scripts/build-rpm.sh`)\n\n'
             printf '### Windows (x86_64)\n- `Platform-Setup.exe` — NSIS installer (built natively on Windows)\n- `Platform-Setup.exe.blockmap` — auto-update delta metadata\n\n'
