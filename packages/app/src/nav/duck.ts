@@ -14,12 +14,12 @@ export const CHANGE_SELECTED_APP_MAIN = 'browserX/nav/CHANGE_SELECTED_APP_MAIN';
 
 // Action Types
 
-export type ChangeSelectedAppMain = { type: CHANGE_SELECTED_APP_MAIN, applicationId: string };
+export type ChangeSelectedAppMain = { type: CHANGE_SELECTED_APP_MAIN, applicationId?: string };
 export type navActions = ChangeSelectedAppMain;
 
 // Action creators
 
-export const changeSelectedAppMain = (applicationId: string): ChangeSelectedAppMain =>
+export const changeSelectedAppMain = (applicationId?: string): ChangeSelectedAppMain =>
   ({ type: CHANGE_SELECTED_APP_MAIN, applicationId });
 
 // Reducer

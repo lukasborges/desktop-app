@@ -25,6 +25,9 @@ import { getStartURL } from './helpers';
 import { optOutConfirmationFlow } from '../../application-settings/sagas';
 import { getPresets } from '../manifest-provider/helpers';
 import { InstallContext } from '../types';
+import { getActiveApplicationId } from '../../nav/selectors';
+import { changeSelectedAppMain } from '../../nav/duck';
+import { getApplicationToSelectAfterUninstall } from '../selectors';
 
 interface InstallApplicationOptions {
   installContext?: InstallContext,
@@ -95,6 +98,15 @@ export function* installApplication(
  * @param applicationId
  */
 export function* uninstallApplication(applicationId: string): SagaIterator {
+  const activeApplicationId = yield select(getActiveApplicationId);
+  if (activeApplicationId === applicationId) {
+    const nextApplicationId = yield select(getApplicationToSelectAfterUninstall, applicationId);
+    // Clear the selection when removing the last application. Otherwise the UI
+    // keeps rendering an application id that is about to be removed, leaving
+    // the content area as a black, empty screen.
+    yield put(changeSelectedAppMain(nextApplicationId));
+  }
+
   yield put(closeAllTabsInApp(applicationId));
   yield put(dropApplication(applicationId));
   yield put(removeAppItem(applicationId));
