@@ -39,6 +39,20 @@ const ensureRuntime: Transformer<SDKServiceRuntime, ServiceRuntime> = evolve({
 });
 
 /**
+ * A dynamic `import()` cannot be used here: TypeScript hoists the template
+ * string into a temporary variable, so webpack cannot statically infer the
+ * directory and ends up with an empty context (`Cannot find module` at runtime).
+ */
+const requireRuntime = require.context('../../manifests/runtime', true, /\/main\.tsx?$/);
+
+/**
+ * webpack 4 context keys keep their extension (`./slack/main.ts`), while
+ * manifests reference them without it (`slack/main`).
+ */
+const runtimeKey = (main: string) => requireRuntime.keys()
+  .find(key => key.replace(/^\.\//, '').replace(/\.tsx?$/, '') === main);
+
+/**
  * Load the `ServiceRuntime` of a given service.
  * If there is no runtime defined (no `main` key in service definition), load
  * a dummy runtime that does nothing.
@@ -46,9 +60,13 @@ const ensureRuntime: Transformer<SDKServiceRuntime, ServiceRuntime> = evolve({
 export const getServiceRuntime = async (manifest: BxAppManifest): Promise<ServiceRuntime | void> => {
   if (!manifest || !manifest.main) return;
 
-  const sdkRuntime: ServiceRuntime = await import(
-    `../../manifests/runtime/${manifest.main}`)
-    .then(({ default: main }) => main);
+  const key = runtimeKey(manifest.main);
+  if (!key) {
+    console.error(`No service runtime found for "${manifest.main}"`);
+    return;
+  }
+
+  const sdkRuntime: ServiceRuntime = requireRuntime(key).default;
 
   return ensureRuntime(sdkRuntime);
 };
