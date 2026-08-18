@@ -41,12 +41,9 @@ export interface ElectronWebviewProps extends Partial<Omit<Electron.WebviewTag, 
   onEnterHtmlFullScreen?: EventListener;
   onLeaveHtmlFullScreen?: EventListener;
   onConsoleMessage?: EventListener;
-  onNewWindow?: EventListener;
   onClose?: EventListener;
   onIpcMessage?: EventListener;
-  onCrashed?: EventListener;
-  onGpuCrashed?: EventListener;
-  onPluginCrashed?: EventListener;
+  onRenderProcessGone?: EventListener;
   onDestroyed?: EventListener;
 }
 
@@ -72,15 +69,16 @@ export const events = [
   'leave-html-full-screen',
   'console-message',
   'found-in-page',
-  'new-window',
+  // `new-window` has been removed in Electron 22, replaced by `setWindowOpenHandler`
+  // in the main process (@see services/services/tab-webcontents/main.ts)
   'will-navigate', // do not use it, not reliable in some cases electron/electron#14751
   'did-navigate',
   'did-navigate-in-page',
   'close',
   'ipc-message',
-  'crashed',
-  'gpu-crashed',
-  'plugin-crashed',
+  // `crashed`, `gpu-crashed` and `plugin-crashed` have been removed in Electron 29
+  // @see https://www.electronjs.org/docs/latest/breaking-changes#removed-crashed-event-on-webcontents-and-webview
+  'render-process-gone',
   'destroyed',
   'media-started-playing',
   'media-paused',
