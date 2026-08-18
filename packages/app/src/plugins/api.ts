@@ -43,13 +43,13 @@ const ensureRuntime: Transformer<SDKServiceRuntime, ServiceRuntime> = evolve({
  * string into a temporary variable, so webpack cannot statically infer the
  * directory and ends up with an empty context (`Cannot find module` at runtime).
  */
-const requireRuntime = require.context('../../manifests/runtime', true, /\/main\.tsx?$/);
+const getRuntimeContext = () => require.context('../../manifests/runtime', true, /\/main\.tsx?$/);
 
 /**
  * webpack 4 context keys keep their extension (`./slack/main.ts`), while
  * manifests reference them without it (`slack/main`).
  */
-const runtimeKey = (main: string) => requireRuntime.keys()
+const runtimeKey = (requireRuntime: __WebpackModuleApi.RequireContext, main: string) => requireRuntime.keys()
   .find(key => key.replace(/^\.\//, '').replace(/\.tsx?$/, '') === main);
 
 /**
@@ -60,7 +60,8 @@ const runtimeKey = (main: string) => requireRuntime.keys()
 export const getServiceRuntime = async (manifest: BxAppManifest): Promise<ServiceRuntime | void> => {
   if (!manifest || !manifest.main) return;
 
-  const key = runtimeKey(manifest.main);
+  const requireRuntime = getRuntimeContext();
+  const key = runtimeKey(requireRuntime, manifest.main);
   if (!key) {
     console.error(`No service runtime found for "${manifest.main}"`);
     return;
