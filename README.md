@@ -1,12 +1,12 @@
 # Platform
 
-Platform is a community-maintained continuation of [Station Desktop](https://github.com/getstation/desktop-app), the workspace that brings web apps and multiple accounts together in one desktop app.
+Platform is an independent, community-maintained desktop workspace that brings web apps and multiple accounts together in one place. It originated as a continuation of [Station Desktop](https://github.com/getstation/desktop-app) and now follows its own roadmap.
 
 The goal is simple: preserve the workflow people enjoyed in Station while keeping it useful with today's services and operating systems.
 
 ![Platform App Store](docs/screenshots/1.png)
 
-## What this fork changes
+## What makes Platform different
 
 - Keeps Station's workflow working on current systems, with reliable sign-in, notifications, external links and spell-check.
 - Refreshes the experience with a curated App Store, clearer app and account controls, and support for custom app icons.
@@ -31,7 +31,7 @@ The goal is simple: preserve the workflow people enjoyed in Station while keepin
 
 ### Ready-to-use builds
 
-Download the newest version from [GitHub Releases](https://github.com/lukasborges/platform/releases). Releases are currently marked as pre-release while the fork matures.
+Download the newest version from [GitHub Releases](https://github.com/lukasborges/platform/releases). Releases are currently marked as pre-release while Platform matures.
 
 #### Windows
 
@@ -226,7 +226,7 @@ WebStorm and VSCode should be correctly configured by default.
 
 ## Releases
 
-Every push to `main` starts the release workflow. It creates the next `v3.3.0-fork.N` pre-release and publishes the Linux and Windows installers listed above.
+Every push to `main` starts the release workflow. It creates the next `v3.3.0-beta.N` pre-release and publishes the Linux and Windows installers listed above. The numbering continues from the earlier `v3.3.0-fork.N` release series.
 
 Add `[skip release]` to a commit message when the change should not publish a new build. macOS artifacts are not part of the automated workflow yet.
 

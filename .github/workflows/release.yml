@@ -27,13 +27,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Compute next fork version
+      - name: Compute next Platform beta version
         id: version
         shell: bash
         run: |
-          last_n=$(git tag --list 'v3.3.0-fork.*' | sed 's/.*\.//' | sort -n | tail -1)
+          last_n=$(git tag --list 'v3.3.0-fork.*' 'v3.3.0-beta.*' | sed 's/.*\.//' | sort -n | tail -1)
           next_n=$((${last_n:-0} + 1))
-          tag="v3.3.0-fork.${next_n}"
+          tag="v3.3.0-beta.${next_n}"
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           echo "next_n=${next_n}" >> "$GITHUB_OUTPUT"
           echo "Next release tag: ${tag}"
