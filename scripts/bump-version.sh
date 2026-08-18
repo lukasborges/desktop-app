@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Bump fork release version in package.json files.
+# Bump Platform beta release version in package.json files.
 # Usage: ./scripts/bump-version.sh <N>
-#   Sets root package.json and packages/app/package.json version to "3.3.0-fork.<N>".
+#   Sets root package.json and packages/app/package.json version to "3.3.0-beta.<N>".
 set -euo pipefail
 
 if [[ $# -ne 1 ]]; then
   echo "usage: $0 <N>" >&2
-  echo "  e.g. $0 4   # sets version to 3.3.0-fork.4" >&2
+  echo "  e.g. $0 70   # sets version to 3.3.0-beta.70" >&2
   exit 64
 fi
 
@@ -16,7 +16,7 @@ if ! [[ "$n" =~ ^[0-9]+$ ]]; then
   exit 64
 fi
 
-new_version="3.3.0-fork.${n}"
+new_version="3.3.0-beta.${n}"
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$repo_root"
 

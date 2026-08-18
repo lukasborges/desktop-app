@@ -49,7 +49,7 @@ export default class AutoUpdaterMock extends EventEmitter {
     await delay(ms('3sec'));
 
     log.debug('autoUpdater.mock: emit update-available');
-    this.emit('update-available', { version: '3.3.0-fork.999' });
+    this.emit('update-available', { version: '3.3.0-beta.999' });
   }
 
   protected async checkForUpdatesWithNotAvailableScenario() {

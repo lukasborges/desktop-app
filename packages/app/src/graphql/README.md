@@ -51,7 +51,7 @@ mutation EnablePromptDownload($enabled: Boolean!) @local {
 }
 ```
 
-The former remote GraphQL schema, `codegen.yml` flow and `api.getstation.com` instructions have been removed from this fork. All current operations resolve locally.
+The former remote GraphQL schema, `codegen.yml` flow and `api.getstation.com` instructions have been removed from Platform. All current operations resolve locally.
 
 ## Reactive resolvers
 

@@ -34,7 +34,7 @@ describe('AutoUpdaterMock', () => {
 
     expect(events).toEqual([
       'checking',
-      'available:3.3.0-fork.999',
+      'available:3.3.0-beta.999',
     ]);
   });
 

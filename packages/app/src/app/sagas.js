@@ -73,7 +73,7 @@ function* sagaPrepareQuit(bxApp) {
 }
 
 function* sagaSyncAutoLaunch() {
-  // Autolaunch feature disabled in this fork: always force off so the app
+  // Autolaunch is disabled in Platform: always force it off so the app
   // never registers itself in the OS autostart, regardless of any stale
   // persisted preference.
   yield put(enableAutoLaunch(false));

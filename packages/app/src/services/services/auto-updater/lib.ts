@@ -5,7 +5,7 @@ import { isPackaged } from '../../../utils/env';
 import AutoUpdaterMock from './AutoUpdaterMock';
 
 if (isPackaged) {
-  // Fork releases are tagged as prerelease (v3.3.0-fork.N), so the GitHub
+  // Platform beta releases are tagged as prerelease (v3.3.0-beta.N), so the GitHub
   // /releases/latest endpoint returns 406. Opt in to prereleases.
   autoUpdaterProd.allowPrerelease = true;
   // Package installation differs by operating system and Linux package
