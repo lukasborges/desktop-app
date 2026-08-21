@@ -23,13 +23,18 @@ export type Props = {
 const styles = () => ({
   iconWrapper: {
     alignItems: 'center',
+    background: 'none',
+    border: 0,
     borderRadius: 7,
+    color: 'inherit',
+    cursor: 'pointer',
     display: 'flex',
     justifyContent: 'center',
     height: 24,
     width: 24,
     opacity: 0.62,
     marginLeft: 5,
+    padding: 0,
     '&:hover': {
       ...roundedBackground('rgba(255,255,255,0.1)'),
       opacity: 1,
@@ -45,14 +50,17 @@ class SubdockButton extends React.PureComponent<Props> {
   renderIcon() {
     const { classes, size, onClick, symbolId, className: upperClassName } = this.props;
     return (
-      <span className={classNames(classes!.iconWrapper, upperClassName)}>
+      <button
+        className={classNames(classes!.iconWrapper, upperClassName)}
+        onClick={onClick}
+        type="button"
+      >
         <Icon
           className={classes!.icon}
           size={size}
           symbolId={symbolId}
-          onClick={onClick}
         />
-      </span>
+      </button>
     );
   }
 
