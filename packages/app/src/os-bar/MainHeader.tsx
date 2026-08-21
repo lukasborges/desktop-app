@@ -54,6 +54,7 @@ const HeaderIcon = ({ name }: HeaderIconProps) => {
 
 interface StateProps {
   activeApplicationId?: string,
+  activeApplicationZoomLevel: number,
   activeTabTitle: string,
   canGoBack: boolean,
   canGoForward: boolean,
@@ -87,6 +88,7 @@ interface HeaderMenuLevelProps {
   items: Electron.MenuItem[],
   menuRef?: (menu: HTMLDivElement | null) => void,
   onActivate: (item: Electron.MenuItem) => void,
+  zoomPercentage: number,
 }
 
 interface HeaderMenuLevelState {
@@ -150,7 +152,7 @@ class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMe
   state: HeaderMenuLevelState = { activeSubmenu: null };
 
   render() {
-    const { depth = 0, items, menuRef, onActivate } = this.props;
+    const { depth = 0, items, menuRef, onActivate, zoomPercentage } = this.props;
 
     return (
       <div className={`station-main-menu station-main-menu--depth-${depth}`} ref={menuRef} role="menu">
@@ -179,7 +181,7 @@ class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMe
                   onClick={onActivate.bind(null, resetZoom)}
                   type="button"
                 >
-                  100%
+                  {zoomPercentage}%
                 </button>
                 <button
                   aria-label="Zoom in"
@@ -226,7 +228,12 @@ class HeaderMenuLevel extends React.PureComponent<HeaderMenuLevelProps, HeaderMe
                 {hasSubmenu && <span className="station-main-menu__arrow">›</span>}
               </button>
               {submenuOpen && item.submenu &&
-                <HeaderMenuLevel depth={depth + 1} items={item.submenu.items} onActivate={onActivate} />
+                <HeaderMenuLevel
+                  depth={depth + 1}
+                  items={item.submenu.items}
+                  onActivate={onActivate}
+                  zoomPercentage={zoomPercentage}
+                />
               }
             </div>
           );
@@ -319,7 +326,11 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
   }
 
   private activateMenuItem = (item: Electron.MenuItem) => {
-    this.closeMainMenu();
+    // Zoom is an incremental control. Keep the popover open so users can
+    // click more than once and see the current percentage immediately.
+    if (!['page-zoom-out', 'page-reset-zoom', 'page-zoom-in'].includes(item.id)) {
+      this.closeMainMenu();
+    }
     item.click(item, this.mainWindow, {
       altKey: false,
       ctrlKey: false,
@@ -378,6 +389,7 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
   render() {
     const {
       activeApplicationId,
+      activeApplicationZoomLevel,
       activeTabTitle,
       appStoreVisible,
       canGoBack,
@@ -419,6 +431,7 @@ class MainHeaderImpl extends React.PureComponent<Props, State> {
               items={headerMenuItems}
               menuRef={this.setMenuPopoverRef}
               onActivate={this.activateMenuItem}
+              zoomPercentage={Math.round(100 * Math.pow(1.2, activeApplicationZoomLevel))}
             />
           }
           {this.renderButton('plus', 'Add apps', onAddApplication, { active: appStoreVisible })}
@@ -465,8 +478,12 @@ const getActiveTabTitle = (state: StationState): string => {
 
 const MainHeader = connect<StateProps, DispatchProps, OwnProps>(
   (state: StationState) => {
+    const activeApplicationId = getActiveApplicationId(state);
+
     return {
-      activeApplicationId: getActiveApplicationId(state),
+      activeApplicationId,
+      activeApplicationZoomLevel: activeApplicationId ?
+        Number(state.getIn(['applications', activeApplicationId, 'zoomLevel'], 0)) : 0,
       activeTabTitle: getActiveTabTitle(state),
       canGoBack: Boolean(getCurrentActiveTabProperty(state, 'canGoBack')),
       canGoForward: Boolean(getCurrentActiveTabProperty(state, 'canGoForward')),

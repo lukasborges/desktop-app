@@ -18,6 +18,12 @@ if (process.platform === 'linux') {
   app.setDesktopName('platform-desktop-app.desktop');
 }
 
+if (process.platform === 'win32') {
+  // Must match electron-builder's appId. Windows uses this identity to
+  // register and deliver native toast notifications to the installed app.
+  app.setAppUserModelId('io.github.lukasborges.Platform');
+}
+
 bootServices(); // all side effects related to services (in main process)
 
 remoteMain.initialize();
