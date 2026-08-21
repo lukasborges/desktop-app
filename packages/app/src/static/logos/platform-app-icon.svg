@@ -12,7 +12,7 @@
     <path id="corner" d="M46 210V142C46 89 89 46 142 46H222V142H184C161 142 142 161 142 184V210H46Z"/>
   </defs>
 
-  <rect width="512" height="512" fill="#FFFFFF"/>
+  <rect width="512" height="512" fill="#FFFFFF" rx="112"/>
 
   <g fill="#121419">
     <use href="#corner" transform="translate(0 6)"/>
