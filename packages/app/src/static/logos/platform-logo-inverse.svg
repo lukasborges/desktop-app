@@ -7,19 +7,34 @@
    id="svg2"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs2" />
+  <defs id="defs2">
+    <linearGradient id="logo-module" x1="0" y1="6" x2="0" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#ECEEF0"/>
+    </linearGradient>
+    <linearGradient id="logo-core" x1="0" y1="25" x2="0" y2="39" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4AD7E7"/>
+      <stop offset="1" stop-color="#35C4D6"/>
+    </linearGradient>
+    <path id="logo-corner" d="M6 26V18C6 11.373 11.373 6 18 6H28V18H23C20.239 18 18 20.239 18 23V26H6Z"/>
+  </defs>
   <title
      id="title1">Platform</title>
   <g transform="translate(0 3) scale(.625)">
-    <g fill="#f5f5f6">
-      <path d="M8 26V16a8 8 0 0 1 8-8h10v10h-4a4 4 0 0 0-4 4v4H8Z"/>
-      <path d="M8 26V16a8 8 0 0 1 8-8h10v10h-4a4 4 0 0 0-4 4v4H8Z" transform="translate(64) scale(-1 1)"/>
-      <path d="M8 26V16a8 8 0 0 1 8-8h10v10h-4a4 4 0 0 0-4 4v4H8Z" transform="translate(64 64) scale(-1 -1)"/>
-      <path d="M8 26V16a8 8 0 0 1 8-8h10v10h-4a4 4 0 0 0-4 4v4H8Z" transform="translate(0 64) scale(1 -1)"/>
-      <path d="M8 48h18v10a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4V48Z"/>
+    <g fill="#C8CCD0">
+      <use href="#logo-corner" transform="translate(0 .75)"/>
+      <use href="#logo-corner" transform="matrix(-1 0 0 1 64 .75)"/>
+      <use href="#logo-corner" transform="matrix(1 0 0 -1 0 64.75)"/>
+      <use href="#logo-corner" transform="matrix(-1 0 0 -1 64 64.75)"/>
     </g>
-    <rect width="16" height="16" x="24" y="24" fill="#42cfe0" rx="4"/>
+    <g fill="url(#logo-module)">
+      <use href="#logo-corner"/>
+      <use href="#logo-corner" transform="matrix(-1 0 0 1 64 0)"/>
+      <use href="#logo-corner" transform="matrix(1 0 0 -1 0 64)"/>
+      <use href="#logo-corner" transform="rotate(180 32 32)"/>
+    </g>
+    <rect width="14" height="14" x="25" y="26" fill="#16AFC1" rx="3.5"/>
+    <rect width="14" height="14" x="25" y="25" fill="url(#logo-core)" rx="3.5"/>
   </g>
   <g
      fill="#f5f5f6"
