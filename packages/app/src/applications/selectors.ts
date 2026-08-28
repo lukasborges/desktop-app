@@ -203,6 +203,11 @@ export const getNotificationsEnabled = (state: StationState, applicationId: stri
   return application.get('notificationsEnabled');
 };
 
+export const shouldMuteApplication = (
+  isSnoozed: boolean,
+  notificationsEnabled: boolean | undefined,
+) => isSnoozed || notificationsEnabled === false;
+
 // Value of `isVisible` is either `false` or a windowId
 export const getUIConfirmResetApplicationModalIsVisible = (state: StationState, windowId: number) =>
   state.getIn(['ui', 'confirmResetApplicationModal', 'isVisible'], false) === windowId;

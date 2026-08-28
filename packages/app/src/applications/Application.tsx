@@ -57,7 +57,7 @@ import ApplicationContainer from './components/ApplicationContainer';
 import { navigateToApplicationTab, setConfigData, uninstallApplication, updateApplicationIcon } from './duck';
 import LazyWebview from './LazyWebview';
 import { withGetApplicationState } from './queries@local.gql.generated';
-import { getApplicationDescription } from './selectors';
+import { getApplicationDescription, getNotificationsEnabled, shouldMuteApplication } from './selectors';
 import { ApplicationImmutable } from './types';
 // @ts-ignore no declaration file
 import { getForeFrontNavigationStateProperty } from './utils';
@@ -128,7 +128,7 @@ export interface StateProps {
   errorCode?: number,
   errorDescription?: string,
   crashed: boolean,
-  isSnoozed: boolean,
+  isMuted: boolean,
 
   // Improve : move down the chain, only for ApplicationContainer
   email: Maybe<string>,
@@ -370,9 +370,9 @@ class ApplicationImpl extends React.PureComponent {
     this.webView.view.executeJavaScript(webviewInjectJS); // `(function(){\n${bxNotifJS}\n})()`);
 
     // The `<webview>` tag has no `muted` attribute, so the initial audio mute
-    // state (e.g. app started while notifications are snoozed) must be applied
+    // state (e.g. app started while its notifications are disabled) must be applied
     // explicitly. Subsequent changes are handled by the `muted` prop.
-    this.webView.setAudioMuted(Boolean(this.props.isSnoozed));
+    this.webView.setAudioMuted(this.props.isMuted);
 
     const js = await injectJS(this.props.legacyServiceId);
     if (js && this.webView && this.webView.view) {
@@ -488,7 +488,7 @@ class ApplicationImpl extends React.PureComponent {
         <LazyWebview
           initialSrc={tabUrl}
           hidden={this.props.hidden}
-          muted={this.props.isSnoozed}
+          muted={this.props.isMuted}
           className="l-webview__content"
           preload={preloadUrl}
           allowpopups={true}
@@ -547,13 +547,17 @@ const Application = compose(
       const tabId = getTabId(tab);
       const tabWebcontents = getTabWebcontentsById(state, tabId);
       const isSnoozed = getSnoozeState(state);
+      const isMuted = shouldMuteApplication(
+        isSnoozed,
+        getNotificationsEnabled(state, ownProps.applicationId),
+      );
 
       if (tabWebcontents) {
         return {
           errorCode: tabWebcontents.get('errorCode'),
           errorDescription: tabWebcontents.get('errorDescription'),
           crashed: tabWebcontents.get('crashed'),
-          isSnoozed,
+          isMuted,
 
           // ApplicationContainer
           email: getApplicationDescription(state, application),
@@ -564,7 +568,7 @@ const Application = compose(
       }
 
       return {
-        isSnoozed,
+        isMuted,
 
         // ApplicationContainer
         email: getApplicationDescription(state, application),
