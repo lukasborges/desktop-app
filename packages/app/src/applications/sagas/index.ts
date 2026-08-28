@@ -44,7 +44,6 @@ import {
   SET_HOME_TAB_AS_ACTIVE,
   setActiveTab,
   SetActiveTabAction,
-  SetHomeTabAsActiveAction,
   uninstallApplication,
   ZOOM_IN,
   ZOOM_OUT,
@@ -55,9 +54,9 @@ import { BxAppManifest } from '../manifest-provider/bxAppManifest';
 import {
   getApplicationById,
   getApplicationFullConfigData,
-  getHomeTab,
 } from '../selectors';
 import { getNewPageURL } from './helpers';
+import { setHomeTabAsActiveForApplication } from './home';
 import { installApplication, watchLifecyleActions, InstallApplicationReturn } from './lifecycle';
 import { goToStartUrlAfterSetConfigData, updateApplicationIconAfterSetConfigData } from './configData';
 import { ApplicationImmutable } from '../types';
@@ -77,22 +76,6 @@ function* interceptZoomActions({ applicationId }: ZoomActions): SagaIterator {
     } catch (e) {
       console.warn(e);
     }
-  }
-}
-
-function* setHomeTabAsActiveForApplication({ applicationId }: SetHomeTabAsActiveAction): SagaIterator {
-  const application = yield select(getApplicationById, applicationId);
-  if (!application) return;
-
-  const homeTab = yield select(getHomeTab, applicationId);
-  if (!homeTab) throw new Error(`No home tab for app ${applicationId}`);
-
-  const currentTabId = getApplicationActiveTab(application);
-  const homeTabId = getTabId(homeTab);
-
-  if (currentTabId !== homeTabId) {
-    // @ts-ignore:thunk
-    yield put(navigateToApplicationTab(applicationId, homeTabId));
   }
 }
 

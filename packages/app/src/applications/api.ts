@@ -1,8 +1,8 @@
 import ms = require('ms');
 import { take } from 'rxjs/operators';
 import * as BluebirdPromise from 'bluebird';
-import { BxAppManifest } from './manifest-provider/bxAppManifest';
-import { BrowserXAppWorker } from '../app-worker';
+import type { BxAppManifest } from './manifest-provider/bxAppManifest';
+import type { BrowserXAppWorker } from '../app-worker';
 import ManifestProvider from './manifest-provider/manifest-provider';
 import { IManifestProvider } from './manifest-provider/types';
 

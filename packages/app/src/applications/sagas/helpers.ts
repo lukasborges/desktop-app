@@ -1,6 +1,6 @@
 import { SagaIterator } from 'redux-saga';
 import { select, call, getContext } from 'redux-saga/effects';
-import { BrowserXAppWorker } from '../../app-worker';
+import type { BrowserXAppWorker } from '../../app-worker';
 import { applicationLabel } from '../../abstract-application/helpers';
 import { getApplicationIdByTabId } from '../../tabs/selectors';
 import { ApplicationConfigData } from '../duck';
